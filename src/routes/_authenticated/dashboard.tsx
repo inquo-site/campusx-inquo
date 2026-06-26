@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { TrendingUp, Eye, Send, ArrowUpRight, Sparkles, Rocket, Briefcase, FolderGit2 } from "lucide-react";
 
-export const Route = createFileRoute("/dashboard")({
+export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
 });
 

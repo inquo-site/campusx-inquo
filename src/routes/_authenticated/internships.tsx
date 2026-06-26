@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { MapPin, Clock, IndianRupee, Building2, ArrowUpRight } from "lucide-react";
 
-export const Route = createFileRoute("/internships")({
+export const Route = createFileRoute("/_authenticated/internships")({
   component: Internships,
 });
 

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { Plus, Github, ExternalLink, X, ArrowUpRight } from "lucide-react";
 
-export const Route = createFileRoute("/projects")({
+export const Route = createFileRoute("/_authenticated/projects")({
   component: Projects,
 });
 

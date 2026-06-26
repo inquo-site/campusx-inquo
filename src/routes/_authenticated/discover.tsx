@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import { useState } from "react";
 import { Search, ChevronDown, Check, ArrowUpRight } from "lucide-react";
 
-export const Route = createFileRoute("/discover")({
+export const Route = createFileRoute("/_authenticated/discover")({
   component: Discover,
 });
 

@@ -10,35 +10,20 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
-import { Route as StartupsRouteImport } from './routes/startups'
-import { Route as ProjectsRouteImport } from './routes/projects'
-import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as InternshipsRouteImport } from './routes/internships'
-import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as DisclaimerRouteImport } from './routes/disclaimer'
-import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedStartupsRouteImport } from './routes/_authenticated/startups'
+import { Route as AuthenticatedProjectsRouteImport } from './routes/_authenticated/projects'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedInternshipsRouteImport } from './routes/_authenticated/internships'
+import { Route as AuthenticatedDiscoverRouteImport } from './routes/_authenticated/discover'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StartupsRoute = StartupsRouteImport.update({
-  id: '/startups',
-  path: '/startups',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProjectsRoute = ProjectsRouteImport.update({
-  id: '/projects',
-  path: '/projects',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -46,24 +31,9 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
-const InternshipsRoute = InternshipsRouteImport.update({
-  id: '/internships',
-  path: '/internships',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DiscoverRoute = DiscoverRouteImport.update({
-  id: '/discover',
-  path: '/discover',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const DisclaimerRoute = DisclaimerRouteImport.update({
   id: '/disclaimer',
   path: '/disclaimer',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -76,101 +46,132 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedStartupsRoute = AuthenticatedStartupsRouteImport.update({
+  id: '/_authenticated/startups',
+  path: '/startups',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedProjectsRoute = AuthenticatedProjectsRouteImport.update({
+  id: '/_authenticated/projects',
+  path: '/projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/_authenticated/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedInternshipsRoute =
+  AuthenticatedInternshipsRouteImport.update({
+    id: '/_authenticated/internships',
+    path: '/internships',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AuthenticatedDiscoverRoute = AuthenticatedDiscoverRouteImport.update({
+  id: '/_authenticated/discover',
+  path: '/discover',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/_authenticated/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/dashboard': typeof DashboardRoute
   '/disclaimer': typeof DisclaimerRoute
-  '/discover': typeof DiscoverRoute
-  '/internships': typeof InternshipsRoute
   '/privacy': typeof PrivacyRoute
-  '/profile': typeof ProfileRoute
-  '/projects': typeof ProjectsRoute
-  '/startups': typeof StartupsRoute
   '/terms': typeof TermsRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/discover': typeof AuthenticatedDiscoverRoute
+  '/internships': typeof AuthenticatedInternshipsRoute
+  '/profile': typeof AuthenticatedProfileRoute
+  '/projects': typeof AuthenticatedProjectsRoute
+  '/startups': typeof AuthenticatedStartupsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/dashboard': typeof DashboardRoute
   '/disclaimer': typeof DisclaimerRoute
-  '/discover': typeof DiscoverRoute
-  '/internships': typeof InternshipsRoute
   '/privacy': typeof PrivacyRoute
-  '/profile': typeof ProfileRoute
-  '/projects': typeof ProjectsRoute
-  '/startups': typeof StartupsRoute
   '/terms': typeof TermsRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/discover': typeof AuthenticatedDiscoverRoute
+  '/internships': typeof AuthenticatedInternshipsRoute
+  '/profile': typeof AuthenticatedProfileRoute
+  '/projects': typeof AuthenticatedProjectsRoute
+  '/startups': typeof AuthenticatedStartupsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/dashboard': typeof DashboardRoute
   '/disclaimer': typeof DisclaimerRoute
-  '/discover': typeof DiscoverRoute
-  '/internships': typeof InternshipsRoute
   '/privacy': typeof PrivacyRoute
-  '/profile': typeof ProfileRoute
-  '/projects': typeof ProjectsRoute
-  '/startups': typeof StartupsRoute
   '/terms': typeof TermsRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/discover': typeof AuthenticatedDiscoverRoute
+  '/_authenticated/internships': typeof AuthenticatedInternshipsRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/projects': typeof AuthenticatedProjectsRoute
+  '/_authenticated/startups': typeof AuthenticatedStartupsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
-    | '/dashboard'
     | '/disclaimer'
+    | '/privacy'
+    | '/terms'
+    | '/dashboard'
     | '/discover'
     | '/internships'
-    | '/privacy'
     | '/profile'
     | '/projects'
     | '/startups'
-    | '/terms'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
-    | '/dashboard'
     | '/disclaimer'
+    | '/privacy'
+    | '/terms'
+    | '/dashboard'
     | '/discover'
     | '/internships'
-    | '/privacy'
     | '/profile'
     | '/projects'
     | '/startups'
-    | '/terms'
   id:
     | '__root__'
     | '/'
     | '/about'
-    | '/dashboard'
     | '/disclaimer'
-    | '/discover'
-    | '/internships'
     | '/privacy'
-    | '/profile'
-    | '/projects'
-    | '/startups'
     | '/terms'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/discover'
+    | '/_authenticated/internships'
+    | '/_authenticated/profile'
+    | '/_authenticated/projects'
+    | '/_authenticated/startups'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  DashboardRoute: typeof DashboardRoute
   DisclaimerRoute: typeof DisclaimerRoute
-  DiscoverRoute: typeof DiscoverRoute
-  InternshipsRoute: typeof InternshipsRoute
   PrivacyRoute: typeof PrivacyRoute
-  ProfileRoute: typeof ProfileRoute
-  ProjectsRoute: typeof ProjectsRoute
-  StartupsRoute: typeof StartupsRoute
   TermsRoute: typeof TermsRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedDiscoverRoute: typeof AuthenticatedDiscoverRoute
+  AuthenticatedInternshipsRoute: typeof AuthenticatedInternshipsRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedProjectsRoute: typeof AuthenticatedProjectsRoute
+  AuthenticatedStartupsRoute: typeof AuthenticatedStartupsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -182,27 +183,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/startups': {
-      id: '/startups'
-      path: '/startups'
-      fullPath: '/startups'
-      preLoaderRoute: typeof StartupsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/projects': {
-      id: '/projects'
-      path: '/projects'
-      fullPath: '/projects'
-      preLoaderRoute: typeof ProjectsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/privacy': {
       id: '/privacy'
       path: '/privacy'
@@ -210,32 +190,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/internships': {
-      id: '/internships'
-      path: '/internships'
-      fullPath: '/internships'
-      preLoaderRoute: typeof InternshipsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/discover': {
-      id: '/discover'
-      path: '/discover'
-      fullPath: '/discover'
-      preLoaderRoute: typeof DiscoverRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/disclaimer': {
       id: '/disclaimer'
       path: '/disclaimer'
       fullPath: '/disclaimer'
       preLoaderRoute: typeof DisclaimerRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -252,21 +211,63 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/startups': {
+      id: '/_authenticated/startups'
+      path: '/startups'
+      fullPath: '/startups'
+      preLoaderRoute: typeof AuthenticatedStartupsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/projects': {
+      id: '/_authenticated/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof AuthenticatedProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/internships': {
+      id: '/_authenticated/internships'
+      path: '/internships'
+      fullPath: '/internships'
+      preLoaderRoute: typeof AuthenticatedInternshipsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/discover': {
+      id: '/_authenticated/discover'
+      path: '/discover'
+      fullPath: '/discover'
+      preLoaderRoute: typeof AuthenticatedDiscoverRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  DashboardRoute: DashboardRoute,
   DisclaimerRoute: DisclaimerRoute,
-  DiscoverRoute: DiscoverRoute,
-  InternshipsRoute: InternshipsRoute,
   PrivacyRoute: PrivacyRoute,
-  ProfileRoute: ProfileRoute,
-  ProjectsRoute: ProjectsRoute,
-  StartupsRoute: StartupsRoute,
   TermsRoute: TermsRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedDiscoverRoute: AuthenticatedDiscoverRoute,
+  AuthenticatedInternshipsRoute: AuthenticatedInternshipsRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedProjectsRoute: AuthenticatedProjectsRoute,
+  AuthenticatedStartupsRoute: AuthenticatedStartupsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
