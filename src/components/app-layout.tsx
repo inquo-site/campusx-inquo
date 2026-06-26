@@ -14,7 +14,7 @@ import {
 import type { ReactNode } from "react";
 
 const navItems = [
-  { to: "/", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/discover", label: "Discover Peers", icon: Users },
   { to: "/projects", label: "Project Hub", icon: FolderGit2 },
   { to: "/internships", label: "Internship Board", icon: Briefcase },
@@ -23,7 +23,7 @@ const navItems = [
 ] as const;
 
 const titleMap: Record<string, { eyebrow: string; title: string; italic: string }> = {
-  "/": { eyebrow: "Home", title: "Builders that", italic: "ship things" },
+  "/dashboard": { eyebrow: "Home", title: "Builders that", italic: "ship things" },
   "/discover": { eyebrow: "Network", title: "Peers who", italic: "build with you" },
   "/projects": { eyebrow: "Showcase", title: "Projects that", italic: "actually run" },
   "/internships": { eyebrow: "Opportunities", title: "Internships worth", italic: "your hours" },
