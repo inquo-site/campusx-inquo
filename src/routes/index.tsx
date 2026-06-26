@@ -57,11 +57,8 @@ const features = [
   { icon: Rocket, title: "Startup", italic: "incubator", body: "Pitch ideas, find co-founders, ship before graduation." },
 ];
 
-const how = [
-  { step: "01", title: "Create your builder profile", body: "Add your skills, stack, and the things you've shipped." },
-  { step: "02", title: "Discover the right people", body: "Filter peers by skill and openness to collaborate." },
-  { step: "03", title: "Ship something real", body: "Form teams, build projects, apply to internships, launch startups." },
-];
+
+
 
 const why = [
   { icon: Target, title: "Built for", italic: "students", body: "Not LinkedIn. Not a job board. A workspace for people who actually want to build." },
