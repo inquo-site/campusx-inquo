@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing-layout";
 import { HowItWorks } from "@/components/how-it-works";
+import { HeroOrbit, TechMarquee, LiveStats, LiveTicker } from "@/components/landing-visuals";
 
 export const Route = createFileRoute("/")({
   head: () => ({
