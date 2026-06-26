@@ -17,8 +17,10 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedStartupsRouteImport } from './routes/_authenticated/startups'
+import { Route as AuthenticatedResumeRouteImport } from './routes/_authenticated/resume'
 import { Route as AuthenticatedProjectsRouteImport } from './routes/_authenticated/projects'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedMentorRouteImport } from './routes/_authenticated/mentor'
 import { Route as AuthenticatedInternshipsRouteImport } from './routes/_authenticated/internships'
 import { Route as AuthenticatedDiscoverRouteImport } from './routes/_authenticated/discover'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -62,6 +64,11 @@ const AuthenticatedStartupsRoute = AuthenticatedStartupsRouteImport.update({
   path: '/startups',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedResumeRoute = AuthenticatedResumeRouteImport.update({
+  id: '/resume',
+  path: '/resume',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedProjectsRoute = AuthenticatedProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
@@ -70,6 +77,11 @@ const AuthenticatedProjectsRoute = AuthenticatedProjectsRouteImport.update({
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMentorRoute = AuthenticatedMentorRouteImport.update({
+  id: '/mentor',
+  path: '/mentor',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedInternshipsRoute =
@@ -99,8 +111,10 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/discover': typeof AuthenticatedDiscoverRoute
   '/internships': typeof AuthenticatedInternshipsRoute
+  '/mentor': typeof AuthenticatedMentorRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/projects': typeof AuthenticatedProjectsRoute
+  '/resume': typeof AuthenticatedResumeRoute
   '/startups': typeof AuthenticatedStartupsRoute
 }
 export interface FileRoutesByTo {
@@ -113,8 +127,10 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/discover': typeof AuthenticatedDiscoverRoute
   '/internships': typeof AuthenticatedInternshipsRoute
+  '/mentor': typeof AuthenticatedMentorRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/projects': typeof AuthenticatedProjectsRoute
+  '/resume': typeof AuthenticatedResumeRoute
   '/startups': typeof AuthenticatedStartupsRoute
 }
 export interface FileRoutesById {
@@ -129,8 +145,10 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/discover': typeof AuthenticatedDiscoverRoute
   '/_authenticated/internships': typeof AuthenticatedInternshipsRoute
+  '/_authenticated/mentor': typeof AuthenticatedMentorRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/projects': typeof AuthenticatedProjectsRoute
+  '/_authenticated/resume': typeof AuthenticatedResumeRoute
   '/_authenticated/startups': typeof AuthenticatedStartupsRoute
 }
 export interface FileRouteTypes {
@@ -145,8 +163,10 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/discover'
     | '/internships'
+    | '/mentor'
     | '/profile'
     | '/projects'
+    | '/resume'
     | '/startups'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -159,8 +179,10 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/discover'
     | '/internships'
+    | '/mentor'
     | '/profile'
     | '/projects'
+    | '/resume'
     | '/startups'
   id:
     | '__root__'
@@ -174,8 +196,10 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/discover'
     | '/_authenticated/internships'
+    | '/_authenticated/mentor'
     | '/_authenticated/profile'
     | '/_authenticated/projects'
+    | '/_authenticated/resume'
     | '/_authenticated/startups'
   fileRoutesById: FileRoutesById
 }
@@ -247,6 +271,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStartupsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/resume': {
+      id: '/_authenticated/resume'
+      path: '/resume'
+      fullPath: '/resume'
+      preLoaderRoute: typeof AuthenticatedResumeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/projects': {
       id: '/_authenticated/projects'
       path: '/projects'
@@ -259,6 +290,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/mentor': {
+      id: '/_authenticated/mentor'
+      path: '/mentor'
+      fullPath: '/mentor'
+      preLoaderRoute: typeof AuthenticatedMentorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/internships': {
@@ -289,8 +327,10 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDiscoverRoute: typeof AuthenticatedDiscoverRoute
   AuthenticatedInternshipsRoute: typeof AuthenticatedInternshipsRoute
+  AuthenticatedMentorRoute: typeof AuthenticatedMentorRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedProjectsRoute: typeof AuthenticatedProjectsRoute
+  AuthenticatedResumeRoute: typeof AuthenticatedResumeRoute
   AuthenticatedStartupsRoute: typeof AuthenticatedStartupsRoute
 }
 
@@ -298,8 +338,10 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDiscoverRoute: AuthenticatedDiscoverRoute,
   AuthenticatedInternshipsRoute: AuthenticatedInternshipsRoute,
+  AuthenticatedMentorRoute: AuthenticatedMentorRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedProjectsRoute: AuthenticatedProjectsRoute,
+  AuthenticatedResumeRoute: AuthenticatedResumeRoute,
   AuthenticatedStartupsRoute: AuthenticatedStartupsRoute,
 }
 
