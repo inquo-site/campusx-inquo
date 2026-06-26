@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -119,14 +120,16 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+const MARKETING_ROUTES = new Set(["/", "/about", "/privacy", "/terms", "/disclaimer"]);
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isMarketing = MARKETING_ROUTES.has(pathname);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AppLayout>
-        <Outlet />
-      </AppLayout>
+      {isMarketing ? <Outlet /> : <AppLayout><Outlet /></AppLayout>}
     </QueryClientProvider>
   );
 }
