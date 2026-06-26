@@ -1,4 +1,4 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import {
   LayoutDashboard,
@@ -10,8 +10,14 @@ import {
   Search,
   Bell,
   ArrowUpRight,
+  Sparkles,
+  FileText,
+  LogOut,
 } from "lucide-react";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { useAuth } from "@/hooks/use-auth";
+import { supabase } from "@/integrations/supabase/client";
+import { useQueryClient } from "@tanstack/react-query";
 
 const navItems = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -19,6 +25,8 @@ const navItems = [
   { to: "/projects", label: "Project Hub", icon: FolderGit2 },
   { to: "/internships", label: "Internship Board", icon: Briefcase },
   { to: "/startups", label: "Startup Incubator", icon: Rocket },
+  { to: "/mentor", label: "AI Mentor", icon: Sparkles },
+  { to: "/resume", label: "Resume Builder", icon: FileText },
   { to: "/profile", label: "My Profile", icon: UserCircle },
 ] as const;
 
@@ -28,32 +36,51 @@ const titleMap: Record<string, { eyebrow: string; title: string; italic: string 
   "/projects": { eyebrow: "Showcase", title: "Projects that", italic: "actually run" },
   "/internships": { eyebrow: "Opportunities", title: "Internships worth", italic: "your hours" },
   "/startups": { eyebrow: "Incubator", title: "Founders looking for", italic: "a co-pilot" },
+  "/mentor": { eyebrow: "Mentor", title: "An AI mentor that", italic: "actually knows code" },
+  "/resume": { eyebrow: "Resume", title: "Your resume,", italic: "AI-polished" },
   "/profile": { eyebrow: "You", title: "Your builder", italic: "footprint" },
 };
 
 export function AppLayout({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const head = titleMap[pathname] ?? titleMap["/"];
+  const head = titleMap[pathname] ?? titleMap["/dashboard"];
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [displayName, setDisplayName] = useState("");
+  const [college, setCollege] = useState("");
+
+  useEffect(() => {
+    if (!user) return;
+    supabase.from("profiles").select("full_name, college").eq("id", user.id).maybeSingle().then(({ data }) => {
+      setDisplayName(data?.full_name ?? user.email?.split("@")[0] ?? "Builder");
+      setCollege(data?.college ?? "Campus X");
+    });
+  }, [user]);
+
+  const signOut = async () => {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/auth", replace: true });
+  };
+
+  const initial = (displayName || "B").charAt(0).toUpperCase();
 
   return (
     <div className="flex min-h-screen w-full bg-background">
-      {/* Sidebar */}
       <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-border bg-sidebar text-sidebar-foreground lg:flex">
-        <div className="flex h-20 items-center gap-3 px-6">
-          <div className="grid h-9 w-9 place-items-center rounded-md border border-gold/40 bg-gold/10 font-display text-xl italic text-gold">
-            X
-          </div>
+        <Link to="/" className="flex h-20 items-center gap-3 px-6">
+          <div className="grid h-9 w-9 place-items-center rounded-md border border-gold/40 bg-gold/10 font-display text-xl italic text-gold">X</div>
           <div className="font-display text-2xl leading-none">
             Campus<span className="italic-serif">X</span>
           </div>
-        </div>
+        </Link>
 
         <div className="hairline mx-6" />
 
-        <nav className="flex-1 px-3 py-5">
-          <div className="px-3 pb-3 text-[10px] font-medium uppercase tracking-[0.22em] text-sidebar-foreground/40">
-            — Workspace
-          </div>
+        <nav className="flex-1 overflow-y-auto px-3 py-5">
+          <div className="px-3 pb-3 text-[10px] font-medium uppercase tracking-[0.22em] text-sidebar-foreground/40">— Workspace</div>
           <ul className="space-y-0.5">
             {navItems.map((item) => {
               const active = pathname === item.to;
@@ -64,9 +91,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
                     to={item.to}
                     className={
                       "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-300 " +
-                      (active
-                        ? "bg-sidebar-accent text-cream"
-                        : "text-sidebar-foreground/65 hover:text-cream")
+                      (active ? "bg-sidebar-accent text-cream" : "text-sidebar-foreground/65 hover:text-cream")
                     }
                   >
                     {active && (
@@ -86,17 +111,14 @@ export function AppLayout({ children }: { children: ReactNode }) {
           </ul>
         </nav>
 
-        <div className="m-3 overflow-hidden rounded-xl border border-border bg-sidebar-accent p-5">
-          <div className="font-display text-lg leading-tight">
-            Ship something <span className="italic-serif">real</span> this week.
-          </div>
-          <p className="mt-2 text-xs leading-relaxed text-sidebar-foreground/60">
-            Post a project, find a collaborator, win demo day.
-          </p>
-        </div>
+        <button
+          onClick={signOut}
+          className="mx-3 mb-3 inline-flex items-center gap-2 rounded-lg border border-border bg-sidebar-accent px-3 py-2.5 text-xs text-sidebar-foreground/70 hover:text-cream"
+        >
+          <LogOut className="h-3.5 w-3.5" /> Sign out
+        </button>
       </aside>
 
-      {/* Main column */}
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-30 grid h-20 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b border-border bg-background/70 px-4 backdrop-blur-xl md:flex md:px-8">
           <div className="min-w-0 flex-1">
@@ -120,27 +142,20 @@ export function AppLayout({ children }: { children: ReactNode }) {
               <input
                 type="search"
                 placeholder="Search peers, projects, internships…"
-                className="h-10 w-80 rounded-full border border-border bg-surface pl-10 pr-4 text-sm outline-none transition focus:border-gold/60"
+                className="h-10 w-72 rounded-full border border-border bg-surface pl-10 pr-4 text-sm outline-none transition focus:border-gold/60"
               />
             </div>
-
-            <button
-              className="relative grid h-10 w-10 place-items-center rounded-full border border-border bg-surface transition hover:border-gold/40"
-              aria-label="Notifications"
-            >
+            <button className="relative grid h-10 w-10 place-items-center rounded-full border border-border bg-surface hover:border-gold/40" aria-label="Notifications">
               <Bell className="h-4 w-4" />
               <span className="absolute right-2.5 top-2.5 h-1.5 w-1.5 rounded-full bg-gold" />
             </button>
-
-            <div className="flex items-center gap-3 rounded-full border border-border bg-surface py-1 pl-1 pr-4">
-              <div className="grid h-8 w-8 place-items-center rounded-full bg-gold font-display text-sm text-primary-foreground">
-                A
-              </div>
+            <Link to="/profile" className="flex items-center gap-3 rounded-full border border-border bg-surface py-1 pl-1 pr-4 hover:border-gold/40">
+              <div className="grid h-8 w-8 place-items-center rounded-full bg-gold font-display text-sm text-primary-foreground">{initial}</div>
               <div className="text-left">
-                <div className="text-xs font-medium leading-tight">Ananya K.</div>
-                <div className="text-[10px] leading-tight text-muted-foreground">IIT Bombay</div>
+                <div className="text-xs font-medium leading-tight">{displayName || "Builder"}</div>
+                <div className="text-[10px] leading-tight text-muted-foreground">{college || "Campus X"}</div>
               </div>
-            </div>
+            </Link>
           </div>
         </header>
 
