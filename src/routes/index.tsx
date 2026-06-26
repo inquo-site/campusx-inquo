@@ -172,6 +172,13 @@ function Landing() {
       {/* How */}
       <HowItWorks />
 
+      {/* Live stats counters */}
+      <LiveStats />
+
+      {/* Live commit ticker */}
+      <LiveTicker />
+
+
 
       {/* Why */}
       <section className="px-4 py-20 md:px-8">
