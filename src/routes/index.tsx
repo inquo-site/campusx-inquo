@@ -14,6 +14,7 @@ import {
   Quote,
 } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing-layout";
+import { HowItWorks } from "@/components/how-it-works";
 
 export const Route = createFileRoute("/")({
   head: () => ({
