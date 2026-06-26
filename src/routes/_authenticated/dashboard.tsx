@@ -122,7 +122,7 @@ function Dashboard() {
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
                     <span className="rounded-full border border-gold/30 px-2 py-0.5 text-gold">{item.tag}</span>
-                    <span>{new Date(item.t).toLocaleDateString()}</span>
+                    <span>{item.t ? new Date(item.t).toLocaleDateString() : ""}</span>
                   </div>
                   <h4 className="mt-2 font-display text-xl leading-snug">{item.title}</h4>
                   <p className="mt-1.5 line-clamp-2 text-sm text-muted-foreground">{item.body}</p>
