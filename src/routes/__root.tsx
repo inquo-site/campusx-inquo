@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -123,7 +124,7 @@ const MARKETING_ROUTES = new Set(["/", "/about", "/privacy", "/terms", "/disclai
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const pathname = useRouterStateOrEmpty();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isMarketing = MARKETING_ROUTES.has(pathname);
 
   return (
@@ -131,9 +132,4 @@ function RootComponent() {
       {isMarketing ? <Outlet /> : <AppLayout><Outlet /></AppLayout>}
     </QueryClientProvider>
   );
-}
-
-function useRouterStateOrEmpty() {
-  const router = useRouter();
-  return router.state.location.pathname;
 }
