@@ -14,7 +14,338 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      ai_messages: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      connections: {
+        Row: {
+          addressee_id: string
+          created_at: string | null
+          id: string
+          requester_id: string
+          status: string
+        }
+        Insert: {
+          addressee_id: string
+          created_at?: string | null
+          id?: string
+          requester_id: string
+          status?: string
+        }
+        Update: {
+          addressee_id?: string
+          created_at?: string | null
+          id?: string
+          requester_id?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      internship_applications: {
+        Row: {
+          applicant_id: string
+          cover_note: string | null
+          created_at: string | null
+          id: string
+          internship_id: string
+          resume_snapshot: Json | null
+          status: string
+        }
+        Insert: {
+          applicant_id: string
+          cover_note?: string | null
+          created_at?: string | null
+          id?: string
+          internship_id: string
+          resume_snapshot?: Json | null
+          status?: string
+        }
+        Update: {
+          applicant_id?: string
+          cover_note?: string | null
+          created_at?: string | null
+          id?: string
+          internship_id?: string
+          resume_snapshot?: Json | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "internship_applications_internship_id_fkey"
+            columns: ["internship_id"]
+            isOneToOne: false
+            referencedRelation: "internships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      internships: {
+        Row: {
+          apply_url: string | null
+          company: string
+          created_at: string | null
+          description: string | null
+          duration: string | null
+          id: string
+          location: string | null
+          posted_by: string | null
+          requirements: string[] | null
+          stipend: string | null
+          tech_stack: string[] | null
+          title: string
+        }
+        Insert: {
+          apply_url?: string | null
+          company: string
+          created_at?: string | null
+          description?: string | null
+          duration?: string | null
+          id?: string
+          location?: string | null
+          posted_by?: string | null
+          requirements?: string[] | null
+          stipend?: string | null
+          tech_stack?: string[] | null
+          title: string
+        }
+        Update: {
+          apply_url?: string | null
+          company?: string
+          created_at?: string | null
+          description?: string | null
+          duration?: string | null
+          id?: string
+          location?: string | null
+          posted_by?: string | null
+          requirements?: string[] | null
+          stipend?: string | null
+          tech_stack?: string[] | null
+          title?: string
+        }
+        Relationships: []
+      }
+      join_requests: {
+        Row: {
+          created_at: string | null
+          id: string
+          message: string | null
+          requester_id: string
+          role: string | null
+          status: string
+          target_id: string
+          target_type: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          message?: string | null
+          requester_id: string
+          role?: string | null
+          status?: string
+          target_id: string
+          target_type: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          message?: string | null
+          requester_id?: string
+          role?: string | null
+          status?: string
+          target_id?: string
+          target_type?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          college: string | null
+          created_at: string | null
+          full_name: string | null
+          github_url: string | null
+          id: string
+          linkedin_url: string | null
+          location: string | null
+          looking_for: string[] | null
+          open_to_collab: boolean | null
+          skills: string[] | null
+          updated_at: string | null
+          website_url: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          college?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          github_url?: string | null
+          id: string
+          linkedin_url?: string | null
+          location?: string | null
+          looking_for?: string[] | null
+          open_to_collab?: boolean | null
+          skills?: string[] | null
+          updated_at?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          college?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          github_url?: string | null
+          id?: string
+          linkedin_url?: string | null
+          location?: string | null
+          looking_for?: string[] | null
+          open_to_collab?: boolean | null
+          skills?: string[] | null
+          updated_at?: string | null
+          website_url?: string | null
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          created_at: string | null
+          description: string
+          github_url: string | null
+          id: string
+          live_url: string | null
+          owner_id: string
+          roles_needed: string[] | null
+          tag: string | null
+          tech_stack: string[] | null
+          title: string
+        }
+        Insert: {
+          created_at?: string | null
+          description: string
+          github_url?: string | null
+          id?: string
+          live_url?: string | null
+          owner_id: string
+          roles_needed?: string[] | null
+          tag?: string | null
+          tech_stack?: string[] | null
+          title: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string
+          github_url?: string | null
+          id?: string
+          live_url?: string | null
+          owner_id?: string
+          roles_needed?: string[] | null
+          tag?: string | null
+          tech_stack?: string[] | null
+          title?: string
+        }
+        Relationships: []
+      }
+      resumes: {
+        Row: {
+          achievements: Json | null
+          education: Json | null
+          email: string | null
+          experiences: Json | null
+          headline: string | null
+          links: Json | null
+          location: string | null
+          phone: string | null
+          projects: Json | null
+          skills: string[] | null
+          summary: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          achievements?: Json | null
+          education?: Json | null
+          email?: string | null
+          experiences?: Json | null
+          headline?: string | null
+          links?: Json | null
+          location?: string | null
+          phone?: string | null
+          projects?: Json | null
+          skills?: string[] | null
+          summary?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          achievements?: Json | null
+          education?: Json | null
+          email?: string | null
+          experiences?: Json | null
+          headline?: string | null
+          links?: Json | null
+          location?: string | null
+          phone?: string | null
+          projects?: Json | null
+          skills?: string[] | null
+          summary?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      startup_ideas: {
+        Row: {
+          created_at: string | null
+          founder_id: string
+          id: string
+          pitch: string
+          roles_needed: string[] | null
+          stage: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string | null
+          founder_id: string
+          id?: string
+          pitch: string
+          roles_needed?: string[] | null
+          stage?: string | null
+          title: string
+        }
+        Update: {
+          created_at?: string | null
+          founder_id?: string
+          id?: string
+          pitch?: string
+          roles_needed?: string[] | null
+          stage?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
