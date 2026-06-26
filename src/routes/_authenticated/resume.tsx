@@ -52,17 +52,36 @@ function ResumeBuilder() {
   });
 
   useEffect(() => {
-    if (resume?.content) setData({ ...blank(), ...(resume.content as ResumeData) });
-    else if (user) {
+    if (resume) {
+      setData((d) => ({
+        ...d,
+        full_name: d.full_name,
+        headline: resume.headline ?? d.headline,
+        email: resume.email ?? "",
+        phone: resume.phone ?? "",
+        location: resume.location ?? "",
+        links: (resume.links as ResumeData["links"]) ?? d.links,
+        summary: resume.summary ?? "",
+        skills: (resume.skills ?? []).join(", "),
+        experience: (resume.experiences as Exp[] | null) ?? [],
+        projects: (resume.projects as Proj[] | null) ?? [],
+        education: (resume.education as Edu[] | null) ?? [],
+      }));
+    }
+    if (user) {
       supabase.from("profiles").select("full_name,bio,skills,github_url,linkedin_url,website_url,location").eq("id", user.id).maybeSingle().then(({ data: p }) => {
         if (p) setData((d) => ({
           ...d,
-          full_name: p.full_name ?? "",
-          email: user.email ?? "",
-          location: p.location ?? "",
-          summary: p.bio ?? "",
-          skills: (p.skills ?? []).join(", "),
-          links: { github: p.github_url ?? "", linkedin: p.linkedin_url ?? "", website: p.website_url ?? "" },
+          full_name: d.full_name || (p.full_name ?? ""),
+          email: d.email || (user.email ?? ""),
+          location: d.location || (p.location ?? ""),
+          summary: d.summary || (p.bio ?? ""),
+          skills: d.skills || (p.skills ?? []).join(", "),
+          links: {
+            github: d.links.github || (p.github_url ?? ""),
+            linkedin: d.links.linkedin || (p.linkedin_url ?? ""),
+            website: d.links.website || (p.website_url ?? ""),
+          },
         }));
       });
     }
@@ -70,7 +89,20 @@ function ResumeBuilder() {
 
   const save = useMutation({
     mutationFn: async () => {
-      const { error } = await supabase.from("resumes").upsert({ user_id: user!.id, content: data, updated_at: new Date().toISOString() }, { onConflict: "user_id" });
+      const { error } = await supabase.from("resumes").upsert({
+        user_id: user!.id,
+        headline: data.headline,
+        email: data.email,
+        phone: data.phone,
+        location: data.location,
+        links: data.links as never,
+        summary: data.summary,
+        skills: data.skills.split(",").map((s) => s.trim()).filter(Boolean),
+        experiences: data.experience as never,
+        projects: data.projects as never,
+        education: data.education as never,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: "user_id" });
       if (error) throw error;
     },
     onSuccess: () => { toast.success("Resume saved"); qc.invalidateQueries({ queryKey: ["resume"] }); },
