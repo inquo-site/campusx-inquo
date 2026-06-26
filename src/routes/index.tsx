@@ -128,8 +128,13 @@ function Landing() {
               About the founder
             </Link>
           </motion.div>
+
+          <HeroOrbit />
         </div>
       </section>
+
+      {/* Tech marquee */}
+      <TechMarquee />
 
       {/* Features */}
       <section className="px-4 py-20 md:px-8">
