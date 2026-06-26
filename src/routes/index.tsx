@@ -164,32 +164,8 @@ function Landing() {
       </section>
 
       {/* How */}
-      <section className="px-4 py-20 md:px-8">
-        <div className="mx-auto max-w-5xl">
-          <div className="mb-12 text-center">
-            <div className="text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground">— How it works</div>
-            <h2 className="mt-3 font-display text-4xl md:text-5xl">
-              From profile to <span className="italic-serif">production</span>.
-            </h2>
-          </div>
-          <div className="grid gap-6 md:grid-cols-3">
-            {how.map((h, i) => (
-              <motion.div
-                key={h.step}
-                initial={{ opacity: 0, y: 14 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="card-noir card-noir-hover rounded-2xl p-7"
-              >
-                <div className="font-mono text-xs text-gold">{h.step}</div>
-                <h3 className="mt-4 font-display text-2xl leading-tight">{h.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{h.body}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <HowItWorks />
+
 
       {/* Why */}
       <section className="px-4 py-20 md:px-8">
