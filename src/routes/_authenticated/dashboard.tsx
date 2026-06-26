@@ -46,7 +46,7 @@ function Dashboard() {
         ...(p.data ?? []).map((x) => ({ kind: "project" as const, icon: FolderGit2, tag: "New project", title: x.title, body: x.description, meta: x.tech_stack?.join(" · "), t: x.created_at })),
         ...(s.data ?? []).map((x) => ({ kind: "startup" as const, icon: Rocket, tag: "Team forming", title: x.title, body: x.pitch, meta: x.roles_needed?.join(" · "), t: x.created_at })),
         ...(i.data ?? []).map((x) => ({ kind: "internship" as const, icon: Briefcase, tag: "Internship", title: `${x.title} @ ${x.company}`, body: x.stipend ?? "", meta: "", t: x.created_at })),
-      ].sort((a, b) => (a.t > b.t ? -1 : 1));
+      ].sort((a, b) => ((a.t ?? "") > (b.t ?? "") ? -1 : 1));
       return items;
     },
   });
