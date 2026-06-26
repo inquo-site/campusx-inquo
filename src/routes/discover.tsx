@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { motion } from "motion/react";
 import { useState } from "react";
-import { Search, ChevronDown, Check } from "lucide-react";
+import { Search, ChevronDown, Check, ArrowUpRight } from "lucide-react";
 
 export const Route = createFileRoute("/discover")({
   component: Discover,
@@ -9,14 +10,14 @@ export const Route = createFileRoute("/discover")({
 const ALL_SKILLS = ["React", "TypeScript", "Python", "Go", "Rust", "ML/AI", "Design", "Product", "Solidity", "Unity"];
 
 const PEERS = [
-  { name: "Raghav Mehta", college: "IIT Bombay", skills: ["Rust", "Go", "Systems"], open: true },
-  { name: "Aisha Verma", college: "BITS Pilani", skills: ["React", "Design", "Product"], open: true },
-  { name: "Kenji Tanaka", college: "NUS Singapore", skills: ["ML/AI", "Python"], open: false },
-  { name: "Priya Nair", college: "NIT Trichy", skills: ["TypeScript", "React", "Node"], open: true },
-  { name: "Diego Alvarez", college: "Stanford", skills: ["Solidity", "Rust"], open: true },
-  { name: "Mei Lin", college: "Tsinghua", skills: ["ML/AI", "Go"], open: false },
-  { name: "Arjun Khanna", college: "IIIT Hyderabad", skills: ["Unity", "C#"], open: true },
-  { name: "Sara Okonkwo", college: "MIT", skills: ["Python", "ML/AI", "Product"], open: true },
+  { name: "Raghav Mehta", college: "IIT Bombay", skills: ["Rust", "Go", "Systems"], open: true, tag: "Systems" },
+  { name: "Aisha Verma", college: "BITS Pilani", skills: ["React", "Design", "Product"], open: true, tag: "Product" },
+  { name: "Kenji Tanaka", college: "NUS Singapore", skills: ["ML/AI", "Python"], open: false, tag: "Research" },
+  { name: "Priya Nair", college: "NIT Trichy", skills: ["TypeScript", "React", "Node"], open: true, tag: "Full-stack" },
+  { name: "Diego Alvarez", college: "Stanford", skills: ["Solidity", "Rust"], open: true, tag: "Web3" },
+  { name: "Mei Lin", college: "Tsinghua", skills: ["ML/AI", "Go"], open: false, tag: "Infra" },
+  { name: "Arjun Khanna", college: "IIIT Hyderabad", skills: ["Unity", "C#"], open: true, tag: "Games" },
+  { name: "Sara Okonkwo", college: "MIT", skills: ["Python", "ML/AI", "Product"], open: true, tag: "Founder" },
 ];
 
 function Discover() {
@@ -36,16 +37,21 @@ function Discover() {
     setSelected((cur) => (cur.includes(s) ? cur.filter((x) => x !== s) : [...cur, s]));
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6">
+    <div className="mx-auto max-w-6xl space-y-8">
+      <p className="max-w-xl text-sm text-muted-foreground">
+        Hand-picked student builders across colleges. Filter by skills, find who's{" "}
+        <span className="italic-serif">open to collaborate</span>, and start a conversation.
+      </p>
+
       {/* Filter bar */}
-      <div className="flex flex-col gap-3 rounded-2xl border border-border bg-surface p-4 md:flex-row md:items-center">
+      <div className="card-noir flex flex-col gap-3 rounded-2xl p-3 md:flex-row md:items-center">
         <div className="relative min-w-0 flex-1">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search by name or college"
-            className="h-11 w-full rounded-xl border border-border bg-background pl-10 pr-4 text-sm outline-none focus:border-ring focus:ring-2 focus:ring-ring/20"
+            className="h-11 w-full rounded-xl border border-border bg-background pl-10 pr-4 text-sm outline-none focus:border-gold/60"
           />
         </div>
 
@@ -60,7 +66,11 @@ function Discover() {
             <ChevronDown className="h-4 w-4 opacity-60" />
           </button>
           {skillsOpen && (
-            <div className="absolute right-0 z-20 mt-2 w-64 overflow-hidden rounded-xl border border-border bg-popover p-2 shadow-lg">
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="absolute right-0 z-20 mt-2 w-64 overflow-hidden rounded-xl border border-border bg-popover p-2 shadow-2xl shadow-black/40"
+            >
               {ALL_SKILLS.map((s) => {
                 const on = selected.includes(s);
                 return (
@@ -69,12 +79,12 @@ function Discover() {
                     onClick={() => toggleSkill(s)}
                     className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm hover:bg-muted"
                   >
-                    {s}
-                    {on && <Check className="h-4 w-4 text-foreground" />}
+                    <span className={on ? "text-gold" : ""}>{s}</span>
+                    {on && <Check className="h-4 w-4 text-gold" />}
                   </button>
                 );
               })}
-            </div>
+            </motion.div>
           )}
         </div>
 
@@ -84,12 +94,14 @@ function Discover() {
             onClick={() => setOpenOnly((o) => !o)}
             className={
               "relative inline-block h-5 w-9 rounded-full transition " +
-              (openOnly ? "bg-lime" : "bg-muted")
+              (openOnly ? "bg-gold" : "bg-muted")
             }
           >
-            <span
+            <motion.span
+              layout
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
               className={
-                "absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition " +
+                "absolute top-0.5 h-4 w-4 rounded-full bg-background shadow " +
                 (openOnly ? "left-[18px]" : "left-0.5")
               }
             />
@@ -97,44 +109,55 @@ function Discover() {
         </label>
       </div>
 
-      <div className="text-xs text-muted-foreground">
-        {filtered.length} peer{filtered.length !== 1 ? "s" : ""} matched
+      <div className="font-mono text-xs text-muted-foreground">
+        {String(filtered.length).padStart(3, "0")} / {String(PEERS.length).padStart(3, "0")} peers
       </div>
 
       {/* Peer grid */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {filtered.map((p) => (
-          <article
+      <div className="grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
+        {filtered.map((p, i) => (
+          <motion.article
             key={p.name}
-            className="group flex flex-col rounded-2xl border border-border bg-surface p-5 transition hover:-translate-y-0.5 hover:border-foreground/30 hover:shadow-sm"
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-30px" }}
+            transition={{ duration: 0.45, delay: (i % 6) * 0.05 }}
+            className="card-noir-hover group flex flex-col bg-surface p-7"
           >
-            <div className="flex items-start gap-3">
-              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-ink font-display font-bold text-ink-foreground">
-                {p.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
-              </div>
-              <div className="min-w-0 flex-1">
-                <h3 className="truncate font-display text-base font-semibold">{p.name}</h3>
-                <p className="truncate text-xs text-muted-foreground">{p.college}</p>
+            <div className="mb-6 flex items-start justify-between">
+              <div className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                — {p.tag}
               </div>
               {p.open && (
-                <span className="rounded-full bg-lime px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-lime-foreground">
+                <span className="rounded-full border border-gold/40 bg-gold/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-gold">
                   Open
                 </span>
               )}
             </div>
 
-            <div className="mt-4 flex flex-wrap gap-1.5">
+            <div className="flex items-center gap-3">
+              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-gold/30 bg-gold/10 font-display text-lg italic text-gold">
+                {p.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
+              </div>
+              <div className="min-w-0">
+                <h3 className="truncate font-display text-xl leading-tight">{p.name}</h3>
+                <p className="truncate text-xs text-muted-foreground">{p.college}</p>
+              </div>
+            </div>
+
+            <div className="mt-5 flex flex-wrap gap-1.5">
               {p.skills.map((s) => (
-                <span key={s} className="rounded-md bg-muted px-2 py-1 text-xs font-medium text-foreground">
+                <span key={s} className="rounded-md border border-border bg-background px-2 py-1 font-mono text-[10px] font-medium text-foreground/80">
                   {s}
                 </span>
               ))}
             </div>
 
-            <button className="mt-5 w-full rounded-xl bg-ink py-2.5 text-sm font-semibold text-ink-foreground transition hover:bg-ink/90">
+            <button className="mt-6 inline-flex items-center justify-between gap-2 rounded-xl border border-border bg-background px-4 py-3 text-sm font-medium transition group-hover:border-gold/40 group-hover:text-gold">
               Connect
+              <ArrowUpRight className="h-3.5 w-3.5" />
             </button>
-          </article>
+          </motion.article>
         ))}
       </div>
     </div>
