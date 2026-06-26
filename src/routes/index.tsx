@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing-layout";
 import { HowItWorks } from "@/components/how-it-works";
+import { HeroOrbit, TechMarquee, LiveStats, LiveTicker } from "@/components/landing-visuals";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -127,8 +128,13 @@ function Landing() {
               About the founder
             </Link>
           </motion.div>
+
+          <HeroOrbit />
         </div>
       </section>
+
+      {/* Tech marquee */}
+      <TechMarquee />
 
       {/* Features */}
       <section className="px-4 py-20 md:px-8">
@@ -165,6 +171,13 @@ function Landing() {
 
       {/* How */}
       <HowItWorks />
+
+      {/* Live stats counters */}
+      <LiveStats />
+
+      {/* Live commit ticker */}
+      <LiveTicker />
+
 
 
       {/* Why */}
