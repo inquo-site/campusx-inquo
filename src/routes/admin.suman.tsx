@@ -139,6 +139,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
 
   const tabs: { id: Tab; label: string }[] = [
     { id: "overview", label: "Overview" },
+    { id: "blog", label: "Blog" },
     { id: "rooms", label: "Moderate Rooms" },
     { id: "jobs", label: "Curate Jobs" },
     { id: "profiles", label: "Feature Profiles" },
@@ -146,6 +147,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     { id: "analytics", label: "Analytics" },
     { id: "promo", label: "Promo Codes" },
   ];
+
 
   return (
     <div className="min-h-screen bg-background">
