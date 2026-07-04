@@ -3,6 +3,8 @@ import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { MarketingLayout } from "@/components/marketing-layout";
 import { getBlogBySlug } from "@/lib/blog.functions";
 import { ArrowLeft, Clock } from "lucide-react";
+import DOMPurify from "isomorphic-dompurify";
+
 
 const blogQO = (slug: string) =>
   queryOptions({
