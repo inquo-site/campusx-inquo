@@ -15,7 +15,8 @@ import {
 } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing-layout";
 import { HowItWorks } from "@/components/how-it-works";
-import { HeroOrbit, TechMarquee, LiveStats, LiveTicker } from "@/components/landing-visuals";
+import { TechMarquee, LiveStats, LiveTicker } from "@/components/landing-visuals";
+import { FeatureCarousel } from "@/components/feature-carousel";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -116,20 +117,17 @@ function Landing() {
           >
             <Link
               to="/dashboard"
-              className="group inline-flex items-center gap-2 rounded-full bg-gold px-6 py-3.5 text-sm font-medium text-primary-foreground transition hover:brightness-110"
+              className="btn-ink group"
             >
               Enter the workspace
-              <ArrowUpRight className="h-4 w-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </Link>
-            <Link
-              to="/about"
-              className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-6 py-3.5 text-sm font-medium hover:border-gold/40"
-            >
+            <Link to="/about" className="btn-ghost">
               About the founder
             </Link>
           </motion.div>
 
-          <HeroOrbit />
+          <FeatureCarousel />
         </div>
       </section>
 
@@ -262,12 +260,9 @@ function Landing() {
           <p className="mx-auto mt-5 max-w-lg text-sm text-muted-foreground">
             Join the workspace where India's next generation of builders meet.
           </p>
-          <Link
-            to="/dashboard"
-            className="group mt-8 inline-flex items-center gap-2 rounded-full bg-gold px-7 py-4 text-sm font-medium text-primary-foreground transition hover:brightness-110"
-          >
+          <Link to="/dashboard" className="btn-ink group mt-8">
             Enter Campus X
-            <ArrowUpRight className="h-4 w-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </Link>
         </div>
       </section>
