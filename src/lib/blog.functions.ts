@@ -132,6 +132,7 @@ export const adminUpsertBlog = createServerFn({ method: "POST" })
       slug: finalSlug,
       excerpt: data.excerpt ?? null,
       content: data.content,
+      content_format: data.content_format,
       cover_image: data.cover_image || null,
       tags: data.tags,
       status: data.status,
