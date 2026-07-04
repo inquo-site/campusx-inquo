@@ -1234,3 +1234,137 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
     </label>
   );
 }
+
+function AgentPanel() {
+  const [input, setInput] = useState("");
+  const scrollerRef = useRef<HTMLDivElement | null>(null);
+
+  const { messages, sendMessage, status, error } = useChat({
+    transport: new DefaultChatTransport({
+      api: "/api/admin/agent-chat",
+      body: () => ({ token: getToken() }),
+    }),
+  });
+
+  useEffect(() => {
+    if (scrollerRef.current) {
+      scrollerRef.current.scrollTop = scrollerRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  const busy = status === "submitted" || status === "streaming";
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const text = input.trim();
+    if (!text || busy) return;
+    setInput("");
+    void sendMessage({ text });
+  };
+
+  const quickPrompts = [
+    "Give me a snapshot of the platform today.",
+    "Show the 5 most recent blog posts.",
+    "Draft a blog on ‘how Indian students can crack their first internship’.",
+    "How many new users joined recently and how active are the rooms?",
+  ];
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <h2 className="text-xl font-semibold">Campus X Admin Agent</h2>
+        <p className="text-xs text-muted-foreground">
+          Ask about users, blogs, rooms and jobs, or ask it to draft a blog. It calls real tools against the database.
+        </p>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        {quickPrompts.map((q) => (
+          <button
+            key={q}
+            type="button"
+            disabled={busy}
+            onClick={() => void sendMessage({ text: q })}
+            className="rounded-full border border-border bg-card px-3 py-1 text-xs hover:bg-accent disabled:opacity-50"
+          >
+            {q}
+          </button>
+        ))}
+      </div>
+
+      <div
+        ref={scrollerRef}
+        className="max-h-[60vh] min-h-[320px] space-y-4 overflow-y-auto rounded-2xl border border-border bg-card p-4"
+      >
+        {messages.length === 0 && (
+          <p className="text-sm text-muted-foreground">
+            Say hi 👋 — try one of the quick prompts, or ask anything about the platform.
+          </p>
+        )}
+        {messages.map((m) => {
+          const text = m.parts
+            .map((p) => (p.type === "text" ? p.text : ""))
+            .join("");
+          const toolCalls = m.parts.filter((p) => p.type.startsWith("tool-"));
+          return (
+            <div
+              key={m.id}
+              className={`rounded-xl border px-4 py-3 text-sm ${
+                m.role === "user"
+                  ? "border-primary/30 bg-primary/5"
+                  : "border-border bg-background"
+              }`}
+            >
+              <p className="mb-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                {m.role === "user" ? "You" : "Agent"}
+              </p>
+              {toolCalls.length > 0 && (
+                <div className="mb-2 flex flex-wrap gap-1.5">
+                  {toolCalls.map((tc, i) => (
+                    <span
+                      key={i}
+                      className="rounded-full border border-gold/30 bg-gold/10 px-2 py-0.5 text-[10px] uppercase tracking-wide text-gold"
+                    >
+                      🔧 {tc.type.replace(/^tool-/, "")}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {text ? (
+                <div className="prose prose-sm max-w-none prose-invert prose-p:my-2 prose-headings:mt-3 prose-headings:mb-2 prose-pre:my-2">
+                  <ReactMarkdown>{text}</ReactMarkdown>
+                </div>
+              ) : (
+                busy && m.role === "assistant" && (
+                  <p className="text-xs text-muted-foreground">Thinking…</p>
+                )
+              )}
+            </div>
+          );
+        })}
+        {error && (
+          <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+            {error.message}
+          </p>
+        )}
+      </div>
+
+      <form onSubmit={submit} className="flex gap-2">
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Ask the admin agent…"
+          className="flex-1 rounded-lg border border-input bg-background px-3 py-2 text-sm"
+          disabled={busy}
+        />
+        <button
+          type="submit"
+          disabled={busy || !input.trim()}
+          className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground disabled:opacity-50"
+        >
+          {busy ? "…" : "Send"}
+        </button>
+      </form>
+    </div>
+  );
+}
