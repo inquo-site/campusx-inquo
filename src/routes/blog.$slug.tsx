@@ -124,7 +124,9 @@ function BlogDetail() {
   const params = Route.useParams();
   const { data: post } = useSuspenseQuery(blogQO(params.slug));
   if (!post) return null;
-  const html = renderMarkdown(post.content || "");
+  const isHtml = (post as { content_format?: string }).content_format === "html";
+  const rawHtml = isHtml ? (post.content || "") : renderMarkdown(post.content || "");
+  const html = DOMPurify.sanitize(rawHtml, { USE_PROFILES: { html: true } });
   const dt = post.published_at ? new Date(post.published_at) : null;
 
   return (
