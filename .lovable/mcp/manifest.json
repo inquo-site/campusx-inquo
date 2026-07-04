@@ -1,0 +1,163 @@
+{
+  "version": 1,
+  "sdk_version": "0.20.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://tvwftotwlyjwdndllafm.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "campus-x-mcp",
+      "version": "0.1.0",
+      "title": "Campus X"
+    },
+    "tools": [
+      {
+        "name": "whoami",
+        "title": "Who am I",
+        "description": "Return the authenticated Campus X user's id and email.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_my_projects",
+        "title": "List my projects",
+        "description": "List projects owned by the signed-in Campus X user.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "description": "Max rows (default 20)."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_project",
+        "title": "Create a project",
+        "description": "Post a new project to the Campus X Project Hub, owned by the signed-in user.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 120
+            },
+            "description": {
+              "type": "string",
+              "minLength": 10,
+              "maxLength": 4000
+            },
+            "tech_stack": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 20
+            },
+            "tag": {
+              "type": "string",
+              "maxLength": 40
+            },
+            "github_url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "live_url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "roles_needed": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 20
+            }
+          },
+          "required": [
+            "title",
+            "description"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_internships",
+        "title": "Browse internships",
+        "description": "List available internships on Campus X, optionally filtered by keyword.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "maxLength": 120,
+              "description": "Match against title/company/description."
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_my_resume",
+        "title": "Get my resume",
+        "description": "Read the signed-in user's Campus X resume (structured JSON).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
