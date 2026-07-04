@@ -11,7 +11,7 @@ const blogsQO = () =>
     queryFn: () => listPublishedBlogs(),
   });
 
-export const Route = createFileRoute("/blog")({
+export const Route = createFileRoute("/blog/")({
   head: () => ({
     meta: [
       { title: "Campus X Blog — Guides for student builders" },
