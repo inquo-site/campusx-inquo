@@ -11,20 +11,24 @@ const errorMiddleware = createMiddleware().server(async ({ next }) => {
     if (error != null && typeof error === "object" && "statusCode" in error) {
       throw error;
     }
-    // Let server-function / fetch errors propagate so the client receives a
-    // proper Error (message, status) instead of an HTML 500 page it can't
-    // parse (which surfaces as a confusing "<host>.lovable.app forbidden"
-    // style message in the admin UI).
-    let isServerFn = false;
+    // Only render the fallback HTML page for top-level GET page loads.
+    // Server-function / fetch calls must receive the real error so the
+    // client can surface a proper message instead of unparseable HTML
+    // (which showed up in the admin UI as "<host>.lovable.app forbidden").
+    let isPageLoad = false;
     try {
       const req = getRequest();
-      const url = req?.url ?? "";
+      const method = (req?.method ?? "GET").toUpperCase();
       const accept = req?.headers?.get("accept") ?? "";
-      isServerFn = url.includes("/_serverFn/") || !accept.includes("text/html");
+      const url = req?.url ?? "";
+      isPageLoad =
+        method === "GET" &&
+        accept.includes("text/html") &&
+        !url.includes("/_serverFn/");
     } catch {
-      // no request in scope
+      // no request in scope — fall back to re-throw
     }
-    if (isServerFn) throw error;
+    if (!isPageLoad) throw error;
     console.error(error);
     return new Response(renderErrorPage(), {
       status: 500,
