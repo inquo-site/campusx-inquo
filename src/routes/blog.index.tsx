@@ -1,4 +1,5 @@
 import { createFileRoute, Link, ErrorComponent, useRouter } from "@tanstack/react-router";
+// Route: /blog (index leaf). Parent path /blog has no layout file — sibling routes like /blog/$slug mount independently.
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { MarketingLayout } from "@/components/marketing-layout";
