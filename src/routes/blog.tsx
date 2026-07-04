@@ -100,7 +100,7 @@ function BlogIndex() {
                   <div className="flex flex-1 flex-col p-6">
                     {p.tags && p.tags.length > 0 && (
                       <div className="mb-3 flex flex-wrap gap-1.5">
-                        {p.tags.slice(0, 3).map((t) => (
+                        {p.tags.slice(0, 3).map((t: string) => (
                           <span key={t} className="rounded-full border border-border px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted-foreground">
                             {t}
                           </span>
