@@ -68,7 +68,7 @@ export const getBlogBySlug = createServerFn({ method: "GET" })
     });
     const { data: row, error } = await sb
       .from("blogs")
-      .select("id, title, slug, excerpt, content, cover_image, tags, author_name, read_minutes, published_at")
+      .select("id, title, slug, excerpt, content, content_format, cover_image, tags, author_name, read_minutes, published_at")
       .eq("slug", data.slug)
       .eq("status", "published")
       .maybeSingle();
@@ -84,7 +84,8 @@ export const adminListBlogs = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: rows, error } = await supabaseAdmin
       .from("blogs")
-      .select("id, title, slug, excerpt, status, is_featured, author_name, read_minutes, tags, cover_image, published_at, updated_at")
+      .select("id, title, slug, excerpt, status, is_featured, author_name, read_minutes, tags, cover_image, content_format, published_at, updated_at")
+
       .order("updated_at", { ascending: false });
     if (error) throw new Error(error.message);
     return rows ?? [];
@@ -111,6 +112,7 @@ const UpsertSchema = z.object({
   slug: z.string().max(120).optional().nullable(),
   excerpt: z.string().max(500).nullable().optional(),
   content: z.string().max(200000).default(""),
+  content_format: z.enum(["markdown", "html"]).default("markdown"),
   cover_image: z.string().url().nullable().optional().or(z.literal("")),
   tags: z.array(z.string()).default([]),
   status: z.enum(["draft", "published"]),
@@ -130,6 +132,7 @@ export const adminUpsertBlog = createServerFn({ method: "POST" })
       slug: finalSlug,
       excerpt: data.excerpt ?? null,
       content: data.content,
+      content_format: data.content_format,
       cover_image: data.cover_image || null,
       tags: data.tags,
       status: data.status,

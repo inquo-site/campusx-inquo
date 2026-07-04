@@ -661,6 +661,7 @@ type BlogFormState = {
   slug: string;
   excerpt: string;
   content: string;
+  content_format: "markdown" | "html";
   cover_image: string;
   tags: string;
   status: "draft" | "published";
@@ -675,6 +676,7 @@ const emptyBlog: BlogFormState = {
   slug: "",
   excerpt: "",
   content: "",
+  content_format: "markdown",
   cover_image: "",
   tags: "",
   status: "draft",
@@ -682,6 +684,7 @@ const emptyBlog: BlogFormState = {
   author_name: "",
   read_minutes: 3,
 };
+
 
 function BlogPanel() {
   const list = useServerFn(adminListBlogs);
@@ -724,6 +727,7 @@ function BlogPanel() {
       slug: row.slug,
       excerpt: row.excerpt ?? "",
       content: row.content ?? "",
+      content_format: ((row as { content_format?: string }).content_format === "html" ? "html" : "markdown"),
       cover_image: row.cover_image ?? "",
       tags: (row.tags ?? []).join(", "),
       status: (row.status as "draft" | "published") ?? "draft",
@@ -745,6 +749,7 @@ function BlogPanel() {
         slug: form.slug || null,
         excerpt: form.excerpt || null,
         content: form.content,
+        content_format: form.content_format,
         cover_image: form.cover_image || null,
         tags: form.tags
           .split(",")
@@ -760,7 +765,10 @@ function BlogPanel() {
       setForm((f) => ({ ...f, id: res.id, slug: res.slug, status: payload.status }));
       invalidate();
     } catch (e) {
-      setNotice((e as Error).message);
+      console.error("[blog save] failed", e);
+      const msg = (e as Error)?.message || "Save failed. Check the browser console.";
+      setNotice(msg);
+      if (typeof window !== "undefined") window.alert(msg);
     }
   };
 
@@ -817,13 +825,32 @@ function BlogPanel() {
               Drafts stay private. Published posts appear on /blog and the landing page.
             </p>
           </div>
-          <button
-            onClick={() => setEditing(false)}
-            className="rounded-lg border border-border px-3 py-1.5 text-sm hover:bg-accent"
-          >
-            Back to list
-          </button>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={() => save(false)}
+              className="rounded-lg border border-border px-3 py-1.5 text-sm hover:bg-accent"
+            >
+              Save draft
+            </button>
+            <button
+              onClick={() => save(true)}
+              className="rounded-lg bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground"
+            >
+              Publish
+            </button>
+            <button
+              onClick={() => setEditing(false)}
+              className="rounded-lg border border-border px-3 py-1.5 text-sm hover:bg-accent"
+            >
+              Back to list
+            </button>
+          </div>
         </div>
+        {notice && (
+          <div className="rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-sm">
+            {notice}
+          </div>
+        )}
 
         {/* AI writer */}
         <div className="rounded-2xl border border-gold/20 bg-gold/5 p-5">
@@ -877,11 +904,39 @@ function BlogPanel() {
                 className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
               />
             </Field>
-            <Field label="Content (Markdown)">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-medium text-muted-foreground">Content format:</span>
+              {(["markdown", "html"] as const).map((fmt) => (
+                <button
+                  key={fmt}
+                  type="button"
+                  onClick={() => setForm({ ...form, content_format: fmt })}
+                  className={`rounded-md border px-2.5 py-1 text-xs uppercase tracking-wide transition ${
+                    form.content_format === fmt
+                      ? "border-gold/50 bg-gold/10 text-gold"
+                      : "border-border text-muted-foreground hover:bg-accent"
+                  }`}
+                >
+                  {fmt}
+                </button>
+              ))}
+            </div>
+            <Field
+              label={
+                form.content_format === "html"
+                  ? "Content (raw HTML — paste your <h2>, <p>, <img> etc.)"
+                  : "Content (Markdown)"
+              }
+            >
               <textarea
                 value={form.content}
                 onChange={(e) => setForm({ ...form, content: e.target.value })}
                 rows={22}
+                placeholder={
+                  form.content_format === "html"
+                    ? "<h2>Section title</h2>\n<p>Your HTML paragraph…</p>"
+                    : "## Section title\n\nYour markdown paragraph…"
+                }
                 className="w-full rounded-lg border border-input bg-background px-3 py-2 font-mono text-xs leading-relaxed"
               />
             </Field>
