@@ -215,6 +215,10 @@ function Landing() {
       {/* Testimonials */}
       <TestimonialsShowcase />
 
+      {/* Featured blog posts */}
+      <FeaturedBlogsSection />
+
+
 
       {/* CTA */}
       <section className="px-4 py-20 md:px-8">
