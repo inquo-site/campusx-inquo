@@ -717,6 +717,12 @@ function BlogPanel() {
   const [aiBusy, setAiBusy] = useState(false);
   const [optResult, setOptResult] = useState<null | Awaited<ReturnType<typeof aiOptimize>>>(null);
   const [notice, setNotice] = useState<string>("");
+  const [publishError, setPublishError] = useState<null | {
+    kind: "forbidden" | "domain" | "generic";
+    title: string;
+    detail: string;
+    host?: string;
+  }>(null);
   const [seoIssues, setSeoIssues] = useState<SeoIssue[] | null>(null);
 
   const invalidate = () => qc.invalidateQueries({ queryKey: ["admin-blogs"] });
@@ -781,8 +787,41 @@ function BlogPanel() {
     }
   };
 
+  const classifyPublishError = (
+    e: unknown,
+  ): { kind: "forbidden" | "domain" | "generic"; title: string; detail: string; host?: string } => {
+    const raw = (e as Error)?.message || String(e ?? "Save failed.");
+    const msg = raw.toLowerCase();
+    // Try to pick out a hostname the platform is complaining about.
+    const hostMatch =
+      raw.match(/https?:\/\/([a-z0-9.-]+\.[a-z]{2,})/i) ||
+      raw.match(/\b([a-z0-9-]+\.lovable\.app)\b/i) ||
+      raw.match(/\b([a-z0-9-]+\.(?:app|com|dev|io|net|co|xyz))\b/i);
+    const host = hostMatch?.[1];
+    if (msg.includes("forbidden") && (msg.includes("host") || msg.includes("domain") || msg.includes("origin") || host)) {
+      return {
+        kind: "domain",
+        title: "That domain isn't allowed yet",
+        detail:
+          "Your site (or the image / link you referenced) is on a domain that isn't in the allowed list. Add it to Allowed Hosts / Site URL and try again.",
+        host,
+      };
+    }
+    if (msg.includes("forbidden") || msg.includes("403") || msg.includes("unauthorized") || msg.includes("401")) {
+      return {
+        kind: "forbidden",
+        title: "You're not signed in as admin",
+        detail:
+          "Your admin session expired or the password is wrong. Log out and sign back in with the admin email + password, then try publishing again.",
+        host,
+      };
+    }
+    return { kind: "generic", title: "Publish failed", detail: raw, host };
+  };
+
   const save = async (publish?: boolean, force?: boolean) => {
     setNotice("");
+    setPublishError(null);
     // On publish, run SEO validation first; block if errors and not forced.
     if (publish && !force) {
       const issues = await runSeoCheck();
@@ -818,8 +857,7 @@ function BlogPanel() {
       invalidate();
     } catch (e) {
       console.error("[blog save] failed", e);
-      const msg = (e as Error)?.message || "Save failed. Check the browser console.";
-      setNotice(msg);
+      setPublishError(classifyPublishError(e));
     }
   };
 
@@ -931,6 +969,85 @@ function BlogPanel() {
         {notice && (
           <div className="rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-sm">
             {notice}
+          </div>
+        )}
+        {publishError && (
+          <div
+            role="alertdialog"
+            aria-labelledby="publish-error-title"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+          >
+            <div className="w-full max-w-lg rounded-2xl border border-destructive/40 bg-card p-6 shadow-2xl">
+              <div className="flex items-start gap-3">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-destructive/15 text-destructive">
+                  ⚠
+                </div>
+                <div className="flex-1">
+                  <h3 id="publish-error-title" className="text-base font-semibold">
+                    {publishError.title}
+                  </h3>
+                  <p className="mt-1 text-sm text-muted-foreground">{publishError.detail}</p>
+                  {publishError.host && (
+                    <p className="mt-2 text-xs">
+                      <span className="text-muted-foreground">Blocked host:</span>{" "}
+                      <code className="rounded bg-muted px-1.5 py-0.5 font-mono">{publishError.host}</code>
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {publishError.kind === "domain" && (
+                <div className="mt-4 rounded-lg border border-border bg-background/50 p-3 text-sm">
+                  <p className="font-medium">How to fix</p>
+                  <ol className="mt-2 list-decimal space-y-1.5 pl-5 text-muted-foreground">
+                    <li>
+                      Open <span className="font-mono text-foreground">Project settings → Domains</span> and confirm your
+                      published <span className="font-mono">.lovable.app</span> URL (or custom domain) is listed and{" "}
+                      <b>Active</b>.
+                    </li>
+                    <li>
+                      In <span className="font-mono text-foreground">Backend → Auth → URL Configuration</span>, add the
+                      same origin under <b>Site URL</b> and under <b>Additional Redirect URLs / Allowed Hosts</b>.
+                    </li>
+                    <li>
+                      If the block is on the <b>cover image URL</b>, use an https URL from an allowed host (your own
+                      domain or a CDN like <span className="font-mono">i.imgur.com</span>,{" "}
+                      <span className="font-mono">images.unsplash.com</span>).
+                    </li>
+                    <li>Save the setting, wait ~30 seconds, then click Publish again.</li>
+                  </ol>
+                </div>
+              )}
+
+              {publishError.kind === "forbidden" && (
+                <div className="mt-4 rounded-lg border border-border bg-background/50 p-3 text-sm">
+                  <p className="font-medium">How to fix</p>
+                  <ol className="mt-2 list-decimal space-y-1.5 pl-5 text-muted-foreground">
+                    <li>Click <b>Log out</b> in the top right.</li>
+                    <li>Sign back in with the admin email and password.</li>
+                    <li>Try Publish again.</li>
+                  </ol>
+                </div>
+              )}
+
+              <div className="mt-5 flex justify-end gap-2">
+                <button
+                  onClick={() => setPublishError(null)}
+                  className="rounded-lg border border-border px-3 py-1.5 text-sm hover:bg-accent"
+                >
+                  Close
+                </button>
+                <button
+                  onClick={() => {
+                    setPublishError(null);
+                    save(true);
+                  }}
+                  className="rounded-lg bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground hover:opacity-90"
+                >
+                  Try again
+                </button>
+              </div>
+            </div>
           </div>
         )}
         {seoIssues && seoIssues.length > 0 && (
@@ -1221,6 +1338,67 @@ function BlogPanel() {
 
   return (
     <div className="space-y-4">
+      {publishError && (
+        <div
+          role="alertdialog"
+          aria-labelledby="publish-error-title-list"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+        >
+          <div className="w-full max-w-lg rounded-2xl border border-destructive/40 bg-card p-6 shadow-2xl">
+            <div className="flex items-start gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-destructive/15 text-destructive">
+                ⚠
+              </div>
+              <div className="flex-1">
+                <h3 id="publish-error-title-list" className="text-base font-semibold">
+                  {publishError.title}
+                </h3>
+                <p className="mt-1 text-sm text-muted-foreground">{publishError.detail}</p>
+                {publishError.host && (
+                  <p className="mt-2 text-xs">
+                    <span className="text-muted-foreground">Blocked host:</span>{" "}
+                    <code className="rounded bg-muted px-1.5 py-0.5 font-mono">{publishError.host}</code>
+                  </p>
+                )}
+              </div>
+            </div>
+            {publishError.kind === "domain" && (
+              <div className="mt-4 rounded-lg border border-border bg-background/50 p-3 text-sm">
+                <p className="font-medium">How to fix</p>
+                <ol className="mt-2 list-decimal space-y-1.5 pl-5 text-muted-foreground">
+                  <li>
+                    Open <span className="font-mono text-foreground">Project settings → Domains</span> and confirm the
+                    site URL is <b>Active</b>.
+                  </li>
+                  <li>
+                    In <span className="font-mono text-foreground">Backend → Auth → URL Configuration</span>, add that
+                    origin to <b>Site URL</b> and <b>Additional Redirect URLs / Allowed Hosts</b>.
+                  </li>
+                  <li>Save, wait ~30s, then click Publish again.</li>
+                </ol>
+              </div>
+            )}
+            {publishError.kind === "forbidden" && (
+              <div className="mt-4 rounded-lg border border-border bg-background/50 p-3 text-sm">
+                <p className="font-medium">How to fix</p>
+                <ol className="mt-2 list-decimal space-y-1.5 pl-5 text-muted-foreground">
+                  <li>Click <b>Log out</b> in the top right.</li>
+                  <li>Sign back in with the admin email and password.</li>
+                  <li>Try Publish again.</li>
+                </ol>
+              </div>
+            )}
+            <div className="mt-5 flex justify-end">
+              <button
+                onClick={() => setPublishError(null)}
+                className="rounded-lg bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground hover:opacity-90"
+              >
+                Got it
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold">Blog posts</h2>
@@ -1291,9 +1469,9 @@ function BlogPanel() {
                     {p.status === "published" ? (
                       <button
                         onClick={() =>
-                          setStatus({ data: { token: getToken(), id: p.id, status: "draft" } }).then(
-                            invalidate,
-                          )
+                          setStatus({ data: { token: getToken(), id: p.id, status: "draft" } })
+                            .then(invalidate)
+                            .catch((e) => setPublishError(classifyPublishError(e)))
                         }
                         className="rounded-md border border-border px-3 py-1 text-xs hover:bg-accent"
                       >
@@ -1304,7 +1482,9 @@ function BlogPanel() {
                         onClick={() =>
                           setStatus({
                             data: { token: getToken(), id: p.id, status: "published" },
-                          }).then(invalidate)
+                          })
+                            .then(invalidate)
+                            .catch((e) => setPublishError(classifyPublishError(e)))
                         }
                         className="rounded-md border border-gold/40 px-3 py-1 text-xs text-gold hover:bg-gold/10"
                       >
