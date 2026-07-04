@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
   convertToModelMessages,
+  generateText,
   streamText,
   tool,
   stepCountIs,
