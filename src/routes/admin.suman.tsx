@@ -717,6 +717,12 @@ function BlogPanel() {
   const [aiBusy, setAiBusy] = useState(false);
   const [optResult, setOptResult] = useState<null | Awaited<ReturnType<typeof aiOptimize>>>(null);
   const [notice, setNotice] = useState<string>("");
+  const [publishError, setPublishError] = useState<null | {
+    kind: "forbidden" | "domain" | "generic";
+    title: string;
+    detail: string;
+    host?: string;
+  }>(null);
   const [seoIssues, setSeoIssues] = useState<SeoIssue[] | null>(null);
 
   const invalidate = () => qc.invalidateQueries({ queryKey: ["admin-blogs"] });
