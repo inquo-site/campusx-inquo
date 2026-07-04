@@ -1,6 +1,16 @@
 import { motion } from "motion/react";
+import type { ReactNode } from "react";
 import {
   Users,
+  FolderGit2,
+  Briefcase,
+  Rocket,
+  Sparkles,
+  FileText,
+  MessageSquareCode,
+  Trophy,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
   FolderGit2,
   Briefcase,
   Rocket,
@@ -26,7 +36,7 @@ type Card = {
   detailKicker: string;
   hue: string; // background gradient for the illustration panel
   accent: string; // small accent used inside the illustration
-  Illustration: () => JSX.Element;
+  Illustration: () => ReactNode;
 };
 
 /* Small SVG illustrations — hand-tuned, no external images */
