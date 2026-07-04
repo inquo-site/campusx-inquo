@@ -706,6 +706,8 @@ function BlogPanel() {
   const setStatus = useServerFn(adminSetBlogStatus);
   const aiWrite = useServerFn(adminAiWriteBlog);
   const aiOptimize = useServerFn(adminAiOptimizeBlog);
+  const aiSummarize = useServerFn(adminAiSummarizeBlog);
+  const validateSeo = useServerFn(validateBlogSeo);
   const qc = useQueryClient();
 
   const [form, setForm] = useState<BlogFormState>(emptyBlog);
@@ -715,6 +717,7 @@ function BlogPanel() {
   const [aiBusy, setAiBusy] = useState(false);
   const [optResult, setOptResult] = useState<null | Awaited<ReturnType<typeof aiOptimize>>>(null);
   const [notice, setNotice] = useState<string>("");
+  const [seoIssues, setSeoIssues] = useState<SeoIssue[] | null>(null);
 
   const invalidate = () => qc.invalidateQueries({ queryKey: ["admin-blogs"] });
 
