@@ -19,6 +19,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as UHandleRouteImport } from './routes/u.$handle'
+import { Route as AdminSumanRouteImport } from './routes/admin.suman'
 import { Route as AuthenticatedStartupsRouteImport } from './routes/_authenticated/startups'
 import { Route as AuthenticatedResumeRouteImport } from './routes/_authenticated/resume'
 import { Route as AuthenticatedProjectsRouteImport } from './routes/_authenticated/projects'
@@ -86,6 +87,11 @@ const IndexRoute = IndexRouteImport.update({
 const UHandleRoute = UHandleRouteImport.update({
   id: '/u/$handle',
   path: '/u/$handle',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSumanRoute = AdminSumanRouteImport.update({
+  id: '/admin/suman',
+  path: '/admin/suman',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedStartupsRoute = AuthenticatedStartupsRouteImport.update({
@@ -213,6 +219,7 @@ export interface FileRoutesByFullPath {
   '/projects': typeof AuthenticatedProjectsRoute
   '/resume': typeof AuthenticatedResumeRoute
   '/startups': typeof AuthenticatedStartupsRoute
+  '/admin/suman': typeof AdminSumanRoute
   '/u/$handle': typeof UHandleRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -243,6 +250,7 @@ export interface FileRoutesByTo {
   '/projects': typeof AuthenticatedProjectsRoute
   '/resume': typeof AuthenticatedResumeRoute
   '/startups': typeof AuthenticatedStartupsRoute
+  '/admin/suman': typeof AdminSumanRoute
   '/u/$handle': typeof UHandleRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -275,6 +283,7 @@ export interface FileRoutesById {
   '/_authenticated/projects': typeof AuthenticatedProjectsRoute
   '/_authenticated/resume': typeof AuthenticatedResumeRoute
   '/_authenticated/startups': typeof AuthenticatedStartupsRoute
+  '/admin/suman': typeof AdminSumanRoute
   '/u/$handle': typeof UHandleRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -307,6 +316,7 @@ export interface FileRouteTypes {
     | '/projects'
     | '/resume'
     | '/startups'
+    | '/admin/suman'
     | '/u/$handle'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
@@ -337,6 +347,7 @@ export interface FileRouteTypes {
     | '/projects'
     | '/resume'
     | '/startups'
+    | '/admin/suman'
     | '/u/$handle'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
@@ -368,6 +379,7 @@ export interface FileRouteTypes {
     | '/_authenticated/projects'
     | '/_authenticated/resume'
     | '/_authenticated/startups'
+    | '/admin/suman'
     | '/u/$handle'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
@@ -387,6 +399,7 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  AdminSumanRoute: typeof AdminSumanRoute
   UHandleRoute: typeof UHandleRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -462,6 +475,13 @@ declare module '@tanstack/react-router' {
       path: '/u/$handle'
       fullPath: '/u/$handle'
       preLoaderRoute: typeof UHandleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/suman': {
+      id: '/admin/suman'
+      path: '/admin/suman'
+      fullPath: '/admin/suman'
+      preLoaderRoute: typeof AdminSumanRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/startups': {
@@ -652,6 +672,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  AdminSumanRoute: AdminSumanRoute,
   UHandleRoute: UHandleRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
