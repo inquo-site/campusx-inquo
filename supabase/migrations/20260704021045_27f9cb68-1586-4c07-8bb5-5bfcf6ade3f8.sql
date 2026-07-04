@@ -1,0 +1,1 @@
+ALTER TABLE public.blogs ADD COLUMN IF NOT EXISTS content_format TEXT NOT NULL DEFAULT 'markdown' CHECK (content_format IN ('markdown','html'));
