@@ -19,6 +19,17 @@ import {
   adminTogglePromoCode,
   adminDeletePromoCode,
 } from "@/lib/admin.functions";
+import {
+  adminListBlogs,
+  adminGetBlog,
+  adminUpsertBlog,
+  adminDeleteBlog,
+  adminToggleBlogFeatured,
+  adminSetBlogStatus,
+  adminAiWriteBlog,
+  adminAiOptimizeBlog,
+} from "@/lib/blog.functions";
+
 
 export const Route = createFileRoute("/admin/suman")({
   component: AdminSuman,
@@ -35,7 +46,7 @@ const ADMIN_PASSWORD = "SUMAN@12suman";
 const STORAGE_KEY = "admin-suman-auth";
 const TOKEN_KEY = "admin-suman-token";
 
-type Tab = "overview" | "rooms" | "jobs" | "profiles" | "users" | "analytics" | "promo";
+type Tab = "overview" | "rooms" | "jobs" | "profiles" | "users" | "analytics" | "promo" | "blog";
 
 function AdminSuman() {
   const [authed, setAuthed] = useState(false);
@@ -128,6 +139,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
 
   const tabs: { id: Tab; label: string }[] = [
     { id: "overview", label: "Overview" },
+    { id: "blog", label: "Blog" },
     { id: "rooms", label: "Moderate Rooms" },
     { id: "jobs", label: "Curate Jobs" },
     { id: "profiles", label: "Feature Profiles" },
@@ -135,6 +147,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     { id: "analytics", label: "Analytics" },
     { id: "promo", label: "Promo Codes" },
   ];
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -169,12 +182,14 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       </header>
       <main className="mx-auto max-w-7xl px-6 py-8">
         {tab === "overview" && <OverviewPanel />}
+        {tab === "blog" && <BlogPanel />}
         {tab === "rooms" && <RoomsPanel />}
         {tab === "jobs" && <JobsPanel />}
         {tab === "profiles" && <ProfilesPanel />}
         {tab === "users" && <UsersPanel />}
         {tab === "analytics" && <AnalyticsPanel />}
         {tab === "promo" && <PromoPanel />}
+
       </main>
     </div>
   );
@@ -636,5 +651,520 @@ function PromoPanel() {
         </div>
       )}
     </div>
+  );
+}
+
+// ============= Blog panel =============
+type BlogFormState = {
+  id: string | null;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  cover_image: string;
+  tags: string;
+  status: "draft" | "published";
+  is_featured: boolean;
+  author_name: string;
+  read_minutes: number;
+};
+
+const emptyBlog: BlogFormState = {
+  id: null,
+  title: "",
+  slug: "",
+  excerpt: "",
+  content: "",
+  cover_image: "",
+  tags: "",
+  status: "draft",
+  is_featured: false,
+  author_name: "",
+  read_minutes: 3,
+};
+
+function BlogPanel() {
+  const list = useServerFn(adminListBlogs);
+  const getOne = useServerFn(adminGetBlog);
+  const upsert = useServerFn(adminUpsertBlog);
+  const del = useServerFn(adminDeleteBlog);
+  const toggleFeat = useServerFn(adminToggleBlogFeatured);
+  const setStatus = useServerFn(adminSetBlogStatus);
+  const aiWrite = useServerFn(adminAiWriteBlog);
+  const aiOptimize = useServerFn(adminAiOptimizeBlog);
+  const qc = useQueryClient();
+
+  const [form, setForm] = useState<BlogFormState>(emptyBlog);
+  const [editing, setEditing] = useState(false);
+  const [aiTopic, setAiTopic] = useState("");
+  const [aiTone, setAiTone] = useState("");
+  const [aiBusy, setAiBusy] = useState(false);
+  const [optResult, setOptResult] = useState<null | Awaited<ReturnType<typeof aiOptimize>>>(null);
+  const [notice, setNotice] = useState<string>("");
+
+  const invalidate = () => qc.invalidateQueries({ queryKey: ["admin-blogs"] });
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["admin-blogs"],
+    queryFn: () => list({ data: { token: getToken() } }),
+  });
+
+  const openNew = () => {
+    setForm(emptyBlog);
+    setOptResult(null);
+    setEditing(true);
+  };
+
+  const openEdit = async (id: string) => {
+    const row = await getOne({ data: { token: getToken(), id } });
+    if (!row) return;
+    setForm({
+      id: row.id,
+      title: row.title,
+      slug: row.slug,
+      excerpt: row.excerpt ?? "",
+      content: row.content ?? "",
+      cover_image: row.cover_image ?? "",
+      tags: (row.tags ?? []).join(", "),
+      status: (row.status as "draft" | "published") ?? "draft",
+      is_featured: !!row.is_featured,
+      author_name: row.author_name ?? "",
+      read_minutes: row.read_minutes ?? 3,
+    });
+    setOptResult(null);
+    setEditing(true);
+  };
+
+  const save = async (publish?: boolean) => {
+    setNotice("");
+    try {
+      const payload = {
+        token: getToken(),
+        id: form.id,
+        title: form.title,
+        slug: form.slug || null,
+        excerpt: form.excerpt || null,
+        content: form.content,
+        cover_image: form.cover_image || null,
+        tags: form.tags
+          .split(",")
+          .map((t) => t.trim().toLowerCase())
+          .filter(Boolean),
+        status: (publish ? "published" : form.status) as "draft" | "published",
+        is_featured: form.is_featured,
+        author_name: form.author_name || null,
+        read_minutes: Number(form.read_minutes) || 3,
+      };
+      const res = await upsert({ data: payload });
+      setNotice(publish ? "Published ✓" : "Saved ✓");
+      setForm((f) => ({ ...f, id: res.id, slug: res.slug, status: payload.status }));
+      invalidate();
+    } catch (e) {
+      setNotice((e as Error).message);
+    }
+  };
+
+  const runAiWrite = async () => {
+    if (!aiTopic.trim()) return;
+    setAiBusy(true);
+    setNotice("");
+    try {
+      const out = await aiWrite({
+        data: { token: getToken(), topic: aiTopic, tone: aiTone || undefined },
+      });
+      setForm((f) => ({
+        ...f,
+        title: out.title,
+        slug: out.slug,
+        excerpt: out.excerpt,
+        tags: out.tags.join(", "),
+        content: out.content_markdown,
+        read_minutes: out.read_minutes,
+      }));
+      setNotice("AI draft loaded — review and save.");
+    } catch (e) {
+      setNotice((e as Error).message);
+    } finally {
+      setAiBusy(false);
+    }
+  };
+
+  const runAiOptimize = async () => {
+    if (!form.title || !form.content) return;
+    setAiBusy(true);
+    setNotice("");
+    try {
+      const out = await aiOptimize({
+        data: { token: getToken(), title: form.title, content: form.content },
+      });
+      setOptResult(out);
+    } catch (e) {
+      setNotice((e as Error).message);
+    } finally {
+      setAiBusy(false);
+    }
+  };
+
+  if (editing) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-semibold">
+              {form.id ? "Edit post" : "New post"}
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              Drafts stay private. Published posts appear on /blog and the landing page.
+            </p>
+          </div>
+          <button
+            onClick={() => setEditing(false)}
+            className="rounded-lg border border-border px-3 py-1.5 text-sm hover:bg-accent"
+          >
+            Back to list
+          </button>
+        </div>
+
+        {/* AI writer */}
+        <div className="rounded-2xl border border-gold/20 bg-gold/5 p-5">
+          <p className="text-xs font-medium uppercase tracking-wide text-gold">AI blog writer</p>
+          <div className="mt-3 grid gap-3 md:grid-cols-[2fr_1fr_auto]">
+            <input
+              value={aiTopic}
+              onChange={(e) => setAiTopic(e.target.value)}
+              placeholder="Topic (e.g. How Indian students should approach their first FAANG resume)"
+              className="rounded-lg border border-input bg-background px-3 py-2 text-sm"
+            />
+            <input
+              value={aiTone}
+              onChange={(e) => setAiTone(e.target.value)}
+              placeholder="Tone (optional)"
+              className="rounded-lg border border-input bg-background px-3 py-2 text-sm"
+            />
+            <button
+              onClick={runAiWrite}
+              disabled={aiBusy || !aiTopic.trim()}
+              className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground disabled:opacity-50"
+            >
+              {aiBusy ? "Writing…" : "Draft with AI"}
+            </button>
+          </div>
+        </div>
+
+        {/* Form */}
+        <div className="grid gap-4 lg:grid-cols-[1fr_320px]">
+          <div className="space-y-4">
+            <Field label="Title">
+              <input
+                value={form.title}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+              />
+            </Field>
+            <Field label="Slug (URL) — leave blank to auto-generate">
+              <input
+                value={form.slug}
+                onChange={(e) => setForm({ ...form, slug: e.target.value })}
+                placeholder="my-post-slug"
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm font-mono"
+              />
+            </Field>
+            <Field label="Excerpt (shown in listings, meta description)">
+              <textarea
+                value={form.excerpt}
+                onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
+                rows={2}
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+              />
+            </Field>
+            <Field label="Content (Markdown)">
+              <textarea
+                value={form.content}
+                onChange={(e) => setForm({ ...form, content: e.target.value })}
+                rows={22}
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 font-mono text-xs leading-relaxed"
+              />
+            </Field>
+          </div>
+
+          <aside className="space-y-4">
+            <Field label="Cover image URL">
+              <input
+                value={form.cover_image}
+                onChange={(e) => setForm({ ...form, cover_image: e.target.value })}
+                placeholder="https://…"
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+              />
+            </Field>
+            <Field label="Tags (comma separated)">
+              <input
+                value={form.tags}
+                onChange={(e) => setForm({ ...form, tags: e.target.value })}
+                placeholder="career, resume, internships"
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+              />
+            </Field>
+            <Field label="Author name">
+              <input
+                value={form.author_name}
+                onChange={(e) => setForm({ ...form, author_name: e.target.value })}
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+              />
+            </Field>
+            <Field label="Read minutes">
+              <input
+                type="number"
+                min={1}
+                max={120}
+                value={form.read_minutes}
+                onChange={(e) =>
+                  setForm({ ...form, read_minutes: Number(e.target.value) || 3 })
+                }
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+              />
+            </Field>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={form.is_featured}
+                onChange={(e) => setForm({ ...form, is_featured: e.target.checked })}
+              />
+              Feature on landing page
+            </label>
+            <Field label="Status">
+              <select
+                value={form.status}
+                onChange={(e) =>
+                  setForm({ ...form, status: e.target.value as "draft" | "published" })
+                }
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+              >
+                <option value="draft">Draft</option>
+                <option value="published">Published</option>
+              </select>
+            </Field>
+
+            <div className="grid gap-2 pt-2">
+              <button
+                onClick={() => save(false)}
+                className="rounded-lg border border-border px-3 py-2 text-sm hover:bg-accent"
+              >
+                Save draft
+              </button>
+              <button
+                onClick={() => save(true)}
+                className="rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground"
+              >
+                Publish
+              </button>
+              <button
+                onClick={runAiOptimize}
+                disabled={aiBusy || !form.title || !form.content}
+                className="rounded-lg border border-gold/40 px-3 py-2 text-sm text-gold hover:bg-gold/10 disabled:opacity-50"
+              >
+                {aiBusy ? "Analyzing…" : "AI Optimize"}
+              </button>
+            </div>
+            {notice && (
+              <p className="rounded-md border border-border bg-card px-3 py-2 text-xs">
+                {notice}
+              </p>
+            )}
+          </aside>
+        </div>
+
+        {optResult && (
+          <div className="rounded-2xl border border-gold/30 bg-gold/5 p-5 text-sm">
+            <div className="flex items-center justify-between">
+              <p className="font-medium text-gold">AI SEO analysis</p>
+              <span className="text-xs text-muted-foreground">
+                Score: <strong className="text-foreground">{optResult.score}/100</strong>
+              </span>
+            </div>
+            <div className="mt-4 grid gap-4 md:grid-cols-2">
+              <div>
+                <p className="text-xs uppercase tracking-wide text-muted-foreground">Suggested SEO title</p>
+                <p className="mt-1">{optResult.seo_title}</p>
+                <button
+                  onClick={() => setForm((f) => ({ ...f, title: optResult.seo_title }))}
+                  className="mt-1 text-xs text-gold underline"
+                >
+                  Apply
+                </button>
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-wide text-muted-foreground">Suggested excerpt</p>
+                <p className="mt-1">{optResult.seo_excerpt}</p>
+                <button
+                  onClick={() => setForm((f) => ({ ...f, excerpt: optResult.seo_excerpt }))}
+                  className="mt-1 text-xs text-gold underline"
+                >
+                  Apply
+                </button>
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-wide text-muted-foreground">Tags</p>
+                <p className="mt-1">{optResult.suggested_tags.join(", ")}</p>
+                <button
+                  onClick={() =>
+                    setForm((f) => ({ ...f, tags: optResult.suggested_tags.join(", ") }))
+                  }
+                  className="mt-1 text-xs text-gold underline"
+                >
+                  Apply
+                </button>
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-wide text-muted-foreground">Rewritten intro</p>
+                <p className="mt-1 whitespace-pre-wrap">{optResult.rewritten_intro}</p>
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-wide text-muted-foreground">Strengths</p>
+                <ul className="mt-1 list-disc pl-5">
+                  {optResult.strengths.map((s, i) => (
+                    <li key={i}>{s}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-wide text-muted-foreground">Improvements</p>
+                <ul className="mt-1 list-disc pl-5">
+                  {optResult.improvements.map((s, i) => (
+                    <li key={i}>{s}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-semibold">Blog posts</h2>
+          <p className="text-xs text-muted-foreground">
+            Publish, edit, feature and unpublish posts. Published posts appear on /blog.
+          </p>
+        </div>
+        <button
+          onClick={openNew}
+          className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+        >
+          + New post
+        </button>
+      </div>
+
+      {isLoading ? (
+        <p className="text-sm text-muted-foreground">Loading…</p>
+      ) : (
+        <div className="rounded-2xl border border-border bg-card overflow-hidden">
+          <table className="w-full text-sm">
+            <thead className="bg-muted/50 text-xs uppercase text-muted-foreground">
+              <tr>
+                <th className="text-left px-4 py-3">Title</th>
+                <th className="text-left px-4 py-3">Slug</th>
+                <th className="text-left px-4 py-3">Status</th>
+                <th className="text-center px-4 py-3">Featured</th>
+                <th className="text-left px-4 py-3">Updated</th>
+                <th className="text-right px-4 py-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(data ?? []).map((p) => (
+                <tr key={p.id} className="border-t border-border">
+                  <td className="px-4 py-3">{p.title}</td>
+                  <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{p.slug}</td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wide ${
+                        p.status === "published"
+                          ? "bg-gold/10 text-gold border border-gold/30"
+                          : "bg-muted text-muted-foreground border border-border"
+                      }`}
+                    >
+                      {p.status}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <input
+                      type="checkbox"
+                      checked={!!p.is_featured}
+                      onChange={(e) =>
+                        toggleFeat({
+                          data: { token: getToken(), id: p.id, featured: e.target.checked },
+                        }).then(invalidate)
+                      }
+                    />
+                  </td>
+                  <td className="px-4 py-3 text-muted-foreground">
+                    {p.updated_at ? new Date(p.updated_at).toLocaleDateString() : "—"}
+                  </td>
+                  <td className="px-4 py-3 text-right space-x-2 whitespace-nowrap">
+                    <button
+                      onClick={() => openEdit(p.id)}
+                      className="rounded-md border border-border px-3 py-1 text-xs hover:bg-accent"
+                    >
+                      Edit
+                    </button>
+                    {p.status === "published" ? (
+                      <button
+                        onClick={() =>
+                          setStatus({ data: { token: getToken(), id: p.id, status: "draft" } }).then(
+                            invalidate,
+                          )
+                        }
+                        className="rounded-md border border-border px-3 py-1 text-xs hover:bg-accent"
+                      >
+                        Unpublish
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() =>
+                          setStatus({
+                            data: { token: getToken(), id: p.id, status: "published" },
+                          }).then(invalidate)
+                        }
+                        className="rounded-md border border-gold/40 px-3 py-1 text-xs text-gold hover:bg-gold/10"
+                      >
+                        Publish
+                      </button>
+                    )}
+                    <button
+                      onClick={() => {
+                        if (confirm(`Delete "${p.title}"?`))
+                          del({ data: { token: getToken(), id: p.id } }).then(invalidate);
+                      }}
+                      className="rounded-md border border-destructive/40 px-3 py-1 text-xs text-destructive hover:bg-destructive/10"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+              {(data ?? []).length === 0 && (
+                <tr>
+                  <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
+                    No posts yet. Click "+ New post" to write your first.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="block space-y-1.5">
+      <span className="text-xs font-medium text-muted-foreground">{label}</span>
+      {children}
+    </label>
   );
 }

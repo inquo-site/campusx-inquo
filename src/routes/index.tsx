@@ -18,6 +18,8 @@ import { TechMarquee, LiveStats, LiveTicker } from "@/components/landing-visuals
 import { FeatureCarousel } from "@/components/feature-carousel";
 import { TestimonialsShowcase } from "@/components/testimonials-showcase";
 import { OpportunityNetworkSection } from "@/components/opportunity-network";
+import { FeaturedBlogsSection } from "@/components/featured-blogs";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -212,6 +214,10 @@ function Landing() {
 
       {/* Testimonials */}
       <TestimonialsShowcase />
+
+      {/* Featured blog posts */}
+      <FeaturedBlogsSection />
+
 
 
       {/* CTA */}

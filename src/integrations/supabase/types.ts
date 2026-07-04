@@ -38,6 +38,63 @@ export type Database = {
         }
         Relationships: []
       }
+      blogs: {
+        Row: {
+          author_id: string | null
+          author_name: string | null
+          content: string
+          cover_image: string | null
+          created_at: string
+          excerpt: string | null
+          id: string
+          is_featured: boolean
+          published_at: string | null
+          read_minutes: number
+          slug: string
+          status: string
+          tags: string[]
+          title: string
+          updated_at: string
+          views: number
+        }
+        Insert: {
+          author_id?: string | null
+          author_name?: string | null
+          content?: string
+          cover_image?: string | null
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          is_featured?: boolean
+          published_at?: string | null
+          read_minutes?: number
+          slug: string
+          status?: string
+          tags?: string[]
+          title: string
+          updated_at?: string
+          views?: number
+        }
+        Update: {
+          author_id?: string | null
+          author_name?: string | null
+          content?: string
+          cover_image?: string | null
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          is_featured?: boolean
+          published_at?: string | null
+          read_minutes?: number
+          slug?: string
+          status?: string
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          views?: number
+        }
+        Relationships: []
+      }
       connections: {
         Row: {
           addressee_id: string
