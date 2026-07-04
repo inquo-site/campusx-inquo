@@ -971,6 +971,85 @@ function BlogPanel() {
             {notice}
           </div>
         )}
+        {publishError && (
+          <div
+            role="alertdialog"
+            aria-labelledby="publish-error-title"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+          >
+            <div className="w-full max-w-lg rounded-2xl border border-destructive/40 bg-card p-6 shadow-2xl">
+              <div className="flex items-start gap-3">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-destructive/15 text-destructive">
+                  ⚠
+                </div>
+                <div className="flex-1">
+                  <h3 id="publish-error-title" className="text-base font-semibold">
+                    {publishError.title}
+                  </h3>
+                  <p className="mt-1 text-sm text-muted-foreground">{publishError.detail}</p>
+                  {publishError.host && (
+                    <p className="mt-2 text-xs">
+                      <span className="text-muted-foreground">Blocked host:</span>{" "}
+                      <code className="rounded bg-muted px-1.5 py-0.5 font-mono">{publishError.host}</code>
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {publishError.kind === "domain" && (
+                <div className="mt-4 rounded-lg border border-border bg-background/50 p-3 text-sm">
+                  <p className="font-medium">How to fix</p>
+                  <ol className="mt-2 list-decimal space-y-1.5 pl-5 text-muted-foreground">
+                    <li>
+                      Open <span className="font-mono text-foreground">Project settings → Domains</span> and confirm your
+                      published <span className="font-mono">.lovable.app</span> URL (or custom domain) is listed and{" "}
+                      <b>Active</b>.
+                    </li>
+                    <li>
+                      In <span className="font-mono text-foreground">Backend → Auth → URL Configuration</span>, add the
+                      same origin under <b>Site URL</b> and under <b>Additional Redirect URLs / Allowed Hosts</b>.
+                    </li>
+                    <li>
+                      If the block is on the <b>cover image URL</b>, use an https URL from an allowed host (your own
+                      domain or a CDN like <span className="font-mono">i.imgur.com</span>,{" "}
+                      <span className="font-mono">images.unsplash.com</span>).
+                    </li>
+                    <li>Save the setting, wait ~30 seconds, then click Publish again.</li>
+                  </ol>
+                </div>
+              )}
+
+              {publishError.kind === "forbidden" && (
+                <div className="mt-4 rounded-lg border border-border bg-background/50 p-3 text-sm">
+                  <p className="font-medium">How to fix</p>
+                  <ol className="mt-2 list-decimal space-y-1.5 pl-5 text-muted-foreground">
+                    <li>Click <b>Log out</b> in the top right.</li>
+                    <li>Sign back in with the admin email and password.</li>
+                    <li>Try Publish again.</li>
+                  </ol>
+                </div>
+              )}
+
+              <div className="mt-5 flex justify-end gap-2">
+                <button
+                  onClick={() => setPublishError(null)}
+                  className="rounded-lg border border-border px-3 py-1.5 text-sm hover:bg-accent"
+                >
+                  Close
+                </button>
+                <button
+                  onClick={() => {
+                    setPublishError(null);
+                    save(true);
+                  }}
+                  className="rounded-lg bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground hover:opacity-90"
+                >
+                  Try again
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         {seoIssues && seoIssues.length > 0 && (
           <div className="rounded-2xl border border-border bg-card p-4">
             <div className="flex items-center justify-between">
