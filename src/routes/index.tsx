@@ -17,6 +17,7 @@ import { HowItWorks } from "@/components/how-it-works";
 import { TechMarquee, LiveStats, LiveTicker } from "@/components/landing-visuals";
 import { FeatureCarousel } from "@/components/feature-carousel";
 import { TestimonialsShowcase } from "@/components/testimonials-showcase";
+import { OpportunityNetworkSection } from "@/components/opportunity-network";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -163,6 +164,10 @@ function Landing() {
 
       {/* How */}
       <HowItWorks />
+
+      {/* Opportunity + Network layers */}
+      <OpportunityNetworkSection />
+
 
       {/* Live stats counters */}
       <LiveStats />
