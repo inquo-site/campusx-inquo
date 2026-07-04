@@ -11,15 +11,6 @@ import {
   Trophy,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-  FolderGit2,
-  Briefcase,
-  Rocket,
-  Sparkles,
-  FileText,
-  MessageSquareCode,
-  Trophy,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
 /*  Feature carousel — auto-scrolling "what you get" cards             */
