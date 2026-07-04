@@ -68,12 +68,6 @@ const why = [
   { icon: Heart, title: "Made in", italic: "India", body: "By a student, for students — from Purnia to every campus." },
 ];
 
-const testimonials = [
-  { name: "Priya R.", college: "NIT Trichy", quote: "Found my co-founder for our climate startup on Campus X within two weeks. We're now in YC's startup school." },
-  { name: "Arjun S.", college: "IIIT Hyderabad", quote: "The internship board got me a paid SDE role at a YC-backed startup. The dual-pane view is so much better than emails." },
-  { name: "Meera K.", college: "BITS Pilani", quote: "I posted a project and three frontend devs joined within 48 hours. We shipped to production in a month." },
-  { name: "Rohan T.", college: "IIT Kharagpur", quote: "Finally a platform that treats students like the builders we are. The vibe here is unlike any other community." },
-];
 
 function Landing() {
   return (
