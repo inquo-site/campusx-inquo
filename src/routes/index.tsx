@@ -11,12 +11,12 @@ import {
   Target,
   Zap,
   Heart,
-  Quote,
 } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing-layout";
 import { HowItWorks } from "@/components/how-it-works";
 import { TechMarquee, LiveStats, LiveTicker } from "@/components/landing-visuals";
 import { FeatureCarousel } from "@/components/feature-carousel";
+import { TestimonialsShowcase } from "@/components/testimonials-showcase";
 
 export const Route = createFileRoute("/")({
   head: () => ({
