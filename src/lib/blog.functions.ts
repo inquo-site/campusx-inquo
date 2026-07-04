@@ -414,3 +414,30 @@ ${data.content.slice(0, 12000)}`;
       throw error;
     }
   });
+
+// ============ SUMMARY ============
+const SummarizeSchema = z.object({
+  token: z.string(),
+  title: z.string().min(3),
+  content: z.string().min(20).max(200000),
+});
+
+export const adminAiSummarizeBlog = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) => SummarizeSchema.parse(input))
+  .handler(async ({ data }) => {
+    verifyAdmin(data.token);
+    const key = process.env.LOVABLE_API_KEY;
+    if (!key) throw new Error("AI is not configured");
+    const { createLovableAiGatewayProvider } = await import("@/lib/ai-gateway.server");
+    const gateway = createLovableAiGatewayProvider(key);
+    const model = gateway("google/gemini-3-flash-preview");
+    const bodyPlain = data.content.replace(/<[^>]+>/g, " ").slice(0, 15000);
+    const prompt = `Summarize this blog post in ONE compelling meta-description sentence, 140-160 characters, active voice, no clickbait, no emojis, no quotes.
+Title: ${data.title}
+Content:
+${bodyPlain}
+
+Return ONLY the summary sentence with no preamble.`;
+    const { text } = await generateText({ model, prompt });
+    return { summary: text.trim().replace(/^["']|["']$/g, "").slice(0, 240) };
+  });
