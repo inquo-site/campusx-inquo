@@ -749,6 +749,7 @@ function BlogPanel() {
         slug: form.slug || null,
         excerpt: form.excerpt || null,
         content: form.content,
+        content_format: form.content_format,
         cover_image: form.cover_image || null,
         tags: form.tags
           .split(",")
