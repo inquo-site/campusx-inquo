@@ -12,8 +12,8 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
 
-  --font-display: "Instrument Serif", ui-serif, Georgia, serif;
-  --font-sans: "Geist", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
   --color-background: var(--background);
@@ -55,86 +55,91 @@
 :root {
   --radius: 0.875rem;
 
-  /* Deep warm noir with gold + cream accents (Sheryians / InQuo style) */
-  --background: oklch(0.16 0.012 60);
-  --foreground: oklch(0.94 0.015 80);
-  --surface: oklch(0.19 0.014 60);
-  --surface-2: oklch(0.22 0.016 60);
+  /* Warm cream → sunlit yellow, deep espresso ink (Unmind-inspired) */
+  --background: oklch(0.975 0.03 92);
+  --foreground: oklch(0.22 0.03 55);
+  --surface: oklch(0.96 0.035 92);
+  --surface-2: oklch(0.93 0.05 95);
 
-  --card: oklch(0.19 0.014 60);
-  --card-foreground: oklch(0.94 0.015 80);
-  --popover: oklch(0.2 0.014 60);
-  --popover-foreground: oklch(0.94 0.015 80);
+  --card: oklch(0.985 0.02 92);
+  --card-foreground: oklch(0.22 0.03 55);
+  --popover: oklch(0.985 0.02 92);
+  --popover-foreground: oklch(0.22 0.03 55);
 
-  --primary: oklch(0.82 0.12 82);
-  --primary-foreground: oklch(0.16 0.012 60);
+  /* Primary = espresso pill button */
+  --primary: oklch(0.22 0.03 55);
+  --primary-foreground: oklch(0.97 0.03 92);
 
-  --secondary: oklch(0.24 0.014 60);
-  --secondary-foreground: oklch(0.94 0.015 80);
+  --secondary: oklch(0.93 0.045 95);
+  --secondary-foreground: oklch(0.22 0.03 55);
 
-  --muted: oklch(0.24 0.014 60);
-  --muted-foreground: oklch(0.7 0.02 80);
+  --muted: oklch(0.93 0.035 92);
+  --muted-foreground: oklch(0.45 0.035 60);
 
-  --accent: oklch(0.82 0.12 82);
-  --accent-foreground: oklch(0.16 0.012 60);
+  --accent: oklch(0.9 0.16 100);
+  --accent-foreground: oklch(0.22 0.03 55);
 
-  --gold: oklch(0.82 0.12 82);
-  --gold-muted: oklch(0.68 0.09 82);
-  --cream: oklch(0.94 0.025 85);
+  /* "gold" retained as semantic name; now bright sunlit yellow */
+  --gold: oklch(0.88 0.17 100);
+  --gold-muted: oklch(0.82 0.12 96);
+  --cream: oklch(0.975 0.03 92);
 
-  --destructive: oklch(0.65 0.22 25);
-  --destructive-foreground: oklch(0.94 0.015 80);
+  --destructive: oklch(0.58 0.2 25);
+  --destructive-foreground: oklch(0.98 0.02 92);
 
-  --border: oklch(1 0 0 / 8%);
-  --input: oklch(1 0 0 / 10%);
-  --ring: oklch(0.82 0.12 82);
+  --border: oklch(0.22 0.03 55 / 12%);
+  --input: oklch(0.22 0.03 55 / 12%);
+  --ring: oklch(0.22 0.03 55 / 40%);
 
-  --sidebar: oklch(0.13 0.01 60);
-  --sidebar-foreground: oklch(0.85 0.015 80);
-  --sidebar-primary: oklch(0.82 0.12 82);
-  --sidebar-primary-foreground: oklch(0.13 0.01 60);
-  --sidebar-accent: oklch(0.2 0.014 60);
-  --sidebar-accent-foreground: oklch(0.94 0.015 80);
-  --sidebar-border: oklch(1 0 0 / 7%);
-  --sidebar-ring: oklch(0.82 0.12 82);
+  --sidebar: oklch(0.96 0.035 92);
+  --sidebar-foreground: oklch(0.22 0.03 55);
+  --sidebar-primary: oklch(0.22 0.03 55);
+  --sidebar-primary-foreground: oklch(0.97 0.03 92);
+  --sidebar-accent: oklch(0.93 0.05 95);
+  --sidebar-accent-foreground: oklch(0.22 0.03 55);
+  --sidebar-border: oklch(0.22 0.03 55 / 10%);
+  --sidebar-ring: oklch(0.22 0.03 55 / 40%);
 }
 
 @layer base {
   * { border-color: var(--color-border); }
-  body {
+  html, body {
     background-color: var(--color-background);
+    background-image:
+      radial-gradient(110% 70% at 100% 0%, oklch(0.92 0.19 100 / 0.75), transparent 55%),
+      radial-gradient(90% 60% at 0% 100%, oklch(0.97 0.05 92 / 0.9), transparent 60%);
+    background-attachment: fixed;
     color: var(--color-foreground);
     font-family: var(--font-sans);
-    font-feature-settings: "ss01", "cv11";
     -webkit-font-smoothing: antialiased;
   }
   h1, h2, h3, h4 {
     font-family: var(--font-display);
     font-weight: 400;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
   }
   .italic-serif {
     font-family: var(--font-display);
     font-style: italic;
-    color: var(--color-gold);
+    font-weight: 400;
+    color: inherit;
   }
 }
 
 @utility ambient-glow {
   background:
-    radial-gradient(60% 80% at 50% 0%, oklch(0.82 0.12 82 / 0.12), transparent 60%),
-    radial-gradient(40% 60% at 100% 100%, oklch(0.82 0.12 82 / 0.08), transparent 60%);
+    radial-gradient(60% 80% at 50% 0%, oklch(0.9 0.18 100 / 0.5), transparent 60%),
+    radial-gradient(40% 60% at 100% 100%, oklch(0.88 0.17 100 / 0.35), transparent 60%);
 }
 
 @utility hairline {
-  background-image: linear-gradient(to right, transparent, oklch(0.82 0.12 82 / 0.4), transparent);
+  background-image: linear-gradient(to right, transparent, oklch(0.22 0.03 55 / 0.25), transparent);
   height: 1px;
 }
 
 @utility card-noir {
-  background:
-    linear-gradient(180deg, oklch(0.22 0.014 60) 0%, oklch(0.18 0.012 60) 100%);
-  border: 1px solid oklch(1 0 0 / 0.06);
+  background: linear-gradient(180deg, oklch(0.985 0.02 92) 0%, oklch(0.955 0.04 95) 100%);
+  border: 1px solid oklch(0.22 0.03 55 / 0.1);
   position: relative;
 }
 
@@ -142,5 +147,5 @@
   transition: border-color 0.4s ease, transform 0.4s ease;
 }
 .card-noir-hover:hover {
-  border-color: oklch(0.82 0.12 82 / 0.35);
+  border-color: oklch(0.22 0.03 55 / 0.35);
 }
