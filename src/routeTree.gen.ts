@@ -40,6 +40,7 @@ import { Route as AuthenticatedAlumniRouteImport } from './routes/_authenticated
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as AuthenticatedRoomsIndexRouteImport } from './routes/_authenticated/rooms.index'
+import { Route as ApiAdminAgentChatRouteImport } from './routes/api/admin/agent-chat'
 import { Route as AuthenticatedRoomsSlugRouteImport } from './routes/_authenticated/rooms.$slug'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
@@ -203,6 +204,11 @@ const AuthenticatedRoomsIndexRoute = AuthenticatedRoomsIndexRouteImport.update({
   path: '/rooms/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiAdminAgentChatRoute = ApiAdminAgentChatRouteImport.update({
+  id: '/api/admin/agent-chat',
+  path: '/api/admin/agent-chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedRoomsSlugRoute = AuthenticatedRoomsSlugRouteImport.update({
   id: '/rooms/$slug',
   path: '/rooms/$slug',
@@ -253,6 +259,7 @@ export interface FileRoutesByFullPath {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/rooms/$slug': typeof AuthenticatedRoomsSlugRoute
+  '/api/admin/agent-chat': typeof ApiAdminAgentChatRoute
   '/rooms/': typeof AuthenticatedRoomsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -288,6 +295,7 @@ export interface FileRoutesByTo {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/rooms/$slug': typeof AuthenticatedRoomsSlugRoute
+  '/api/admin/agent-chat': typeof ApiAdminAgentChatRoute
   '/rooms': typeof AuthenticatedRoomsIndexRoute
 }
 export interface FileRoutesById {
@@ -325,6 +333,7 @@ export interface FileRoutesById {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/rooms/$slug': typeof AuthenticatedRoomsSlugRoute
+  '/api/admin/agent-chat': typeof ApiAdminAgentChatRoute
   '/_authenticated/rooms/': typeof AuthenticatedRoomsIndexRoute
 }
 export interface FileRouteTypes {
@@ -362,6 +371,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/rooms/$slug'
+    | '/api/admin/agent-chat'
     | '/rooms/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -397,6 +407,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/rooms/$slug'
+    | '/api/admin/agent-chat'
     | '/rooms'
   id:
     | '__root__'
@@ -433,6 +444,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/rooms/$slug'
+    | '/api/admin/agent-chat'
     | '/_authenticated/rooms/'
   fileRoutesById: FileRoutesById
 }
@@ -454,6 +466,7 @@ export interface RootRouteChildren {
   UHandleRoute: typeof UHandleRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
+  ApiAdminAgentChatRoute: typeof ApiAdminAgentChatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -675,6 +688,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRoomsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/admin/agent-chat': {
+      id: '/api/admin/agent-chat'
+      path: '/api/admin/agent-chat'
+      fullPath: '/api/admin/agent-chat'
+      preLoaderRoute: typeof ApiAdminAgentChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/rooms/$slug': {
       id: '/_authenticated/rooms/$slug'
       path: '/rooms/$slug'
@@ -769,6 +789,7 @@ const rootRouteChildren: RootRouteChildren = {
   UHandleRoute: UHandleRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
+  ApiAdminAgentChatRoute: ApiAdminAgentChatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
