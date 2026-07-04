@@ -139,7 +139,7 @@ function AuthPage() {
                   placeholder="Full name"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="h-11 w-full rounded-xl border border-border bg-background px-4 text-sm outline-none focus:border-gold/60"
+                  className="input-ink"
                 />
               )}
               <input
@@ -148,7 +148,7 @@ function AuthPage() {
                 placeholder="you@college.edu"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-11 w-full rounded-xl border border-border bg-background px-4 text-sm outline-none focus:border-gold/60"
+                className="input-ink"
               />
               <input
                 required
@@ -157,12 +157,12 @@ function AuthPage() {
                 minLength={6}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="h-11 w-full rounded-xl border border-border bg-background px-4 text-sm outline-none focus:border-gold/60"
+                className="input-ink"
               />
               <button
                 type="submit"
                 disabled={loading}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gold py-3 text-sm font-medium text-primary-foreground hover:brightness-110 disabled:opacity-60"
+                className="btn-ink w-full justify-center disabled:opacity-60"
               >
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowRight className="h-4 w-4" />}
                 {mode === "signin" ? "Sign in" : "Create account"}
