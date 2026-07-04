@@ -19,6 +19,17 @@ import {
   adminTogglePromoCode,
   adminDeletePromoCode,
 } from "@/lib/admin.functions";
+import {
+  adminListBlogs,
+  adminGetBlog,
+  adminUpsertBlog,
+  adminDeleteBlog,
+  adminToggleBlogFeatured,
+  adminSetBlogStatus,
+  adminAiWriteBlog,
+  adminAiOptimizeBlog,
+} from "@/lib/blog.functions";
+
 
 export const Route = createFileRoute("/admin/suman")({
   component: AdminSuman,
