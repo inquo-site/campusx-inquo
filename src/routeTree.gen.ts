@@ -18,6 +18,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as UHandleRouteImport } from './routes/u.$handle'
 import { Route as AuthenticatedStartupsRouteImport } from './routes/_authenticated/startups'
 import { Route as AuthenticatedRoomsRouteImport } from './routes/_authenticated/rooms'
 import { Route as AuthenticatedResumeRouteImport } from './routes/_authenticated/resume'
@@ -34,6 +35,7 @@ import { Route as AuthenticatedApplicationsRouteImport } from './routes/_authent
 import { Route as AuthenticatedAlumniRouteImport } from './routes/_authenticated/alumni'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
+import { Route as AuthenticatedRoomsSlugRouteImport } from './routes/_authenticated/rooms.$slug'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 
@@ -79,6 +81,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UHandleRoute = UHandleRouteImport.update({
+  id: '/u/$handle',
+  path: '/u/$handle',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedStartupsRoute = AuthenticatedStartupsRouteImport.update({
@@ -165,6 +172,11 @@ const Char91DotmcpChar93ListToolsRoute =
     path: '/.mcp/list-tools',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthenticatedRoomsSlugRoute = AuthenticatedRoomsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => AuthenticatedRoomsRoute,
+} as any)
 const Char91DotmcpChar93InvokeToolToolRoute =
   Char91DotmcpChar93InvokeToolToolRouteImport.update({
     id: '/.mcp/invoke-tool/$tool',
@@ -200,10 +212,12 @@ export interface FileRoutesByFullPath {
   '/profile': typeof AuthenticatedProfileRoute
   '/projects': typeof AuthenticatedProjectsRoute
   '/resume': typeof AuthenticatedResumeRoute
-  '/rooms': typeof AuthenticatedRoomsRoute
+  '/rooms': typeof AuthenticatedRoomsRouteWithChildren
   '/startups': typeof AuthenticatedStartupsRoute
+  '/u/$handle': typeof UHandleRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/rooms/$slug': typeof AuthenticatedRoomsSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -228,10 +242,12 @@ export interface FileRoutesByTo {
   '/profile': typeof AuthenticatedProfileRoute
   '/projects': typeof AuthenticatedProjectsRoute
   '/resume': typeof AuthenticatedResumeRoute
-  '/rooms': typeof AuthenticatedRoomsRoute
+  '/rooms': typeof AuthenticatedRoomsRouteWithChildren
   '/startups': typeof AuthenticatedStartupsRoute
+  '/u/$handle': typeof UHandleRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/rooms/$slug': typeof AuthenticatedRoomsSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -258,10 +274,12 @@ export interface FileRoutesById {
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/projects': typeof AuthenticatedProjectsRoute
   '/_authenticated/resume': typeof AuthenticatedResumeRoute
-  '/_authenticated/rooms': typeof AuthenticatedRoomsRoute
+  '/_authenticated/rooms': typeof AuthenticatedRoomsRouteWithChildren
   '/_authenticated/startups': typeof AuthenticatedStartupsRoute
+  '/u/$handle': typeof UHandleRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/_authenticated/rooms/$slug': typeof AuthenticatedRoomsSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -290,8 +308,10 @@ export interface FileRouteTypes {
     | '/resume'
     | '/rooms'
     | '/startups'
+    | '/u/$handle'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/rooms/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -318,8 +338,10 @@ export interface FileRouteTypes {
     | '/resume'
     | '/rooms'
     | '/startups'
+    | '/u/$handle'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/rooms/$slug'
   id:
     | '__root__'
     | '/'
@@ -347,8 +369,10 @@ export interface FileRouteTypes {
     | '/_authenticated/resume'
     | '/_authenticated/rooms'
     | '/_authenticated/startups'
+    | '/u/$handle'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/_authenticated/rooms/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -363,6 +387,7 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  UHandleRoute: typeof UHandleRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
 }
@@ -430,6 +455,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/u/$handle': {
+      id: '/u/$handle'
+      path: '/u/$handle'
+      fullPath: '/u/$handle'
+      preLoaderRoute: typeof UHandleRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/startups': {
@@ -544,6 +576,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/rooms/$slug': {
+      id: '/_authenticated/rooms/$slug'
+      path: '/$slug'
+      fullPath: '/rooms/$slug'
+      preLoaderRoute: typeof AuthenticatedRoomsSlugRouteImport
+      parentRoute: typeof AuthenticatedRoomsRoute
+    }
     '/.mcp/invoke-tool/$tool': {
       id: '/.mcp/invoke-tool/$tool'
       path: '/.mcp/invoke-tool/$tool'
@@ -561,6 +600,17 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedRoomsRouteChildren {
+  AuthenticatedRoomsSlugRoute: typeof AuthenticatedRoomsSlugRoute
+}
+
+const AuthenticatedRoomsRouteChildren: AuthenticatedRoomsRouteChildren = {
+  AuthenticatedRoomsSlugRoute: AuthenticatedRoomsSlugRoute,
+}
+
+const AuthenticatedRoomsRouteWithChildren =
+  AuthenticatedRoomsRoute._addFileChildren(AuthenticatedRoomsRouteChildren)
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAlumniRoute: typeof AuthenticatedAlumniRoute
   AuthenticatedApplicationsRoute: typeof AuthenticatedApplicationsRoute
@@ -574,7 +624,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedProjectsRoute: typeof AuthenticatedProjectsRoute
   AuthenticatedResumeRoute: typeof AuthenticatedResumeRoute
-  AuthenticatedRoomsRoute: typeof AuthenticatedRoomsRoute
+  AuthenticatedRoomsRoute: typeof AuthenticatedRoomsRouteWithChildren
   AuthenticatedStartupsRoute: typeof AuthenticatedStartupsRoute
 }
 
@@ -591,7 +641,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedProjectsRoute: AuthenticatedProjectsRoute,
   AuthenticatedResumeRoute: AuthenticatedResumeRoute,
-  AuthenticatedRoomsRoute: AuthenticatedRoomsRoute,
+  AuthenticatedRoomsRoute: AuthenticatedRoomsRouteWithChildren,
   AuthenticatedStartupsRoute: AuthenticatedStartupsRoute,
 }
 
@@ -611,6 +661,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  UHandleRoute: UHandleRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
 }
