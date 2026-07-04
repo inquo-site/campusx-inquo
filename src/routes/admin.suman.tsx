@@ -753,8 +753,47 @@ function BlogPanel() {
     setEditing(true);
   };
 
-  const save = async (publish?: boolean) => {
+  const buildTags = () =>
+    form.tags
+      .split(",")
+      .map((t) => t.trim().toLowerCase())
+      .filter(Boolean);
+
+  const runSeoCheck = async () => {
+    try {
+      const res = await validateSeo({
+        data: {
+          token: getToken(),
+          title: form.title,
+          slug: form.slug || form.title,
+          excerpt: form.excerpt,
+          cover_image: form.cover_image,
+          content: form.content,
+          content_format: form.content_format,
+          tags: buildTags(),
+        },
+      });
+      setSeoIssues(res.issues);
+      return res.issues;
+    } catch (e) {
+      console.error("[seo check]", e);
+      return [] as SeoIssue[];
+    }
+  };
+
+  const save = async (publish?: boolean, force?: boolean) => {
     setNotice("");
+    // On publish, run SEO validation first; block if errors and not forced.
+    if (publish && !force) {
+      const issues = await runSeoCheck();
+      const hardErrors = issues.filter((i) => i.level === "error");
+      if (hardErrors.length > 0) {
+        setNotice(
+          `Blocked by ${hardErrors.length} SEO issue${hardErrors.length > 1 ? "s" : ""}. Fix them below, or click "Publish anyway".`,
+        );
+        return;
+      }
+    }
     try {
       const payload = {
         token: getToken(),
@@ -765,26 +804,42 @@ function BlogPanel() {
         content: form.content,
         content_format: form.content_format,
         cover_image: form.cover_image || null,
-        tags: form.tags
-          .split(",")
-          .map((t) => t.trim().toLowerCase())
-          .filter(Boolean),
+        tags: buildTags(),
         status: (publish ? "published" : form.status) as "draft" | "published",
         is_featured: form.is_featured,
         author_name: form.author_name || null,
         read_minutes: Number(form.read_minutes) || 3,
+        force: !!force,
       };
       const res = await upsert({ data: payload });
       setNotice(publish ? "Published ✓" : "Saved ✓");
+      setSeoIssues(null);
       setForm((f) => ({ ...f, id: res.id, slug: res.slug, status: payload.status }));
       invalidate();
     } catch (e) {
       console.error("[blog save] failed", e);
       const msg = (e as Error)?.message || "Save failed. Check the browser console.";
       setNotice(msg);
-      if (typeof window !== "undefined") window.alert(msg);
     }
   };
+
+  const runSummarize = async () => {
+    if (!form.title || !form.content) return;
+    setAiBusy(true);
+    setNotice("");
+    try {
+      const out = await aiSummarize({
+        data: { token: getToken(), title: form.title, content: form.content },
+      });
+      setForm((f) => ({ ...f, excerpt: out.summary }));
+      setNotice("Summary written into excerpt ✓");
+    } catch (e) {
+      setNotice((e as Error).message);
+    } finally {
+      setAiBusy(false);
+    }
+  };
+
 
   const runAiWrite = async () => {
     if (!aiTopic.trim()) return;
