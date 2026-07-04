@@ -661,6 +661,7 @@ type BlogFormState = {
   slug: string;
   excerpt: string;
   content: string;
+  content_format: "markdown" | "html";
   cover_image: string;
   tags: string;
   status: "draft" | "published";
@@ -675,6 +676,7 @@ const emptyBlog: BlogFormState = {
   slug: "",
   excerpt: "",
   content: "",
+  content_format: "markdown",
   cover_image: "",
   tags: "",
   status: "draft",
@@ -682,6 +684,7 @@ const emptyBlog: BlogFormState = {
   author_name: "",
   read_minutes: 3,
 };
+
 
 function BlogPanel() {
   const list = useServerFn(adminListBlogs);
