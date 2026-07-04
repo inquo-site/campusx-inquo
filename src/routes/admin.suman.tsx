@@ -28,7 +28,16 @@ import {
   adminSetBlogStatus,
   adminAiWriteBlog,
   adminAiOptimizeBlog,
+  adminAiSummarizeBlog,
+  validateBlogSeo,
+  type SeoIssue,
 } from "@/lib/blog.functions";
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
+import ReactMarkdown from "react-markdown";
+import { useRef } from "react";
+
+
 
 
 export const Route = createFileRoute("/admin/suman")({
