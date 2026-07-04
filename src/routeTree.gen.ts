@@ -13,6 +13,7 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as McpRouteImport } from './routes/mcp'
+import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as DisclaimerRouteImport } from './routes/disclaimer'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutRouteImport } from './routes/about'
@@ -25,6 +26,7 @@ import { Route as AuthenticatedResumeRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedProjectsRouteImport } from './routes/_authenticated/projects'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedMentorRouteImport } from './routes/_authenticated/mentor'
+import { Route as AuthenticatedLinkedinOptimizerRouteImport } from './routes/_authenticated/linkedin-optimizer'
 import { Route as AuthenticatedJobsRouteImport } from './routes/_authenticated/jobs'
 import { Route as AuthenticatedInternshipsRouteImport } from './routes/_authenticated/internships'
 import { Route as AuthenticatedHackathonsRouteImport } from './routes/_authenticated/hackathons'
@@ -58,6 +60,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const McpRoute = McpRouteImport.update({
   id: '/mcp',
   path: '/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeaturesRoute = FeaturesRouteImport.update({
+  id: '/features',
+  path: '/features',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DisclaimerRoute = DisclaimerRouteImport.update({
@@ -119,6 +126,12 @@ const AuthenticatedMentorRoute = AuthenticatedMentorRouteImport.update({
   path: '/mentor',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedLinkedinOptimizerRoute =
+  AuthenticatedLinkedinOptimizerRouteImport.update({
+    id: '/linkedin-optimizer',
+    path: '/linkedin-optimizer',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedJobsRoute = AuthenticatedJobsRouteImport.update({
   id: '/jobs',
   path: '/jobs',
@@ -200,6 +213,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/disclaimer': typeof DisclaimerRoute
+  '/features': typeof FeaturesRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -214,6 +228,7 @@ export interface FileRoutesByFullPath {
   '/hackathons': typeof AuthenticatedHackathonsRoute
   '/internships': typeof AuthenticatedInternshipsRoute
   '/jobs': typeof AuthenticatedJobsRoute
+  '/linkedin-optimizer': typeof AuthenticatedLinkedinOptimizerRoute
   '/mentor': typeof AuthenticatedMentorRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/projects': typeof AuthenticatedProjectsRoute
@@ -231,6 +246,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/disclaimer': typeof DisclaimerRoute
+  '/features': typeof FeaturesRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -245,6 +261,7 @@ export interface FileRoutesByTo {
   '/hackathons': typeof AuthenticatedHackathonsRoute
   '/internships': typeof AuthenticatedInternshipsRoute
   '/jobs': typeof AuthenticatedJobsRoute
+  '/linkedin-optimizer': typeof AuthenticatedLinkedinOptimizerRoute
   '/mentor': typeof AuthenticatedMentorRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/projects': typeof AuthenticatedProjectsRoute
@@ -264,6 +281,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/disclaimer': typeof DisclaimerRoute
+  '/features': typeof FeaturesRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -278,6 +296,7 @@ export interface FileRoutesById {
   '/_authenticated/hackathons': typeof AuthenticatedHackathonsRoute
   '/_authenticated/internships': typeof AuthenticatedInternshipsRoute
   '/_authenticated/jobs': typeof AuthenticatedJobsRoute
+  '/_authenticated/linkedin-optimizer': typeof AuthenticatedLinkedinOptimizerRoute
   '/_authenticated/mentor': typeof AuthenticatedMentorRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/projects': typeof AuthenticatedProjectsRoute
@@ -297,6 +316,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/auth'
     | '/disclaimer'
+    | '/features'
     | '/mcp'
     | '/privacy'
     | '/sitemap.xml'
@@ -311,6 +331,7 @@ export interface FileRouteTypes {
     | '/hackathons'
     | '/internships'
     | '/jobs'
+    | '/linkedin-optimizer'
     | '/mentor'
     | '/profile'
     | '/projects'
@@ -328,6 +349,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/auth'
     | '/disclaimer'
+    | '/features'
     | '/mcp'
     | '/privacy'
     | '/sitemap.xml'
@@ -342,6 +364,7 @@ export interface FileRouteTypes {
     | '/hackathons'
     | '/internships'
     | '/jobs'
+    | '/linkedin-optimizer'
     | '/mentor'
     | '/profile'
     | '/projects'
@@ -360,6 +383,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/auth'
     | '/disclaimer'
+    | '/features'
     | '/mcp'
     | '/privacy'
     | '/sitemap.xml'
@@ -374,6 +398,7 @@ export interface FileRouteTypes {
     | '/_authenticated/hackathons'
     | '/_authenticated/internships'
     | '/_authenticated/jobs'
+    | '/_authenticated/linkedin-optimizer'
     | '/_authenticated/mentor'
     | '/_authenticated/profile'
     | '/_authenticated/projects'
@@ -393,6 +418,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
   DisclaimerRoute: typeof DisclaimerRoute
+  FeaturesRoute: typeof FeaturesRoute
   McpRoute: typeof McpRoute
   PrivacyRoute: typeof PrivacyRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -433,6 +459,13 @@ declare module '@tanstack/react-router' {
       path: '/mcp'
       fullPath: '/mcp'
       preLoaderRoute: typeof McpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/features': {
+      id: '/features'
+      path: '/features'
+      fullPath: '/features'
+      preLoaderRoute: typeof FeaturesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/disclaimer': {
@@ -517,6 +550,13 @@ declare module '@tanstack/react-router' {
       path: '/mentor'
       fullPath: '/mentor'
       preLoaderRoute: typeof AuthenticatedMentorRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/linkedin-optimizer': {
+      id: '/_authenticated/linkedin-optimizer'
+      path: '/linkedin-optimizer'
+      fullPath: '/linkedin-optimizer'
+      preLoaderRoute: typeof AuthenticatedLinkedinOptimizerRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/jobs': {
@@ -629,6 +669,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedHackathonsRoute: typeof AuthenticatedHackathonsRoute
   AuthenticatedInternshipsRoute: typeof AuthenticatedInternshipsRoute
   AuthenticatedJobsRoute: typeof AuthenticatedJobsRoute
+  AuthenticatedLinkedinOptimizerRoute: typeof AuthenticatedLinkedinOptimizerRoute
   AuthenticatedMentorRoute: typeof AuthenticatedMentorRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedProjectsRoute: typeof AuthenticatedProjectsRoute
@@ -647,6 +688,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedHackathonsRoute: AuthenticatedHackathonsRoute,
   AuthenticatedInternshipsRoute: AuthenticatedInternshipsRoute,
   AuthenticatedJobsRoute: AuthenticatedJobsRoute,
+  AuthenticatedLinkedinOptimizerRoute: AuthenticatedLinkedinOptimizerRoute,
   AuthenticatedMentorRoute: AuthenticatedMentorRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedProjectsRoute: AuthenticatedProjectsRoute,
@@ -665,6 +707,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
   DisclaimerRoute: DisclaimerRoute,
+  FeaturesRoute: FeaturesRoute,
   McpRoute: McpRoute,
   PrivacyRoute: PrivacyRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
