@@ -160,13 +160,14 @@ export const adminAnalytics = createServerFn({ method: "POST" })
       supabaseAdmin.from("internships").select("created_at").gte("created_at", since),
     ]);
 
-    const bucket = (rows: { created_at: string }[] | null) => {
+    const bucket = (rows: { created_at: string | null }[] | null) => {
       const map = new Map<string, number>();
       for (let i = 13; i >= 0; i--) {
         const d = new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
         map.set(d, 0);
       }
       (rows ?? []).forEach((r) => {
+        if (!r.created_at) return;
         const d = r.created_at.slice(0, 10);
         if (map.has(d)) map.set(d, (map.get(d) ?? 0) + 1);
       });
