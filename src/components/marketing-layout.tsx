@@ -50,6 +50,9 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
               {l.label}
             </Link>
           ))}
+          <a href="/#layers" className="text-sm text-foreground/70 transition hover:text-gold">
+            Features
+          </a>
         </nav>
 
         <Link
@@ -69,7 +72,7 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
           className="mx-auto max-w-6xl rounded-3xl border border-white/10 bg-background/40 p-8 backdrop-blur-2xl md:p-12"
           style={{ boxShadow: "0 8px 40px oklch(0 0 0 / 0.4), inset 0 1px 0 oklch(1 0 0 / 0.05)" }}
         >
-          <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
+          <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
             <div>
               <div className="flex items-center gap-2">
                 <div className="grid h-9 w-9 place-items-center rounded-md border border-gold/40 bg-gold/10 font-display text-xl italic text-gold">
@@ -99,6 +102,19 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
               <div className="mb-4 text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground">— Explore</div>
               <ul className="space-y-2.5 text-sm">
                 {navLinks.map((l) => (
+                  <li key={l.to}>
+                    <Link to={l.to} className="text-foreground/70 transition hover:text-gold">
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <div className="mb-4 text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground">— Features</div>
+              <ul className="space-y-2.5 text-sm">
+                {featureLinks.map((l) => (
                   <li key={l.to}>
                     <Link to={l.to} className="text-foreground/70 transition hover:text-gold">
                       {l.label}
