@@ -62,6 +62,63 @@ export type Database = {
         }
         Relationships: []
       }
+      dev_profiles: {
+        Row: {
+          bio: string | null
+          codeforces_data: Json | null
+          codeforces_handle: string | null
+          created_at: string
+          display_name: string | null
+          github_data: Json | null
+          github_username: string | null
+          handle: string
+          headline: string | null
+          leetcode_url: string | null
+          linkedin_url: string | null
+          location: string | null
+          portfolio_url: string | null
+          synced_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bio?: string | null
+          codeforces_data?: Json | null
+          codeforces_handle?: string | null
+          created_at?: string
+          display_name?: string | null
+          github_data?: Json | null
+          github_username?: string | null
+          handle: string
+          headline?: string | null
+          leetcode_url?: string | null
+          linkedin_url?: string | null
+          location?: string | null
+          portfolio_url?: string | null
+          synced_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          bio?: string | null
+          codeforces_data?: Json | null
+          codeforces_handle?: string | null
+          created_at?: string
+          display_name?: string | null
+          github_data?: Json | null
+          github_username?: string | null
+          handle?: string
+          headline?: string | null
+          leetcode_url?: string | null
+          linkedin_url?: string | null
+          location?: string | null
+          portfolio_url?: string | null
+          synced_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       internship_applications: {
         Row: {
           applicant_id: string
@@ -316,6 +373,97 @@ export type Database = {
         }
         Relationships: []
       }
+      room_members: {
+        Row: {
+          joined_at: string
+          room_id: string
+          user_id: string
+        }
+        Insert: {
+          joined_at?: string
+          room_id: string
+          user_id: string
+        }
+        Update: {
+          joined_at?: string
+          room_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "room_members_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      room_messages: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          room_id: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          room_id: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          room_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "room_messages_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rooms: {
+        Row: {
+          created_at: string
+          created_by: string
+          description: string | null
+          id: string
+          kind: string
+          name: string
+          slug: string
+          topic: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          description?: string | null
+          id?: string
+          kind: string
+          name: string
+          slug: string
+          topic?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          id?: string
+          kind?: string
+          name?: string
+          slug?: string
+          topic?: string | null
+        }
+        Relationships: []
+      }
       startup_ideas: {
         Row: {
           created_at: string | null
@@ -351,7 +499,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_room_creator: {
+        Args: { _room_id: string; _user_id: string }
+        Returns: boolean
+      }
+      is_room_member: {
+        Args: { _room_id: string; _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
