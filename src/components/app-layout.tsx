@@ -13,6 +13,11 @@ import {
   Sparkles,
   FileText,
   LogOut,
+  Trophy,
+  ClipboardList,
+  Users2,
+  MessagesSquare,
+  Github,
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { useAuth } from "@/hooks/use-auth";
@@ -24,6 +29,12 @@ const navItems = [
   { to: "/discover", label: "Discover Peers", icon: Users },
   { to: "/projects", label: "Project Hub", icon: FolderGit2 },
   { to: "/internships", label: "Internship Board", icon: Briefcase },
+  { to: "/jobs", label: "Off-Campus Jobs", icon: Briefcase },
+  { to: "/hackathons", label: "Hackathons", icon: Trophy },
+  { to: "/applications", label: "Applications", icon: ClipboardList },
+  { to: "/alumni", label: "Alumni Referrals", icon: Users2 },
+  { to: "/rooms", label: "Peer Rooms", icon: MessagesSquare },
+  { to: "/devprofile", label: "Dev Report Card", icon: Github },
   { to: "/startups", label: "Startup Incubator", icon: Rocket },
   { to: "/mentor", label: "AI Mentor", icon: Sparkles },
   { to: "/resume", label: "Resume Builder", icon: FileText },
