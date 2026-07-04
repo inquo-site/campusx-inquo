@@ -1408,9 +1408,9 @@ function BlogPanel() {
                     {p.status === "published" ? (
                       <button
                         onClick={() =>
-                          setStatus({ data: { token: getToken(), id: p.id, status: "draft" } }).then(
-                            invalidate,
-                          )
+                          setStatus({ data: { token: getToken(), id: p.id, status: "draft" } })
+                            .then(invalidate)
+                            .catch((e) => setPublishError(classifyPublishError(e)))
                         }
                         className="rounded-md border border-border px-3 py-1 text-xs hover:bg-accent"
                       >
@@ -1421,7 +1421,9 @@ function BlogPanel() {
                         onClick={() =>
                           setStatus({
                             data: { token: getToken(), id: p.id, status: "published" },
-                          }).then(invalidate)
+                          })
+                            .then(invalidate)
+                            .catch((e) => setPublishError(classifyPublishError(e)))
                         }
                         className="rounded-md border border-gold/40 px-3 py-1 text-xs text-gold hover:bg-gold/10"
                       >
