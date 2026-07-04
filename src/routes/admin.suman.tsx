@@ -765,7 +765,10 @@ function BlogPanel() {
       setForm((f) => ({ ...f, id: res.id, slug: res.slug, status: payload.status }));
       invalidate();
     } catch (e) {
-      setNotice((e as Error).message);
+      console.error("[blog save] failed", e);
+      const msg = (e as Error)?.message || "Save failed. Check the browser console.";
+      setNotice(msg);
+      if (typeof window !== "undefined") window.alert(msg);
     }
   };
 
