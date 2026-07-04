@@ -73,6 +73,7 @@ export type Database = {
           github_username: string | null
           handle: string
           headline: string | null
+          is_featured: boolean
           leetcode_url: string | null
           linkedin_url: string | null
           location: string | null
@@ -91,6 +92,7 @@ export type Database = {
           github_username?: string | null
           handle: string
           headline?: string | null
+          is_featured?: boolean
           leetcode_url?: string | null
           linkedin_url?: string | null
           location?: string | null
@@ -109,6 +111,7 @@ export type Database = {
           github_username?: string | null
           handle?: string
           headline?: string | null
+          is_featured?: boolean
           leetcode_url?: string | null
           linkedin_url?: string | null
           location?: string | null
@@ -165,6 +168,7 @@ export type Database = {
           description: string | null
           duration: string | null
           id: string
+          is_featured: boolean
           location: string | null
           posted_by: string | null
           requirements: string[] | null
@@ -179,6 +183,7 @@ export type Database = {
           description?: string | null
           duration?: string | null
           id?: string
+          is_featured?: boolean
           location?: string | null
           posted_by?: string | null
           requirements?: string[] | null
@@ -193,6 +198,7 @@ export type Database = {
           description?: string | null
           duration?: string | null
           id?: string
+          is_featured?: boolean
           location?: string | null
           posted_by?: string | null
           requirements?: string[] | null
@@ -322,6 +328,45 @@ export type Database = {
           tag?: string | null
           tech_stack?: string[] | null
           title?: string
+        }
+        Relationships: []
+      }
+      promo_codes: {
+        Row: {
+          code: string
+          created_at: string
+          description: string | null
+          discount_percent: number
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          max_uses: number | null
+          updated_at: string
+          uses: number
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          description?: string | null
+          discount_percent?: number
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          max_uses?: number | null
+          updated_at?: string
+          uses?: number
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          description?: string | null
+          discount_percent?: number
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          max_uses?: number | null
+          updated_at?: string
+          uses?: number
         }
         Relationships: []
       }
