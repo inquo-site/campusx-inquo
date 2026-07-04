@@ -28,7 +28,16 @@ import {
   adminSetBlogStatus,
   adminAiWriteBlog,
   adminAiOptimizeBlog,
+  adminAiSummarizeBlog,
+  validateBlogSeo,
+  type SeoIssue,
 } from "@/lib/blog.functions";
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
+import ReactMarkdown from "react-markdown";
+import { useRef } from "react";
+
+
 
 
 export const Route = createFileRoute("/admin/suman")({
@@ -46,7 +55,7 @@ const ADMIN_PASSWORD = "SUMAN@12suman";
 const STORAGE_KEY = "admin-suman-auth";
 const TOKEN_KEY = "admin-suman-token";
 
-type Tab = "overview" | "rooms" | "jobs" | "profiles" | "users" | "analytics" | "promo" | "blog";
+type Tab = "overview" | "agent" | "rooms" | "jobs" | "profiles" | "users" | "analytics" | "promo" | "blog";
 
 function AdminSuman() {
   const [authed, setAuthed] = useState(false);
@@ -139,6 +148,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
 
   const tabs: { id: Tab; label: string }[] = [
     { id: "overview", label: "Overview" },
+    { id: "agent", label: "AI Agent" },
     { id: "blog", label: "Blog" },
     { id: "rooms", label: "Moderate Rooms" },
     { id: "jobs", label: "Curate Jobs" },
@@ -182,6 +192,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       </header>
       <main className="mx-auto max-w-7xl px-6 py-8">
         {tab === "overview" && <OverviewPanel />}
+        {tab === "agent" && <AgentPanel />}
         {tab === "blog" && <BlogPanel />}
         {tab === "rooms" && <RoomsPanel />}
         {tab === "jobs" && <JobsPanel />}
@@ -695,6 +706,8 @@ function BlogPanel() {
   const setStatus = useServerFn(adminSetBlogStatus);
   const aiWrite = useServerFn(adminAiWriteBlog);
   const aiOptimize = useServerFn(adminAiOptimizeBlog);
+  const aiSummarize = useServerFn(adminAiSummarizeBlog);
+  const validateSeo = useServerFn(validateBlogSeo);
   const qc = useQueryClient();
 
   const [form, setForm] = useState<BlogFormState>(emptyBlog);
@@ -704,6 +717,7 @@ function BlogPanel() {
   const [aiBusy, setAiBusy] = useState(false);
   const [optResult, setOptResult] = useState<null | Awaited<ReturnType<typeof aiOptimize>>>(null);
   const [notice, setNotice] = useState<string>("");
+  const [seoIssues, setSeoIssues] = useState<SeoIssue[] | null>(null);
 
   const invalidate = () => qc.invalidateQueries({ queryKey: ["admin-blogs"] });
 
@@ -739,8 +753,47 @@ function BlogPanel() {
     setEditing(true);
   };
 
-  const save = async (publish?: boolean) => {
+  const buildTags = () =>
+    form.tags
+      .split(",")
+      .map((t) => t.trim().toLowerCase())
+      .filter(Boolean);
+
+  const runSeoCheck = async () => {
+    try {
+      const res = await validateSeo({
+        data: {
+          token: getToken(),
+          title: form.title,
+          slug: form.slug || form.title,
+          excerpt: form.excerpt,
+          cover_image: form.cover_image,
+          content: form.content,
+          content_format: form.content_format,
+          tags: buildTags(),
+        },
+      });
+      setSeoIssues(res.issues);
+      return res.issues;
+    } catch (e) {
+      console.error("[seo check]", e);
+      return [] as SeoIssue[];
+    }
+  };
+
+  const save = async (publish?: boolean, force?: boolean) => {
     setNotice("");
+    // On publish, run SEO validation first; block if errors and not forced.
+    if (publish && !force) {
+      const issues = await runSeoCheck();
+      const hardErrors = issues.filter((i) => i.level === "error");
+      if (hardErrors.length > 0) {
+        setNotice(
+          `Blocked by ${hardErrors.length} SEO issue${hardErrors.length > 1 ? "s" : ""}. Fix them below, or click "Publish anyway".`,
+        );
+        return;
+      }
+    }
     try {
       const payload = {
         token: getToken(),
@@ -751,26 +804,42 @@ function BlogPanel() {
         content: form.content,
         content_format: form.content_format,
         cover_image: form.cover_image || null,
-        tags: form.tags
-          .split(",")
-          .map((t) => t.trim().toLowerCase())
-          .filter(Boolean),
+        tags: buildTags(),
         status: (publish ? "published" : form.status) as "draft" | "published",
         is_featured: form.is_featured,
         author_name: form.author_name || null,
         read_minutes: Number(form.read_minutes) || 3,
+        force: !!force,
       };
       const res = await upsert({ data: payload });
       setNotice(publish ? "Published ✓" : "Saved ✓");
+      setSeoIssues(null);
       setForm((f) => ({ ...f, id: res.id, slug: res.slug, status: payload.status }));
       invalidate();
     } catch (e) {
       console.error("[blog save] failed", e);
       const msg = (e as Error)?.message || "Save failed. Check the browser console.";
       setNotice(msg);
-      if (typeof window !== "undefined") window.alert(msg);
     }
   };
+
+  const runSummarize = async () => {
+    if (!form.title || !form.content) return;
+    setAiBusy(true);
+    setNotice("");
+    try {
+      const out = await aiSummarize({
+        data: { token: getToken(), title: form.title, content: form.content },
+      });
+      setForm((f) => ({ ...f, excerpt: out.summary }));
+      setNotice("Summary written into excerpt ✓");
+    } catch (e) {
+      setNotice((e as Error).message);
+    } finally {
+      setAiBusy(false);
+    }
+  };
+
 
   const runAiWrite = async () => {
     if (!aiTopic.trim()) return;
@@ -833,6 +902,19 @@ function BlogPanel() {
               Save draft
             </button>
             <button
+              onClick={runSeoCheck}
+              className="rounded-lg border border-gold/40 px-3 py-1.5 text-sm text-gold hover:bg-gold/10"
+            >
+              Check SEO
+            </button>
+            <button
+              onClick={runSummarize}
+              disabled={aiBusy || !form.title || !form.content}
+              className="rounded-lg border border-gold/40 px-3 py-1.5 text-sm text-gold hover:bg-gold/10 disabled:opacity-50"
+            >
+              {aiBusy ? "…" : "AI Summary"}
+            </button>
+            <button
               onClick={() => save(true)}
               className="rounded-lg bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground"
             >
@@ -849,6 +931,47 @@ function BlogPanel() {
         {notice && (
           <div className="rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-sm">
             {notice}
+          </div>
+        )}
+        {seoIssues && seoIssues.length > 0 && (
+          <div className="rounded-2xl border border-border bg-card p-4">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-semibold">
+                SEO validation — {seoIssues.filter((i) => i.level === "error").length} errors,{" "}
+                {seoIssues.filter((i) => i.level === "warn").length} warnings
+              </p>
+              {seoIssues.some((i) => i.level === "error") && (
+                <button
+                  onClick={() => save(true, true)}
+                  className="rounded-lg border border-destructive/40 px-3 py-1 text-xs text-destructive hover:bg-destructive/10"
+                >
+                  Publish anyway
+                </button>
+              )}
+            </div>
+            <ul className="mt-2 space-y-1.5 text-sm">
+              {seoIssues.map((i, idx) => (
+                <li key={idx} className="flex gap-2">
+                  <span
+                    className={`mt-0.5 rounded px-1.5 py-0.5 text-[10px] uppercase ${
+                      i.level === "error"
+                        ? "bg-destructive/15 text-destructive"
+                        : "bg-gold/15 text-gold"
+                    }`}
+                  >
+                    {i.level}
+                  </span>
+                  <span>
+                    <span className="font-mono text-xs text-muted-foreground">{i.field}</span> — {i.message}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {seoIssues && seoIssues.length === 0 && (
+          <div className="rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-400">
+            SEO looks good — safe to publish ✓
           </div>
         )}
 
@@ -1221,5 +1344,139 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
       <span className="text-xs font-medium text-muted-foreground">{label}</span>
       {children}
     </label>
+  );
+}
+
+function AgentPanel() {
+  const [input, setInput] = useState("");
+  const scrollerRef = useRef<HTMLDivElement | null>(null);
+
+  const { messages, sendMessage, status, error } = useChat({
+    transport: new DefaultChatTransport({
+      api: "/api/admin/agent-chat",
+      body: () => ({ token: getToken() }),
+    }),
+  });
+
+  useEffect(() => {
+    if (scrollerRef.current) {
+      scrollerRef.current.scrollTop = scrollerRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  const busy = status === "submitted" || status === "streaming";
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const text = input.trim();
+    if (!text || busy) return;
+    setInput("");
+    void sendMessage({ text });
+  };
+
+  const quickPrompts = [
+    "Give me a snapshot of the platform today.",
+    "Show the 5 most recent blog posts.",
+    "Draft a blog on ‘how Indian students can crack their first internship’.",
+    "How many new users joined recently and how active are the rooms?",
+  ];
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <h2 className="text-xl font-semibold">Campus X Admin Agent</h2>
+        <p className="text-xs text-muted-foreground">
+          Ask about users, blogs, rooms and jobs, or ask it to draft a blog. It calls real tools against the database.
+        </p>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        {quickPrompts.map((q) => (
+          <button
+            key={q}
+            type="button"
+            disabled={busy}
+            onClick={() => void sendMessage({ text: q })}
+            className="rounded-full border border-border bg-card px-3 py-1 text-xs hover:bg-accent disabled:opacity-50"
+          >
+            {q}
+          </button>
+        ))}
+      </div>
+
+      <div
+        ref={scrollerRef}
+        className="max-h-[60vh] min-h-[320px] space-y-4 overflow-y-auto rounded-2xl border border-border bg-card p-4"
+      >
+        {messages.length === 0 && (
+          <p className="text-sm text-muted-foreground">
+            Say hi 👋 — try one of the quick prompts, or ask anything about the platform.
+          </p>
+        )}
+        {messages.map((m) => {
+          const text = m.parts
+            .map((p) => (p.type === "text" ? p.text : ""))
+            .join("");
+          const toolCalls = m.parts.filter((p) => p.type.startsWith("tool-"));
+          return (
+            <div
+              key={m.id}
+              className={`rounded-xl border px-4 py-3 text-sm ${
+                m.role === "user"
+                  ? "border-primary/30 bg-primary/5"
+                  : "border-border bg-background"
+              }`}
+            >
+              <p className="mb-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                {m.role === "user" ? "You" : "Agent"}
+              </p>
+              {toolCalls.length > 0 && (
+                <div className="mb-2 flex flex-wrap gap-1.5">
+                  {toolCalls.map((tc, i) => (
+                    <span
+                      key={i}
+                      className="rounded-full border border-gold/30 bg-gold/10 px-2 py-0.5 text-[10px] uppercase tracking-wide text-gold"
+                    >
+                      🔧 {tc.type.replace(/^tool-/, "")}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {text ? (
+                <div className="prose prose-sm max-w-none prose-invert prose-p:my-2 prose-headings:mt-3 prose-headings:mb-2 prose-pre:my-2">
+                  <ReactMarkdown>{text}</ReactMarkdown>
+                </div>
+              ) : (
+                busy && m.role === "assistant" && (
+                  <p className="text-xs text-muted-foreground">Thinking…</p>
+                )
+              )}
+            </div>
+          );
+        })}
+        {error && (
+          <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+            {error.message}
+          </p>
+        )}
+      </div>
+
+      <form onSubmit={submit} className="flex gap-2">
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Ask the admin agent…"
+          className="flex-1 rounded-lg border border-input bg-background px-3 py-2 text-sm"
+          disabled={busy}
+        />
+        <button
+          type="submit"
+          disabled={busy || !input.trim()}
+          className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground disabled:opacity-50"
+        >
+          {busy ? "…" : "Send"}
+        </button>
+      </form>
+    </div>
   );
 }
