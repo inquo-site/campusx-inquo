@@ -105,6 +105,73 @@ export const adminGetBlog = createServerFn({ method: "POST" })
     return row;
   });
 
+// ============ SEO VALIDATION ============
+export type SeoIssue = { level: "error" | "warn"; field: string; message: string };
+
+function stripHtml(s: string): string {
+  return s.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+export function validateBlogSeoInput(input: {
+  title: string;
+  slug: string;
+  excerpt: string;
+  cover_image: string;
+  content: string;
+  content_format?: "markdown" | "html";
+  tags: string[];
+}): SeoIssue[] {
+  const issues: SeoIssue[] = [];
+  const title = input.title.trim();
+  if (title.length < 20) issues.push({ level: "error", field: "title", message: "Title is too short — aim for 30-65 characters." });
+  else if (title.length < 30) issues.push({ level: "warn", field: "title", message: "Title under 30 chars. 30-65 is best for search." });
+  if (title.length > 65) issues.push({ level: "warn", field: "title", message: `Title is ${title.length} chars — Google truncates around 60-65.` });
+
+  const slug = (input.slug || "").trim();
+  if (!slug) issues.push({ level: "error", field: "slug", message: "Slug is empty. Set a clean, hyphen-separated URL." });
+  else if (!/^[a-z0-9-]+$/.test(slug)) issues.push({ level: "error", field: "slug", message: "Slug must be lowercase letters, numbers and hyphens only." });
+  else if (slug.length > 80) issues.push({ level: "warn", field: "slug", message: "Slug is long — shorten to under 80 chars." });
+
+  const excerpt = (input.excerpt || "").trim();
+  if (!excerpt) issues.push({ level: "error", field: "excerpt", message: "Meta description (excerpt) is missing." });
+  else {
+    if (excerpt.length < 80) issues.push({ level: "warn", field: "excerpt", message: `Excerpt is ${excerpt.length} chars — 120-160 is ideal.` });
+    if (excerpt.length > 200) issues.push({ level: "warn", field: "excerpt", message: `Excerpt is ${excerpt.length} chars — over 200 gets truncated.` });
+  }
+
+  const cover = (input.cover_image || "").trim();
+  if (!cover) issues.push({ level: "error", field: "cover_image", message: "Cover image URL is required for OpenGraph / Twitter share previews." });
+  else if (!/^https?:\/\//.test(cover)) issues.push({ level: "error", field: "cover_image", message: "Cover image must be an absolute https URL." });
+
+  const bodyText = input.content_format === "html" ? stripHtml(input.content) : input.content;
+  const wordCount = bodyText.split(/\s+/).filter(Boolean).length;
+  if (wordCount < 250) issues.push({ level: "error", field: "content", message: `Only ${wordCount} words. Aim for 400+ for real search value.` });
+  else if (wordCount < 400) issues.push({ level: "warn", field: "content", message: `${wordCount} words — a bit thin. 600-1200 is a sweet spot.` });
+
+  if (!input.tags || input.tags.length === 0) issues.push({ level: "warn", field: "tags", message: "No tags — add 3-6 topical tags for discovery." });
+  else if (input.tags.length > 8) issues.push({ level: "warn", field: "tags", message: "Over 8 tags dilutes topical focus." });
+
+  return issues;
+}
+
+export const validateBlogSeo = createServerFn({ method: "POST" })
+  .inputValidator(
+    (data: {
+      token: string;
+      title: string;
+      slug: string;
+      excerpt: string;
+      cover_image: string;
+      content: string;
+      content_format?: "markdown" | "html";
+      tags: string[];
+    }) => data,
+  )
+  .handler(async ({ data }) => {
+    verifyAdmin(data.token);
+    return { issues: validateBlogSeoInput(data) };
+  });
+
 const UpsertSchema = z.object({
   token: z.string(),
   id: z.string().nullable().optional(),
@@ -119,6 +186,7 @@ const UpsertSchema = z.object({
   is_featured: z.boolean().default(false),
   author_name: z.string().max(120).nullable().optional(),
   read_minutes: z.number().int().min(1).max(120).default(3),
+  force: z.boolean().default(false),
 });
 
 export const adminUpsertBlog = createServerFn({ method: "POST" })
