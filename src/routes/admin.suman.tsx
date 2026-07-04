@@ -787,8 +787,41 @@ function BlogPanel() {
     }
   };
 
+  const classifyPublishError = (
+    e: unknown,
+  ): { kind: "forbidden" | "domain" | "generic"; title: string; detail: string; host?: string } => {
+    const raw = (e as Error)?.message || String(e ?? "Save failed.");
+    const msg = raw.toLowerCase();
+    // Try to pick out a hostname the platform is complaining about.
+    const hostMatch =
+      raw.match(/https?:\/\/([a-z0-9.-]+\.[a-z]{2,})/i) ||
+      raw.match(/\b([a-z0-9-]+\.lovable\.app)\b/i) ||
+      raw.match(/\b([a-z0-9-]+\.(?:app|com|dev|io|net|co|xyz))\b/i);
+    const host = hostMatch?.[1];
+    if (msg.includes("forbidden") && (msg.includes("host") || msg.includes("domain") || msg.includes("origin") || host)) {
+      return {
+        kind: "domain",
+        title: "That domain isn't allowed yet",
+        detail:
+          "Your site (or the image / link you referenced) is on a domain that isn't in the allowed list. Add it to Allowed Hosts / Site URL and try again.",
+        host,
+      };
+    }
+    if (msg.includes("forbidden") || msg.includes("403") || msg.includes("unauthorized") || msg.includes("401")) {
+      return {
+        kind: "forbidden",
+        title: "You're not signed in as admin",
+        detail:
+          "Your admin session expired or the password is wrong. Log out and sign back in with the admin email + password, then try publishing again.",
+        host,
+      };
+    }
+    return { kind: "generic", title: "Publish failed", detail: raw, host };
+  };
+
   const save = async (publish?: boolean, force?: boolean) => {
     setNotice("");
+    setPublishError(null);
     // On publish, run SEO validation first; block if errors and not forced.
     if (publish && !force) {
       const issues = await runSeoCheck();
@@ -824,8 +857,7 @@ function BlogPanel() {
       invalidate();
     } catch (e) {
       console.error("[blog save] failed", e);
-      const msg = (e as Error)?.message || "Save failed. Check the browser console.";
-      setNotice(msg);
+      setPublishError(classifyPublishError(e));
     }
   };
 
