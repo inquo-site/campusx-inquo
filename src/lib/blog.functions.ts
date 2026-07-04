@@ -195,6 +195,29 @@ export const adminUpsertBlog = createServerFn({ method: "POST" })
     verifyAdmin(data.token);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const finalSlug = (data.slug && data.slug.trim()) || slugify(data.title);
+
+    // Enforce SEO validation when publishing (unless explicitly forced)
+    if (data.status === "published" && !data.force) {
+      const issues = validateBlogSeoInput({
+        title: data.title,
+        slug: finalSlug,
+        excerpt: data.excerpt ?? "",
+        cover_image: data.cover_image ?? "",
+        content: data.content,
+        content_format: data.content_format,
+        tags: data.tags,
+      });
+      const errors = issues.filter((i) => i.level === "error");
+      if (errors.length > 0) {
+        const err = new Error(
+          "SEO validation failed. Fix these before publishing:\n" +
+            errors.map((e) => `• ${e.field}: ${e.message}`).join("\n"),
+        );
+        (err as Error & { seoIssues?: SeoIssue[] }).seoIssues = issues;
+        throw err;
+      }
+    }
+
     const payload = {
       title: data.title,
       slug: finalSlug,
