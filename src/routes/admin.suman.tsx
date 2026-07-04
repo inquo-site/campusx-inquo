@@ -727,6 +727,7 @@ function BlogPanel() {
       slug: row.slug,
       excerpt: row.excerpt ?? "",
       content: row.content ?? "",
+      content_format: ((row as { content_format?: string }).content_format === "html" ? "html" : "markdown"),
       cover_image: row.cover_image ?? "",
       tags: (row.tags ?? []).join(", "),
       status: (row.status as "draft" | "published") ?? "draft",
