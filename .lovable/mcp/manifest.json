@@ -42,17 +42,16 @@
           "openWorldHint": false
         },
         "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
           "properties": {
             "limit": {
+              "description": "Max rows (default 20).",
               "type": "integer",
               "minimum": 1,
-              "maximum": 50,
-              "description": "Max rows (default 20)."
+              "maximum": 50
             }
-          },
-          "additionalProperties": false,
-          "$schema": "http://json-schema.org/draft-07/schema#"
+          }
         },
         "outputSchema": null
       },
@@ -66,6 +65,7 @@
           "openWorldHint": false
         },
         "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
           "properties": {
             "title": {
@@ -79,11 +79,11 @@
               "maxLength": 4000
             },
             "tech_stack": {
+              "maxItems": 20,
               "type": "array",
               "items": {
                 "type": "string"
-              },
-              "maxItems": 20
+              }
             },
             "tag": {
               "type": "string",
@@ -98,19 +98,17 @@
               "format": "uri"
             },
             "roles_needed": {
+              "maxItems": 20,
               "type": "array",
               "items": {
                 "type": "string"
-              },
-              "maxItems": 20
+              }
             }
           },
           "required": [
             "title",
             "description"
-          ],
-          "additionalProperties": false,
-          "$schema": "http://json-schema.org/draft-07/schema#"
+          ]
         },
         "outputSchema": null
       },
@@ -124,21 +122,20 @@
           "openWorldHint": false
         },
         "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
           "properties": {
             "query": {
+              "description": "Match against title/company/description.",
               "type": "string",
-              "maxLength": 120,
-              "description": "Match against title/company/description."
+              "maxLength": 120
             },
             "limit": {
               "type": "integer",
               "minimum": 1,
               "maximum": 50
             }
-          },
-          "additionalProperties": false,
-          "$schema": "http://json-schema.org/draft-07/schema#"
+          }
         },
         "outputSchema": null
       },
