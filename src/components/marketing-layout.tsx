@@ -50,9 +50,9 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
               {l.label}
             </Link>
           ))}
-          <a href="/#layers" className="text-sm text-foreground/70 transition hover:text-gold">
+          <Link to="/features" className="text-sm text-foreground/70 transition hover:text-gold">
             Features
-          </a>
+          </Link>
         </nav>
 
         <Link

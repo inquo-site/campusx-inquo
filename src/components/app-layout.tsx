@@ -18,6 +18,7 @@ import {
   Users2,
   MessagesSquare,
   Github,
+  Linkedin,
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { useAuth } from "@/hooks/use-auth";
@@ -35,6 +36,7 @@ const navItems = [
   { to: "/alumni", label: "Alumni Referrals", icon: Users2 },
   { to: "/rooms", label: "Peer Rooms", icon: MessagesSquare },
   { to: "/devprofile", label: "Dev Report Card", icon: Github },
+  { to: "/linkedin-optimizer", label: "LinkedIn Optimizer", icon: Linkedin },
   { to: "/startups", label: "Startup Incubator", icon: Rocket },
   { to: "/mentor", label: "AI Mentor", icon: Sparkles },
   { to: "/resume", label: "Resume Builder", icon: FileText },
@@ -52,7 +54,7 @@ const titleMap: Record<string, { eyebrow: string; title: string; italic: string 
   "/alumni": { eyebrow: "Network", title: "Warm intros,", italic: "not cold DMs" },
   "/rooms": { eyebrow: "Network", title: "Peer rooms that", italic: "ship together" },
   "/devprofile": { eyebrow: "Network", title: "Your public builder", italic: "report card" },
-  "/startups": { eyebrow: "Incubator", title: "Founders looking for", italic: "a co-pilot" },
+  "/linkedin-optimizer": { eyebrow: "Profile", title: "Your LinkedIn,", italic: "recruiter-ready" },
   "/mentor": { eyebrow: "Mentor", title: "An AI mentor that", italic: "actually knows code" },
   "/resume": { eyebrow: "Resume", title: "Your resume,", italic: "AI-polished" },
   "/profile": { eyebrow: "You", title: "Your builder", italic: "footprint" },
