@@ -15,11 +15,11 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as DisclaimerRouteImport } from './routes/disclaimer'
-import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as UHandleRouteImport } from './routes/u.$handle'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AdminSumanRouteImport } from './routes/admin.suman'
@@ -75,11 +75,6 @@ const DisclaimerRoute = DisclaimerRouteImport.update({
   path: '/disclaimer',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogRoute = BlogRouteImport.update({
-  id: '/blog',
-  path: '/blog',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -99,15 +94,20 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UHandleRoute = UHandleRouteImport.update({
   id: '/u/$handle',
   path: '/u/$handle',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => BlogRoute,
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminSumanRoute = AdminSumanRouteImport.update({
   id: '/admin/suman',
@@ -230,7 +230,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRouteWithChildren
   '/disclaimer': typeof DisclaimerRoute
   '/features': typeof FeaturesRoute
   '/mcp': typeof McpRoute
@@ -256,6 +255,7 @@ export interface FileRoutesByFullPath {
   '/admin/suman': typeof AdminSumanRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/u/$handle': typeof UHandleRoute
+  '/blog/': typeof BlogIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/rooms/$slug': typeof AuthenticatedRoomsSlugRoute
@@ -266,7 +266,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRouteWithChildren
   '/disclaimer': typeof DisclaimerRoute
   '/features': typeof FeaturesRoute
   '/mcp': typeof McpRoute
@@ -292,6 +291,7 @@ export interface FileRoutesByTo {
   '/admin/suman': typeof AdminSumanRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/u/$handle': typeof UHandleRoute
+  '/blog': typeof BlogIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/rooms/$slug': typeof AuthenticatedRoomsSlugRoute
@@ -304,7 +304,6 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRouteWithChildren
   '/disclaimer': typeof DisclaimerRoute
   '/features': typeof FeaturesRoute
   '/mcp': typeof McpRoute
@@ -330,6 +329,7 @@ export interface FileRoutesById {
   '/admin/suman': typeof AdminSumanRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/u/$handle': typeof UHandleRoute
+  '/blog/': typeof BlogIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/rooms/$slug': typeof AuthenticatedRoomsSlugRoute
@@ -342,7 +342,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
-    | '/blog'
     | '/disclaimer'
     | '/features'
     | '/mcp'
@@ -368,6 +367,7 @@ export interface FileRouteTypes {
     | '/admin/suman'
     | '/blog/$slug'
     | '/u/$handle'
+    | '/blog/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/rooms/$slug'
@@ -378,7 +378,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
-    | '/blog'
     | '/disclaimer'
     | '/features'
     | '/mcp'
@@ -404,6 +403,7 @@ export interface FileRouteTypes {
     | '/admin/suman'
     | '/blog/$slug'
     | '/u/$handle'
+    | '/blog'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/rooms/$slug'
@@ -415,7 +415,6 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/about'
     | '/auth'
-    | '/blog'
     | '/disclaimer'
     | '/features'
     | '/mcp'
@@ -441,6 +440,7 @@ export interface FileRouteTypes {
     | '/admin/suman'
     | '/blog/$slug'
     | '/u/$handle'
+    | '/blog/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/rooms/$slug'
@@ -453,7 +453,6 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
-  BlogRoute: typeof BlogRouteWithChildren
   DisclaimerRoute: typeof DisclaimerRoute
   FeaturesRoute: typeof FeaturesRoute
   McpRoute: typeof McpRoute
@@ -463,7 +462,9 @@ export interface RootRouteChildren {
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   AdminSumanRoute: typeof AdminSumanRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   UHandleRoute: typeof UHandleRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiAdminAgentChatRoute: typeof ApiAdminAgentChatRoute
@@ -513,13 +514,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DisclaimerRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog': {
-      id: '/blog'
-      path: '/blog'
-      fullPath: '/blog'
-      preLoaderRoute: typeof BlogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -548,6 +542,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/u/$handle': {
       id: '/u/$handle'
       path: '/u/$handle'
@@ -557,10 +558,10 @@ declare module '@tanstack/react-router' {
     }
     '/blog/$slug': {
       id: '/blog/$slug'
-      path: '/$slug'
+      path: '/blog/$slug'
       fullPath: '/blog/$slug'
       preLoaderRoute: typeof BlogSlugRouteImport
-      parentRoute: typeof BlogRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/suman': {
       id: '/admin/suman'
@@ -760,22 +761,11 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
-interface BlogRouteChildren {
-  BlogSlugRoute: typeof BlogSlugRoute
-}
-
-const BlogRouteChildren: BlogRouteChildren = {
-  BlogSlugRoute: BlogSlugRoute,
-}
-
-const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
-  BlogRoute: BlogRouteWithChildren,
   DisclaimerRoute: DisclaimerRoute,
   FeaturesRoute: FeaturesRoute,
   McpRoute: McpRoute,
@@ -786,7 +776,9 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   AdminSumanRoute: AdminSumanRoute,
+  BlogSlugRoute: BlogSlugRoute,
   UHandleRoute: UHandleRoute,
+  BlogIndexRoute: BlogIndexRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   ApiAdminAgentChatRoute: ApiAdminAgentChatRoute,
