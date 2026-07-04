@@ -212,42 +212,8 @@ function Landing() {
       </section>
 
       {/* Testimonials */}
-      <section className="px-4 py-20 md:px-8">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-12 text-center">
-            <div className="text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground">— What builders say</div>
-            <h2 className="mt-3 font-display text-4xl md:text-5xl">
-              Loved by people who <span className="italic-serif">ship.</span>
-            </h2>
-          </div>
-          <div className="grid gap-6 md:grid-cols-2">
-            {testimonials.map((t, i) => (
-              <motion.figure
-                key={t.name}
-                initial={{ opacity: 0, y: 14 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-                className="card-noir card-noir-hover rounded-2xl p-8"
-              >
-                <Quote className="h-5 w-5 text-gold" />
-                <blockquote className="mt-4 font-display text-xl leading-snug">
-                  "{t.quote}"
-                </blockquote>
-                <figcaption className="mt-6 flex items-center gap-3">
-                  <div className="grid h-10 w-10 place-items-center rounded-full bg-gold font-display text-sm text-primary-foreground">
-                    {t.name[0]}
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium">{t.name}</div>
-                    <div className="text-xs text-muted-foreground">{t.college}</div>
-                  </div>
-                </figcaption>
-              </motion.figure>
-            ))}
-          </div>
-        </div>
-      </section>
+      <TestimonialsShowcase />
+
 
       {/* CTA */}
       <section className="px-4 py-20 md:px-8">
