@@ -21,6 +21,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as UHandleRouteImport } from './routes/u.$handle'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AdminSumanRouteImport } from './routes/admin.suman'
 import { Route as AuthenticatedStartupsRouteImport } from './routes/_authenticated/startups'
 import { Route as AuthenticatedResumeRouteImport } from './routes/_authenticated/resume'
@@ -101,6 +102,11 @@ const UHandleRoute = UHandleRouteImport.update({
   id: '/u/$handle',
   path: '/u/$handle',
   getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogRoute,
 } as any)
 const AdminSumanRoute = AdminSumanRouteImport.update({
   id: '/admin/suman',
@@ -218,7 +224,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/disclaimer': typeof DisclaimerRoute
   '/features': typeof FeaturesRoute
   '/mcp': typeof McpRoute
@@ -242,6 +248,7 @@ export interface FileRoutesByFullPath {
   '/resume': typeof AuthenticatedResumeRoute
   '/startups': typeof AuthenticatedStartupsRoute
   '/admin/suman': typeof AdminSumanRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/u/$handle': typeof UHandleRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -252,7 +259,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/disclaimer': typeof DisclaimerRoute
   '/features': typeof FeaturesRoute
   '/mcp': typeof McpRoute
@@ -276,6 +283,7 @@ export interface FileRoutesByTo {
   '/resume': typeof AuthenticatedResumeRoute
   '/startups': typeof AuthenticatedStartupsRoute
   '/admin/suman': typeof AdminSumanRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/u/$handle': typeof UHandleRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -288,7 +296,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/disclaimer': typeof DisclaimerRoute
   '/features': typeof FeaturesRoute
   '/mcp': typeof McpRoute
@@ -312,6 +320,7 @@ export interface FileRoutesById {
   '/_authenticated/resume': typeof AuthenticatedResumeRoute
   '/_authenticated/startups': typeof AuthenticatedStartupsRoute
   '/admin/suman': typeof AdminSumanRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/u/$handle': typeof UHandleRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -348,6 +357,7 @@ export interface FileRouteTypes {
     | '/resume'
     | '/startups'
     | '/admin/suman'
+    | '/blog/$slug'
     | '/u/$handle'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
@@ -382,6 +392,7 @@ export interface FileRouteTypes {
     | '/resume'
     | '/startups'
     | '/admin/suman'
+    | '/blog/$slug'
     | '/u/$handle'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
@@ -417,6 +428,7 @@ export interface FileRouteTypes {
     | '/_authenticated/resume'
     | '/_authenticated/startups'
     | '/admin/suman'
+    | '/blog/$slug'
     | '/u/$handle'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
@@ -429,7 +441,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
-  BlogRoute: typeof BlogRoute
+  BlogRoute: typeof BlogRouteWithChildren
   DisclaimerRoute: typeof DisclaimerRoute
   FeaturesRoute: typeof FeaturesRoute
   McpRoute: typeof McpRoute
@@ -529,6 +541,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/u/$handle'
       preLoaderRoute: typeof UHandleRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof BlogRoute
     }
     '/admin/suman': {
       id: '/admin/suman'
@@ -721,12 +740,22 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface BlogRouteChildren {
+  BlogSlugRoute: typeof BlogSlugRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogSlugRoute: BlogSlugRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
-  BlogRoute: BlogRoute,
+  BlogRoute: BlogRouteWithChildren,
   DisclaimerRoute: DisclaimerRoute,
   FeaturesRoute: FeaturesRoute,
   McpRoute: McpRoute,
