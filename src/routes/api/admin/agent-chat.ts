@@ -109,9 +109,7 @@ Audience: ${audience || "Indian student developers"}
 Return an SEO title (30-65 chars), a slug (kebab-case, <60), a 140-160 char excerpt,
 4-6 lowercase tags, an integer read_minutes, and content_markdown (700-1200 words, H2/H3, no H1).
 Respond as JSON with keys: title, slug, excerpt, tags, read_minutes, content_markdown.`;
-              const { text } = await streamText({ model, prompt }).then(async (r) => ({
-                text: await r.text,
-              }));
+              const { text } = await generateText({ model, prompt });
               // Best-effort JSON extraction
               const match = text.match(/\{[\s\S]*\}$/m) || text.match(/\{[\s\S]*\}/);
               try {
