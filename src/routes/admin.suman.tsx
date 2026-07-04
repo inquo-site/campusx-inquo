@@ -902,6 +902,19 @@ function BlogPanel() {
               Save draft
             </button>
             <button
+              onClick={runSeoCheck}
+              className="rounded-lg border border-gold/40 px-3 py-1.5 text-sm text-gold hover:bg-gold/10"
+            >
+              Check SEO
+            </button>
+            <button
+              onClick={runSummarize}
+              disabled={aiBusy || !form.title || !form.content}
+              className="rounded-lg border border-gold/40 px-3 py-1.5 text-sm text-gold hover:bg-gold/10 disabled:opacity-50"
+            >
+              {aiBusy ? "…" : "AI Summary"}
+            </button>
+            <button
               onClick={() => save(true)}
               className="rounded-lg bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground"
             >
@@ -918,6 +931,47 @@ function BlogPanel() {
         {notice && (
           <div className="rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-sm">
             {notice}
+          </div>
+        )}
+        {seoIssues && seoIssues.length > 0 && (
+          <div className="rounded-2xl border border-border bg-card p-4">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-semibold">
+                SEO validation — {seoIssues.filter((i) => i.level === "error").length} errors,{" "}
+                {seoIssues.filter((i) => i.level === "warn").length} warnings
+              </p>
+              {seoIssues.some((i) => i.level === "error") && (
+                <button
+                  onClick={() => save(true, true)}
+                  className="rounded-lg border border-destructive/40 px-3 py-1 text-xs text-destructive hover:bg-destructive/10"
+                >
+                  Publish anyway
+                </button>
+              )}
+            </div>
+            <ul className="mt-2 space-y-1.5 text-sm">
+              {seoIssues.map((i, idx) => (
+                <li key={idx} className="flex gap-2">
+                  <span
+                    className={`mt-0.5 rounded px-1.5 py-0.5 text-[10px] uppercase ${
+                      i.level === "error"
+                        ? "bg-destructive/15 text-destructive"
+                        : "bg-gold/15 text-gold"
+                    }`}
+                  >
+                    {i.level}
+                  </span>
+                  <span>
+                    <span className="font-mono text-xs text-muted-foreground">{i.field}</span> — {i.message}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {seoIssues && seoIssues.length === 0 && (
+          <div className="rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-400">
+            SEO looks good — safe to publish ✓
           </div>
         )}
 
