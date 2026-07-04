@@ -8,6 +8,15 @@ const navLinks = [
   { to: "/dashboard", label: "App" },
 ] as const;
 
+const featureLinks = [
+  { to: "/jobs", label: "Off-Campus Jobs" },
+  { to: "/hackathons", label: "Hackathons" },
+  { to: "/applications", label: "Application Tracker" },
+  { to: "/alumni", label: "Alumni Referrals" },
+  { to: "/rooms", label: "Peer Rooms" },
+  { to: "/devprofile", label: "Dev Report Card" },
+] as const;
+
 const footerLinks = [
   { to: "/about", label: "About Us" },
   { to: "/privacy", label: "Privacy Policy" },
