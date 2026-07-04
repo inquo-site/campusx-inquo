@@ -1,5 +1,5 @@
-import { motion } from "motion/react";
-import type { ReactNode } from "react";
+import { motion, useMotionValue, useAnimationFrame, animate } from "motion/react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   Users,
   FolderGit2,
@@ -9,13 +9,15 @@ import {
   FileText,
   MessageSquareCode,
   Trophy,
+  ChevronLeft,
+  ChevronRight,
+  Pause,
+  Play,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
 /*  Feature carousel — auto-scrolling "what you get" cards             */
-/*  Composition mirrors Unmind's hero card row: image field, a         */
-/*  category pill (top-left), and a floating detail chip (bottom).     */
 /* ------------------------------------------------------------------ */
 
 type Card = {
@@ -25,12 +27,10 @@ type Card = {
   headline: string;
   detail: string;
   detailKicker: string;
-  hue: string; // background gradient for the illustration panel
-  accent: string; // small accent used inside the illustration
+  hue: string;
+  accent: string;
   Illustration: () => ReactNode;
 };
-
-/* Small SVG illustrations — hand-tuned, no external images */
 
 const IllProjects = () => (
   <svg viewBox="0 0 320 200" className="h-full w-full" aria-hidden>
@@ -70,9 +70,7 @@ const IllInternships = () => (
 const IllMentor = () => (
   <svg viewBox="0 0 320 200" className="h-full w-full" aria-hidden>
     <rect x="26" y="34" width="268" height="132" rx="16" fill="#1c1a17" />
-    <g fill="#f5d97a">
-      <circle cx="60" cy="70" r="14" />
-    </g>
+    <g fill="#f5d97a"><circle cx="60" cy="70" r="14" /></g>
     <rect x="82" y="60" width="150" height="24" rx="12" fill="#ffffff" opacity="0.1" />
     <rect x="92" y="70" width="120" height="4" rx="2" fill="#ffffff" opacity="0.6" />
     <g transform="translate(0,40)">
@@ -131,9 +129,7 @@ const IllDiscover = () => (
       <g key={i} transform={`translate(${n.x - 22},${n.y - 12})`}>
         <rect width="80" height="34" rx="17" fill="#ffffff" />
         <circle cx="18" cy="17" r="10" fill={n.c} />
-        <text x="18" y="21" textAnchor="middle" fontSize="10" fontWeight="700" fill="#ffffff">
-          {n.t}
-        </text>
+        <text x="18" y="21" textAnchor="middle" fontSize="10" fontWeight="700" fill="#ffffff">{n.t}</text>
         <rect x="34" y="10" width="36" height="4" rx="2" fill="#2b2620" opacity="0.6" />
         <rect x="34" y="20" width="24" height="4" rx="2" fill="#2b2620" opacity="0.3" />
       </g>
@@ -142,89 +138,25 @@ const IllDiscover = () => (
 );
 
 const CARDS: Card[] = [
-  {
-    key: "projects",
-    label: "Project Hub",
-    icon: FolderGit2,
-    headline: "Ship live projects",
-    detailKicker: "New",
-    detail: "Realtime portfolio · GitHub linked",
-    hue: "linear-gradient(160deg,#faf0d8 0%,#f1d99a 100%)",
-    accent: "#d4b062",
-    Illustration: IllProjects,
-  },
-  {
-    key: "internships",
-    label: "Internships",
-    icon: Briefcase,
-    headline: "Real, paid roles",
-    detailKicker: "12 open",
-    detail: "Filtered for CS undergrads",
-    hue: "linear-gradient(160deg,#fff4e0 0%,#f7d9a5 100%)",
-    accent: "#e8a87c",
-    Illustration: IllInternships,
-  },
-  {
-    key: "mentor",
-    label: "AI Mentor",
-    icon: MessageSquareCode,
-    headline: "Chat with Campus X",
-    detailKicker: "Gemini",
-    detail: "Ask about stack, resume, interviews",
-    hue: "linear-gradient(160deg,#f5efe1 0%,#e8dcc0 100%)",
-    accent: "#d4b062",
-    Illustration: IllMentor,
-  },
-  {
-    key: "startup",
-    label: "Startup Incubator",
-    icon: Rocket,
-    headline: "Find your co-founder",
-    detailKicker: "Live",
-    detail: "Pitch board · role matching",
-    hue: "linear-gradient(160deg,#ffeec2 0%,#f4c04f 100%)",
-    accent: "#f4c04f",
-    Illustration: IllStartup,
-  },
-  {
-    key: "resume",
-    label: "Resume Builder",
-    icon: FileText,
-    headline: "AI-polished bullets",
-    detailKicker: "1-click",
-    detail: "Recruiter-tuned PDF export",
-    hue: "linear-gradient(160deg,#fbf6e9 0%,#eaddb8 100%)",
-    accent: "#e0c26a",
-    Illustration: IllResume,
-  },
-  {
-    key: "discover",
-    label: "Discover Peers",
-    icon: Users,
-    headline: "Meet the builders",
-    detailKicker: "600+",
-    detail: "Skill + college filters",
-    hue: "linear-gradient(160deg,#fff2d6 0%,#f0d99a 100%)",
-    accent: "#d4b062",
-    Illustration: IllDiscover,
-  },
+  { key: "projects", label: "Project Hub", icon: FolderGit2, headline: "Ship live projects", detailKicker: "New", detail: "Realtime portfolio · GitHub linked", hue: "linear-gradient(160deg,#faf0d8 0%,#f1d99a 100%)", accent: "#d4b062", Illustration: IllProjects },
+  { key: "internships", label: "Internships", icon: Briefcase, headline: "Real, paid roles", detailKicker: "12 open", detail: "Filtered for CS undergrads", hue: "linear-gradient(160deg,#fff4e0 0%,#f7d9a5 100%)", accent: "#e8a87c", Illustration: IllInternships },
+  { key: "mentor", label: "AI Mentor", icon: MessageSquareCode, headline: "Chat with Campus X", detailKicker: "Gemini", detail: "Ask about stack, resume, interviews", hue: "linear-gradient(160deg,#f5efe1 0%,#e8dcc0 100%)", accent: "#d4b062", Illustration: IllMentor },
+  { key: "startup", label: "Startup Incubator", icon: Rocket, headline: "Find your co-founder", detailKicker: "Live", detail: "Pitch board · role matching", hue: "linear-gradient(160deg,#ffeec2 0%,#f4c04f 100%)", accent: "#f4c04f", Illustration: IllStartup },
+  { key: "resume", label: "Resume Builder", icon: FileText, headline: "AI-polished bullets", detailKicker: "1-click", detail: "Recruiter-tuned PDF export", hue: "linear-gradient(160deg,#fbf6e9 0%,#eaddb8 100%)", accent: "#e0c26a", Illustration: IllResume },
+  { key: "discover", label: "Discover Peers", icon: Users, headline: "Meet the builders", detailKicker: "600+", detail: "Skill + college filters", hue: "linear-gradient(160deg,#fff2d6 0%,#f0d99a 100%)", accent: "#d4b062", Illustration: IllDiscover },
 ];
 
 function CarouselCard({ c }: { c: Card }) {
   return (
     <div className="group relative flex w-[280px] shrink-0 flex-col overflow-hidden rounded-3xl border border-foreground/8 shadow-[0_18px_40px_-24px_rgba(43,38,32,0.35)] transition-transform duration-500 ease-out hover:-translate-y-1 sm:w-[320px] md:w-[360px]">
       <div className="relative h-[220px] w-full" style={{ background: c.hue }}>
-        <div className="absolute inset-0 opacity-90">
+        <div className="absolute inset-0 opacity-90 pointer-events-none">
           <c.Illustration />
         </div>
-
-        {/* Category pill */}
         <div className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-background/90 px-3 py-1.5 text-[11px] font-medium text-foreground shadow-sm backdrop-blur">
           <c.icon className="h-3.5 w-3.5" style={{ color: c.accent }} />
           {c.label}
         </div>
-
-        {/* Floating detail chip */}
         <div className="absolute bottom-4 right-4 flex items-center gap-3 rounded-2xl bg-background px-4 py-2.5 shadow-lg">
           <div className="grid h-9 w-9 place-items-center rounded-xl bg-foreground text-[10px] font-semibold uppercase tracking-wider text-background">
             {c.detailKicker.length > 5 ? c.detailKicker.slice(0, 3) : c.detailKicker}
@@ -239,34 +171,163 @@ function CarouselCard({ c }: { c: Card }) {
   );
 }
 
+const SPEED = 70; // px per second — faster than the previous 42s loop
+
 export function FeatureCarousel() {
-  // Duplicate the list so the marquee loops seamlessly.
   const loop = [...CARDS, ...CARDS];
+  const trackRef = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const [setWidth, setSetWidth] = useState(0); // width of ONE set of cards + gaps
+  const [paused, setPaused] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [dragging, setDragging] = useState(false);
+  const [active, setActive] = useState(0);
+
+  // Measure the width of a single set (half of the duplicated track).
+  useEffect(() => {
+    const measure = () => {
+      const el = trackRef.current;
+      if (!el) return;
+      const w = el.scrollWidth / 2;
+      if (w > 0) setSetWidth(w);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (trackRef.current) ro.observe(trackRef.current);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
+
+  // Auto-scroll loop with pause on hover / drag / manual pause.
+  useAnimationFrame((_, delta) => {
+    if (!setWidth || paused || hovered || dragging) return;
+    let next = x.get() - (SPEED * delta) / 1000;
+    if (next <= -setWidth) next += setWidth;
+    x.set(next);
+  });
+
+  // Track active dot from x position.
+  useEffect(() => {
+    if (!setWidth) return;
+    const unsub = x.on("change", (val) => {
+      const cardStep = setWidth / CARDS.length;
+      let idx = Math.round((-val % setWidth) / cardStep) % CARDS.length;
+      if (idx < 0) idx += CARDS.length;
+      setActive(idx);
+    });
+    return () => unsub();
+  }, [setWidth, x]);
+
+  const jumpBy = (dir: 1 | -1) => {
+    if (!setWidth) return;
+    const cardStep = setWidth / CARDS.length;
+    let target = x.get() - dir * cardStep;
+    // Keep target within [-setWidth, 0] for a clean animation, then normalise.
+    animate(x, target, {
+      type: "spring",
+      stiffness: 180,
+      damping: 26,
+      onComplete: () => {
+        let v = x.get();
+        if (v <= -setWidth) v += setWidth;
+        if (v > 0) v -= setWidth;
+        x.set(v);
+      },
+    });
+  };
+
+  const jumpTo = (idx: number) => {
+    if (!setWidth) return;
+    const cardStep = setWidth / CARDS.length;
+    animate(x, -idx * cardStep, { type: "spring", stiffness: 180, damping: 26 });
+  };
 
   return (
-    <div className="relative mx-auto mt-14 w-full max-w-[110rem] overflow-hidden">
-      {/* soft edge fades */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-background to-transparent md:w-28" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-background to-transparent md:w-28" />
-
-      <motion.div
-        className="flex gap-5 will-change-transform"
-        animate={{ x: ["0%", "-50%"] }}
-        transition={{
-          duration: 42,
-          ease: "linear",
-          repeat: Infinity,
-        }}
+    <div className="relative mx-auto mt-14 w-full max-w-[110rem]">
+      <div
+        className="relative overflow-hidden"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
       >
-        {loop.map((c, i) => (
-          <CarouselCard key={`${c.key}-${i}`} c={c} />
-        ))}
-      </motion.div>
+        {/* soft edge fades */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-background to-transparent md:w-28" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-background to-transparent md:w-28" />
+
+        <motion.div
+          ref={trackRef}
+          className="flex gap-5 will-change-transform cursor-grab active:cursor-grabbing"
+          style={{ x }}
+          drag="x"
+          dragMomentum={false}
+          dragConstraints={{ left: -Infinity, right: Infinity }}
+          onDragStart={() => setDragging(true)}
+          onDragEnd={() => {
+            setDragging(false);
+            // normalise x back into a single loop window so the marquee stays seamless
+            if (setWidth) {
+              let v = x.get();
+              v = ((v % setWidth) + setWidth) % setWidth; // 0..setWidth
+              x.set(v === 0 ? 0 : -(setWidth - v));
+            }
+          }}
+        >
+          {loop.map((c, i) => (
+            <CarouselCard key={`${c.key}-${i}`} c={c} />
+          ))}
+        </motion.div>
+
+        {/* Prev / Next arrows */}
+        <button
+          type="button"
+          aria-label="Previous"
+          onClick={() => jumpBy(-1)}
+          className="absolute left-3 top-1/2 z-20 -translate-y-1/2 grid h-11 w-11 place-items-center rounded-full bg-background/90 text-foreground shadow-lg backdrop-blur transition hover:scale-105 active:scale-95 md:left-6"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </button>
+        <button
+          type="button"
+          aria-label="Next"
+          onClick={() => jumpBy(1)}
+          className="absolute right-3 top-1/2 z-20 -translate-y-1/2 grid h-11 w-11 place-items-center rounded-full bg-background/90 text-foreground shadow-lg backdrop-blur transition hover:scale-105 active:scale-95 md:right-6"
+        >
+          <ChevronRight className="h-5 w-5" />
+        </button>
+      </div>
+
+      {/* Controls row: pagination dots + play/pause */}
+      <div className="mt-6 flex items-center justify-center gap-5">
+        <div className="flex items-center gap-2">
+          {CARDS.map((c, i) => (
+            <button
+              key={c.key}
+              type="button"
+              aria-label={`Go to ${c.label}`}
+              onClick={() => jumpTo(i)}
+              className={`h-2 rounded-full transition-all ${
+                active === i ? "w-6 bg-foreground" : "w-2 bg-foreground/25 hover:bg-foreground/50"
+              }`}
+            />
+          ))}
+        </div>
+        <button
+          type="button"
+          onClick={() => setPaused((p) => !p)}
+          aria-label={paused ? "Play" : "Pause"}
+          className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-background px-3 py-1.5 text-[11px] font-medium text-foreground shadow-sm transition hover:bg-foreground/5"
+        >
+          {paused ? <Play className="h-3 w-3" /> : <Pause className="h-3 w-3" />}
+          {paused ? "Play" : "Pause"}
+        </button>
+      </div>
 
       {/* Kicker */}
-      <div className="mt-8 flex items-center justify-center gap-2 text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
+      <div className="mt-6 flex items-center justify-center gap-2 text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
         <Sparkles className="h-3 w-3" />
-        <span>Everything you'll find inside</span>
+        <span>Everything you'll find inside · drag or swipe</span>
         <Trophy className="h-3 w-3" />
       </div>
     </div>
