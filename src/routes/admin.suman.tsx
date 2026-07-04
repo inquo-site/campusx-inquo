@@ -825,13 +825,32 @@ function BlogPanel() {
               Drafts stay private. Published posts appear on /blog and the landing page.
             </p>
           </div>
-          <button
-            onClick={() => setEditing(false)}
-            className="rounded-lg border border-border px-3 py-1.5 text-sm hover:bg-accent"
-          >
-            Back to list
-          </button>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={() => save(false)}
+              className="rounded-lg border border-border px-3 py-1.5 text-sm hover:bg-accent"
+            >
+              Save draft
+            </button>
+            <button
+              onClick={() => save(true)}
+              className="rounded-lg bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground"
+            >
+              Publish
+            </button>
+            <button
+              onClick={() => setEditing(false)}
+              className="rounded-lg border border-border px-3 py-1.5 text-sm hover:bg-accent"
+            >
+              Back to list
+            </button>
+          </div>
         </div>
+        {notice && (
+          <div className="rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-sm">
+            {notice}
+          </div>
+        )}
 
         {/* AI writer */}
         <div className="rounded-2xl border border-gold/20 bg-gold/5 p-5">
