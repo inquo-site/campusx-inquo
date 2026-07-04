@@ -11,12 +11,12 @@ import {
   Target,
   Zap,
   Heart,
-  Quote,
 } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing-layout";
 import { HowItWorks } from "@/components/how-it-works";
 import { TechMarquee, LiveStats, LiveTicker } from "@/components/landing-visuals";
 import { FeatureCarousel } from "@/components/feature-carousel";
+import { TestimonialsShowcase } from "@/components/testimonials-showcase";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -68,12 +68,6 @@ const why = [
   { icon: Heart, title: "Made in", italic: "India", body: "By a student, for students — from Purnia to every campus." },
 ];
 
-const testimonials = [
-  { name: "Priya R.", college: "NIT Trichy", quote: "Found my co-founder for our climate startup on Campus X within two weeks. We're now in YC's startup school." },
-  { name: "Arjun S.", college: "IIIT Hyderabad", quote: "The internship board got me a paid SDE role at a YC-backed startup. The dual-pane view is so much better than emails." },
-  { name: "Meera K.", college: "BITS Pilani", quote: "I posted a project and three frontend devs joined within 48 hours. We shipped to production in a month." },
-  { name: "Rohan T.", college: "IIT Kharagpur", quote: "Finally a platform that treats students like the builders we are. The vibe here is unlike any other community." },
-];
 
 function Landing() {
   return (
@@ -212,42 +206,8 @@ function Landing() {
       </section>
 
       {/* Testimonials */}
-      <section className="px-4 py-20 md:px-8">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-12 text-center">
-            <div className="text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground">— What builders say</div>
-            <h2 className="mt-3 font-display text-4xl md:text-5xl">
-              Loved by people who <span className="italic-serif">ship.</span>
-            </h2>
-          </div>
-          <div className="grid gap-6 md:grid-cols-2">
-            {testimonials.map((t, i) => (
-              <motion.figure
-                key={t.name}
-                initial={{ opacity: 0, y: 14 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-                className="card-noir card-noir-hover rounded-2xl p-8"
-              >
-                <Quote className="h-5 w-5 text-gold" />
-                <blockquote className="mt-4 font-display text-xl leading-snug">
-                  "{t.quote}"
-                </blockquote>
-                <figcaption className="mt-6 flex items-center gap-3">
-                  <div className="grid h-10 w-10 place-items-center rounded-full bg-gold font-display text-sm text-primary-foreground">
-                    {t.name[0]}
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium">{t.name}</div>
-                    <div className="text-xs text-muted-foreground">{t.college}</div>
-                  </div>
-                </figcaption>
-              </motion.figure>
-            ))}
-          </div>
-        </div>
-      </section>
+      <TestimonialsShowcase />
+
 
       {/* CTA */}
       <section className="px-4 py-20 md:px-8">
