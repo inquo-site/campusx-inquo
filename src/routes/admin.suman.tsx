@@ -182,12 +182,14 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       </header>
       <main className="mx-auto max-w-7xl px-6 py-8">
         {tab === "overview" && <OverviewPanel />}
+        {tab === "blog" && <BlogPanel />}
         {tab === "rooms" && <RoomsPanel />}
         {tab === "jobs" && <JobsPanel />}
         {tab === "profiles" && <ProfilesPanel />}
         {tab === "users" && <UsersPanel />}
         {tab === "analytics" && <AnalyticsPanel />}
         {tab === "promo" && <PromoPanel />}
+
       </main>
     </div>
   );
