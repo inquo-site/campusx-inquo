@@ -904,11 +904,39 @@ function BlogPanel() {
                 className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
               />
             </Field>
-            <Field label="Content (Markdown)">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-medium text-muted-foreground">Content format:</span>
+              {(["markdown", "html"] as const).map((fmt) => (
+                <button
+                  key={fmt}
+                  type="button"
+                  onClick={() => setForm({ ...form, content_format: fmt })}
+                  className={`rounded-md border px-2.5 py-1 text-xs uppercase tracking-wide transition ${
+                    form.content_format === fmt
+                      ? "border-gold/50 bg-gold/10 text-gold"
+                      : "border-border text-muted-foreground hover:bg-accent"
+                  }`}
+                >
+                  {fmt}
+                </button>
+              ))}
+            </div>
+            <Field
+              label={
+                form.content_format === "html"
+                  ? "Content (raw HTML — paste your <h2>, <p>, <img> etc.)"
+                  : "Content (Markdown)"
+              }
+            >
               <textarea
                 value={form.content}
                 onChange={(e) => setForm({ ...form, content: e.target.value })}
                 rows={22}
+                placeholder={
+                  form.content_format === "html"
+                    ? "<h2>Section title</h2>\n<p>Your HTML paragraph…</p>"
+                    : "## Section title\n\nYour markdown paragraph…"
+                }
                 className="w-full rounded-lg border border-input bg-background px-3 py-2 font-mono text-xs leading-relaxed"
               />
             </Field>
