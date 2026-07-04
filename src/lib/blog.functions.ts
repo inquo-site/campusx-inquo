@@ -112,6 +112,7 @@ const UpsertSchema = z.object({
   slug: z.string().max(120).optional().nullable(),
   excerpt: z.string().max(500).nullable().optional(),
   content: z.string().max(200000).default(""),
+  content_format: z.enum(["markdown", "html"]).default("markdown"),
   cover_image: z.string().url().nullable().optional().or(z.literal("")),
   tags: z.array(z.string()).default([]),
   status: z.enum(["draft", "published"]),
