@@ -55,7 +55,7 @@ const ADMIN_PASSWORD = "SUMAN@12suman";
 const STORAGE_KEY = "admin-suman-auth";
 const TOKEN_KEY = "admin-suman-token";
 
-type Tab = "overview" | "agent" | "rooms" | "jobs" | "profiles" | "users" | "analytics" | "promo" | "blog";
+type Tab = "overview" | "agent" | "autopilot" | "rooms" | "jobs" | "profiles" | "users" | "analytics" | "promo" | "blog";
 
 function AdminSuman() {
   const [authed, setAuthed] = useState(false);
@@ -149,6 +149,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const tabs: { id: Tab; label: string }[] = [
     { id: "overview", label: "Overview" },
     { id: "agent", label: "AI Agent" },
+    { id: "autopilot", label: "Autopilot" },
     { id: "blog", label: "Blog" },
     { id: "rooms", label: "Moderate Rooms" },
     { id: "jobs", label: "Curate Jobs" },
@@ -193,6 +194,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       <main className="mx-auto max-w-7xl px-6 py-8">
         {tab === "overview" && <OverviewPanel />}
         {tab === "agent" && <AgentPanel />}
+        {tab === "autopilot" && <AutopilotPanel />}
         {tab === "blog" && <BlogPanel />}
         {tab === "rooms" && <RoomsPanel />}
         {tab === "jobs" && <JobsPanel />}
