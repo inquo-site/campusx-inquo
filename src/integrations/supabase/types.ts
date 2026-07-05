@@ -14,6 +14,86 @@ export type Database = {
   }
   public: {
     Tables: {
+      agent_events: {
+        Row: {
+          created_at: string
+          dispatched_at: string | null
+          event_type: string
+          id: string
+          payload: Json
+          source_id: string | null
+          source_table: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          dispatched_at?: string | null
+          event_type: string
+          id?: string
+          payload?: Json
+          source_id?: string | null
+          source_table?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          dispatched_at?: string | null
+          event_type?: string
+          id?: string
+          payload?: Json
+          source_id?: string | null
+          source_table?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
+      agent_runs: {
+        Row: {
+          agent_name: string
+          created_at: string
+          duration_ms: number | null
+          error: string | null
+          event_id: string | null
+          event_type: string
+          id: string
+          input: Json
+          output: string | null
+          status: string
+        }
+        Insert: {
+          agent_name: string
+          created_at?: string
+          duration_ms?: number | null
+          error?: string | null
+          event_id?: string | null
+          event_type: string
+          id?: string
+          input?: Json
+          output?: string | null
+          status?: string
+        }
+        Update: {
+          agent_name?: string
+          created_at?: string
+          duration_ms?: number | null
+          error?: string | null
+          event_id?: string | null
+          event_type?: string
+          id?: string
+          input?: Json
+          output?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_runs_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "agent_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_messages: {
         Row: {
           content: string
