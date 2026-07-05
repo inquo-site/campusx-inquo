@@ -1871,8 +1871,8 @@ function PaymentsPanel() {
             </thead>
             <tbody className="divide-y divide-border">
               {subs.map((s) => (
-                <>
-                  <tr key={s.id} className="align-top">
+                <React.Fragment key={s.id}>
+                  <tr className="align-top">
                     <td className="px-4 py-3">
                       <div className="font-medium">{s.user_name || "—"}</div>
                       <div className="text-xs text-muted-foreground">{s.user_email}</div>
