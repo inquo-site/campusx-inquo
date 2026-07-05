@@ -110,6 +110,21 @@ export const Route = createFileRoute("/api/public/hooks/agent-dispatch")({
           return Response.json({ ok: true, no_agent: true });
         }
 
+        // Gate: only run agents for owners with an active autopilot subscription.
+        // System-wide cron events (owner_id is null) always run.
+        if (event.owner_id) {
+          const { data: active } = await supabaseAdmin.rpc("has_active_autopilot", {
+            _user_id: event.owner_id,
+          });
+          if (!active) {
+            await supabaseAdmin
+              .from("agent_events")
+              .update({ status: "skipped_no_subscription", dispatched_at: new Date().toISOString() })
+              .eq("id", eventId);
+            return Response.json({ ok: true, skipped: "no_active_subscription" });
+          }
+        }
+
         await supabaseAdmin
           .from("agent_events")
           .update({ status: "dispatched", dispatched_at: new Date().toISOString() })
