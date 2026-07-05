@@ -19,6 +19,7 @@ import {
   MessagesSquare,
   Github,
   Linkedin,
+  Bot,
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { useAuth } from "@/hooks/use-auth";
@@ -27,6 +28,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 const navItems = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/agents", label: "AI Autopilot", icon: Bot },
   { to: "/discover", label: "Discover Peers", icon: Users },
   { to: "/projects", label: "Project Hub", icon: FolderGit2 },
   { to: "/internships", label: "Internship Board", icon: Briefcase },
@@ -45,6 +47,7 @@ const navItems = [
 
 const titleMap: Record<string, { eyebrow: string; title: string; italic: string }> = {
   "/dashboard": { eyebrow: "Home", title: "Builders that", italic: "ship things" },
+  "/agents": { eyebrow: "Autopilot", title: "Your AI team,", italic: "always on" },
   "/discover": { eyebrow: "Network", title: "Peers who", italic: "build with you" },
   "/projects": { eyebrow: "Showcase", title: "Projects that", italic: "actually run" },
   "/internships": { eyebrow: "Opportunities", title: "Internships worth", italic: "your hours" },
@@ -110,7 +113,9 @@ export function AppLayout({ children }: { children: ReactNode }) {
                     to={item.to}
                     className={
                       "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-300 " +
-                      (active ? "bg-sidebar-accent text-cream" : "text-sidebar-foreground/65 hover:text-cream")
+                      (active
+                        ? "bg-gold/10 text-foreground"
+                        : "text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-foreground")
                     }
                   >
                     {active && (
@@ -132,7 +137,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
 
         <button
           onClick={signOut}
-          className="mx-3 mb-3 inline-flex items-center gap-2 rounded-lg border border-border bg-sidebar-accent px-3 py-2.5 text-xs text-sidebar-foreground/70 hover:text-cream"
+          className="mx-3 mb-3 inline-flex items-center gap-2 rounded-lg border border-border bg-sidebar-accent/60 px-3 py-2.5 text-xs text-sidebar-foreground/80 hover:border-gold/40 hover:text-foreground"
         >
           <LogOut className="h-3.5 w-3.5" /> Sign out
         </button>
