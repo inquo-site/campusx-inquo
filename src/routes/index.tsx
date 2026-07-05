@@ -19,6 +19,7 @@ import { FeatureCarousel } from "@/components/feature-carousel";
 import { TestimonialsShowcase } from "@/components/testimonials-showcase";
 import { OpportunityNetworkSection } from "@/components/opportunity-network";
 import { FeaturedBlogsSection } from "@/components/featured-blogs";
+import { AiAgentsSection } from "@/components/ai-agents-section";
 
 
 export const Route = createFileRoute("/")({
@@ -169,6 +170,10 @@ function Landing() {
 
       {/* Opportunity + Network layers */}
       <OpportunityNetworkSection />
+
+      {/* AI Agents autopilot */}
+      <AiAgentsSection />
+
 
 
       {/* Live stats counters */}
