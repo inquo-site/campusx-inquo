@@ -28,6 +28,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 const navItems = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/agents", label: "AI Autopilot", icon: Bot },
   { to: "/discover", label: "Discover Peers", icon: Users },
   { to: "/projects", label: "Project Hub", icon: FolderGit2 },
   { to: "/internships", label: "Internship Board", icon: Briefcase },
