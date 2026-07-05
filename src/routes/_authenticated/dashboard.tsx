@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { AiAgentsSection } from "@/components/ai-agents-section";
 import { motion } from "motion/react";
 import { TrendingUp, Eye, Send, ArrowUpRight, Sparkles, Rocket, Briefcase, FolderGit2, FileText } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -139,6 +140,8 @@ function Dashboard() {
           )}
         </div>
       </section>
+
+      <AiAgentsSection />
     </div>
   );
 }
