@@ -137,7 +137,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
 
         <button
           onClick={signOut}
-          className="mx-3 mb-3 inline-flex items-center gap-2 rounded-lg border border-border bg-sidebar-accent px-3 py-2.5 text-xs text-sidebar-foreground/70 hover:text-cream"
+          className="mx-3 mb-3 inline-flex items-center gap-2 rounded-lg border border-border bg-sidebar-accent/60 px-3 py-2.5 text-xs text-sidebar-foreground/80 hover:border-gold/40 hover:text-foreground"
         >
           <LogOut className="h-3.5 w-3.5" /> Sign out
         </button>
