@@ -94,6 +94,51 @@ export type Database = {
           },
         ]
       }
+      agent_subscriptions: {
+        Row: {
+          active_until: string | null
+          admin_note: string | null
+          amount_inr: number
+          created_at: string
+          id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          screenshot_url: string | null
+          status: string
+          updated_at: string
+          upi_txn_id: string
+          user_id: string
+        }
+        Insert: {
+          active_until?: string | null
+          admin_note?: string | null
+          amount_inr?: number
+          created_at?: string
+          id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          screenshot_url?: string | null
+          status?: string
+          updated_at?: string
+          upi_txn_id: string
+          user_id: string
+        }
+        Update: {
+          active_until?: string | null
+          admin_note?: string | null
+          amount_inr?: number
+          created_at?: string
+          id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          screenshot_url?: string | null
+          status?: string
+          updated_at?: string
+          upi_txn_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       ai_messages: {
         Row: {
           content: string

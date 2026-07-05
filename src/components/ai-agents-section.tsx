@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "motion/react";
 import {
   Hammer,
@@ -10,8 +11,13 @@ import {
   Check,
   ArrowUpRight,
   Sparkles,
+  ShieldCheck,
+  Clock,
 } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
+import { AutopilotActivateDialog } from "@/components/autopilot-activate-dialog";
 
 const agents = [
   {
@@ -66,6 +72,34 @@ const included = [
 ];
 
 export function AiAgentsSection() {
+  const { user } = useAuth();
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const { data: sub } = useQuery({
+    queryKey: ["my-autopilot-sub", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("agent_subscriptions")
+        .select("status,created_at,upi_txn_id")
+        .eq("user_id", user!.id)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      return data;
+    },
+  });
+
+  const status = sub?.status;
+  const ctaLabel =
+    status === "approved" ? "Autopilot Active" :
+    status === "pending" ? "Verification pending" :
+    "Activate Autopilot";
+  const CtaIcon =
+    status === "approved" ? ShieldCheck :
+    status === "pending" ? Clock :
+    ArrowUpRight;
+
   return (
     <section id="agents" className="px-4 py-24 md:px-8">
       <div className="mx-auto max-w-6xl">
@@ -111,20 +145,39 @@ export function AiAgentsSection() {
         {/* Pricing */}
         <div className="mt-12 grid gap-6 lg:grid-cols-[1.1fr_1fr]">
           <div className="ambient-glow rounded-3xl border border-gold/20 bg-surface p-8 md:p-10">
-            <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-              — AI Autopilot Plan
+            <div className="flex items-center justify-between">
+              <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                — AI Autopilot Plan
+              </div>
+              {status === "approved" && (
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-medium uppercase tracking-widest text-emerald-400">
+                  <ShieldCheck className="h-3 w-3" /> Active
+                </span>
+              )}
+              {status === "pending" && (
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-[10px] font-medium uppercase tracking-widest text-amber-400">
+                  <Clock className="h-3 w-3" /> Pending
+                </span>
+              )}
             </div>
             <div className="mt-4 flex items-baseline gap-2">
               <span className="font-display text-6xl md:text-7xl">₹999</span>
               <span className="text-sm text-muted-foreground">/ month</span>
             </div>
             <p className="mt-3 text-sm text-muted-foreground">
-              Flat pricing. All seven agents. Billed monthly in INR.
+              Flat pricing. All seven agents. Manual UPI payment · billed monthly in INR.
             </p>
-            <Link to="/dashboard" className="btn-ink group mt-8">
-              Activate Autopilot
-              <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-            </Link>
+            <button
+              onClick={() => setDialogOpen(true)}
+              disabled={!user}
+              className="btn-ink group mt-8 disabled:opacity-50"
+            >
+              {ctaLabel}
+              <CtaIcon className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </button>
+            {!user && (
+              <p className="mt-3 text-[11px] text-muted-foreground">Sign in to activate autopilot.</p>
+            )}
           </div>
 
           <div className="rounded-3xl border border-border bg-card p-8 md:p-10">
@@ -145,6 +198,7 @@ export function AiAgentsSection() {
           </div>
         </div>
       </div>
+      <AutopilotActivateDialog open={dialogOpen} onClose={() => setDialogOpen(false)} />
     </section>
   );
 }

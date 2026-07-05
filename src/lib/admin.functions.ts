@@ -242,3 +242,65 @@ export const adminDeletePromoCode = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+export const adminListSubscriptions = createServerFn({ method: "POST" })
+  .inputValidator((data: { token: string; status?: "pending" | "approved" | "rejected" | "all" }) => data)
+  .handler(async ({ data }) => {
+    verify(data.token);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    let q = supabaseAdmin
+      .from("agent_subscriptions")
+      .select("id,user_id,upi_txn_id,screenshot_url,amount_inr,status,admin_note,created_at,reviewed_at,active_until")
+      .order("created_at", { ascending: false })
+      .limit(200);
+    if (data.status && data.status !== "all") q = q.eq("status", data.status);
+    const { data: rows, error } = await q;
+    if (error) throw new Error(error.message);
+    const userIds = Array.from(new Set((rows ?? []).map((r) => r.user_id)));
+    const profiles = userIds.length
+      ? (
+          await supabaseAdmin.from("profiles").select("id,full_name").in("id", userIds)
+        ).data ?? []
+      : [];
+    const auths = userIds.length
+      ? (await supabaseAdmin.auth.admin.listUsers({ perPage: 200 })).data.users
+      : [];
+    const nameMap = new Map(profiles.map((p) => [p.id, p.full_name]));
+    const emailMap = new Map(auths.map((u) => [u.id, u.email ?? ""]));
+    return (rows ?? []).map((r) => ({
+      ...r,
+      user_name: nameMap.get(r.user_id) ?? "",
+      user_email: emailMap.get(r.user_id) ?? "",
+    }));
+  });
+
+export const adminReviewSubscription = createServerFn({ method: "POST" })
+  .inputValidator(
+    (d: { token: string; id: string; action: "approve" | "reject"; note?: string }) => d,
+  )
+  .handler(async ({ data }) => {
+    verify(data.token);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const now = new Date();
+    const patch: {
+      status: "approved" | "rejected";
+      admin_note: string | null;
+      reviewed_at: string;
+      active_until?: string;
+    } = {
+      status: data.action === "approve" ? "approved" : "rejected",
+      admin_note: data.note ?? null,
+      reviewed_at: now.toISOString(),
+    };
+    if (data.action === "approve") {
+      const until = new Date(now);
+      until.setDate(until.getDate() + 30);
+      patch.active_until = until.toISOString();
+    }
+    const { error } = await supabaseAdmin
+      .from("agent_subscriptions")
+      .update(patch)
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
