@@ -86,23 +86,17 @@ function MyAgentsPage() {
   });
 
   return (
-    <div className="mx-auto max-w-5xl space-y-10">
-      <header>
-        <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-          <span className="h-px w-6 bg-gold/60" /> Autopilot workspace
-        </div>
-        <div className="mt-4 flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <h1 className="max-w-2xl font-display text-4xl leading-[1.05] tracking-tight md:text-5xl">
-              Your seven <span className="italic-serif">AI agents</span> at work.
-            </h1>
-            <p className="mt-3 max-w-xl text-sm text-muted-foreground">
-              Har event par ek dedicated AI agent chalta hai — bilkul real human team ki tarah.
-              Yahan aap unke live outputs dekh sakte hain.
-            </p>
+    <div className="mx-auto max-w-4xl space-y-8">
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+            <span className="h-px w-6 bg-gold/60" /> Autopilot workspace
           </div>
-          <SubscriptionBadge sub={sub} loading={subLoading} onActivate={() => setDialogOpen(true)} />
+          <h1 className="mt-3 font-display text-3xl leading-[1.1] tracking-tight md:text-4xl">
+            Your AI team, <span className="italic-serif">quietly shipping.</span>
+          </h1>
         </div>
+        <SubscriptionBadge sub={sub} loading={subLoading} onActivate={() => setDialogOpen(true)} />
       </header>
 
       {!active ? (
