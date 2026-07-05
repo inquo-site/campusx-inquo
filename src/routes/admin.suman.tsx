@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -18,6 +18,8 @@ import {
   adminCreatePromoCode,
   adminTogglePromoCode,
   adminDeletePromoCode,
+  adminListSubscriptions,
+  adminReviewSubscription,
 } from "@/lib/admin.functions";
 import {
   adminListBlogs,
@@ -60,7 +62,7 @@ const ADMIN_PASSWORD = "SUMAN@12suman";
 const STORAGE_KEY = "admin-suman-auth";
 const TOKEN_KEY = "admin-suman-token";
 
-type Tab = "overview" | "agent" | "autopilot" | "rooms" | "jobs" | "profiles" | "users" | "analytics" | "promo" | "blog";
+type Tab = "overview" | "agent" | "autopilot" | "payments" | "rooms" | "jobs" | "profiles" | "users" | "analytics" | "promo" | "blog";
 
 function AdminSuman() {
   const [authed, setAuthed] = useState(false);
@@ -155,6 +157,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     { id: "overview", label: "Overview" },
     { id: "agent", label: "AI Agent" },
     { id: "autopilot", label: "Autopilot" },
+    { id: "payments", label: "Payments" },
     { id: "blog", label: "Blog" },
     { id: "rooms", label: "Moderate Rooms" },
     { id: "jobs", label: "Curate Jobs" },
@@ -200,6 +203,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
         {tab === "overview" && <OverviewPanel />}
         {tab === "agent" && <AgentPanel />}
         {tab === "autopilot" && <AutopilotPanel />}
+        {tab === "payments" && <PaymentsPanel />}
         {tab === "blog" && <BlogPanel />}
         {tab === "rooms" && <RoomsPanel />}
         {tab === "jobs" && <JobsPanel />}
@@ -1797,6 +1801,155 @@ function AutopilotPanel() {
           </table>
         </div>
       </section>
+    </div>
+  );
+}
+
+function PaymentsPanel() {
+  const token = typeof window !== "undefined" ? sessionStorage.getItem(TOKEN_KEY) ?? ADMIN_PASSWORD : ADMIN_PASSWORD;
+  const listFn = useServerFn(adminListSubscriptions);
+  const reviewFn = useServerFn(adminReviewSubscription);
+  const qc = useQueryClient();
+  const [filter, setFilter] = useState<"pending" | "approved" | "rejected" | "all">("pending");
+  const [noteFor, setNoteFor] = useState<string | null>(null);
+  const [note, setNote] = useState("");
+
+  const { data: subs, isLoading } = useQuery({
+    queryKey: ["admin-subs", filter],
+    queryFn: () => listFn({ data: { token, status: filter } }),
+  });
+
+  const review = useMutation({
+    mutationFn: async (v: { id: string; action: "approve" | "reject"; note?: string }) =>
+      reviewFn({ data: { token, ...v } }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin-subs"] });
+      setNoteFor(null);
+      setNote("");
+    },
+  });
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-semibold">Autopilot Payments</h2>
+          <p className="text-sm text-muted-foreground">Manual UPI verification for ₹999 activations.</p>
+        </div>
+        <div className="flex gap-1 rounded-lg border border-border bg-surface p-1">
+          {(["pending", "approved", "rejected", "all"] as const).map((s) => (
+            <button
+              key={s}
+              onClick={() => setFilter(s)}
+              className={`rounded-md px-3 py-1 text-xs capitalize transition ${
+                filter === s ? "bg-primary text-primary-foreground" : "hover:bg-accent"
+              }`}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {isLoading ? (
+        <div className="rounded-xl border border-border p-8 text-center text-sm text-muted-foreground">Loading…</div>
+      ) : !subs || subs.length === 0 ? (
+        <div className="rounded-xl border border-border p-8 text-center text-sm text-muted-foreground">No {filter} requests.</div>
+      ) : (
+        <div className="overflow-hidden rounded-xl border border-border">
+          <table className="w-full text-sm">
+            <thead className="bg-surface text-left text-[10px] uppercase tracking-widest text-muted-foreground">
+              <tr>
+                <th className="px-4 py-3">User</th>
+                <th className="px-4 py-3">Txn ID</th>
+                <th className="px-4 py-3">Amount</th>
+                <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3">Submitted</th>
+                <th className="px-4 py-3">Proof</th>
+                <th className="px-4 py-3 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {subs.map((s) => (
+                <React.Fragment key={s.id}>
+                  <tr className="align-top">
+                    <td className="px-4 py-3">
+                      <div className="font-medium">{s.user_name || "—"}</div>
+                      <div className="text-xs text-muted-foreground">{s.user_email}</div>
+                    </td>
+                    <td className="px-4 py-3 font-mono text-xs">{s.upi_txn_id}</td>
+                    <td className="px-4 py-3">₹{s.amount_inr}</td>
+                    <td className="px-4 py-3">
+                      <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] uppercase tracking-widest ${
+                        s.status === "approved" ? "bg-emerald-500/10 text-emerald-400" :
+                        s.status === "rejected" ? "bg-rose-500/10 text-rose-400" :
+                        "bg-amber-500/10 text-amber-400"
+                      }`}>{s.status}</span>
+                    </td>
+                    <td className="px-4 py-3 text-xs text-muted-foreground">{new Date(s.created_at).toLocaleString()}</td>
+                    <td className="px-4 py-3">
+                      {s.screenshot_url ? (
+                        <a href={s.screenshot_url} target="_blank" rel="noreferrer" className="text-primary underline">
+                          View
+                        </a>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">—</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      {s.status === "pending" && (
+                        <div className="flex justify-end gap-2">
+                          <button
+                            onClick={() => review.mutate({ id: s.id, action: "approve" })}
+                            className="rounded-md bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400 hover:bg-emerald-500/20"
+                          >
+                            Approve
+                          </button>
+                          <button
+                            onClick={() => { setNoteFor(s.id); setNote(""); }}
+                            className="rounded-md bg-rose-500/10 px-3 py-1 text-xs font-medium text-rose-400 hover:bg-rose-500/20"
+                          >
+                            Reject
+                          </button>
+                        </div>
+                      )}
+                      {s.status !== "pending" && s.admin_note && (
+                        <div className="text-right text-[11px] text-muted-foreground italic">"{s.admin_note}"</div>
+                      )}
+                    </td>
+                  </tr>
+                  {noteFor === s.id && (
+                    <tr>
+                      <td colSpan={7} className="bg-surface px-4 py-3">
+                        <div className="flex gap-2">
+                          <input
+                            value={note}
+                            onChange={(e) => setNote(e.target.value)}
+                            placeholder="Reason for rejection (optional)"
+                            className="flex-1 rounded-md border border-border bg-background px-3 py-1.5 text-sm"
+                          />
+                          <button
+                            onClick={() => review.mutate({ id: s.id, action: "reject", note })}
+                            className="rounded-md bg-rose-500 px-3 py-1.5 text-xs font-medium text-white hover:bg-rose-600"
+                          >
+                            Confirm reject
+                          </button>
+                          <button
+                            onClick={() => setNoteFor(null)}
+                            className="rounded-md border border-border px-3 py-1.5 text-xs hover:bg-accent"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
