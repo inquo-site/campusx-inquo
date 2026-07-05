@@ -19,6 +19,7 @@ import {
   MessagesSquare,
   Github,
   Linkedin,
+  Bot,
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { useAuth } from "@/hooks/use-auth";
