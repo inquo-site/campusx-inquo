@@ -20,6 +20,7 @@ export type Database = {
           dispatched_at: string | null
           event_type: string
           id: string
+          owner_id: string | null
           payload: Json
           source_id: string | null
           source_table: string | null
@@ -30,6 +31,7 @@ export type Database = {
           dispatched_at?: string | null
           event_type: string
           id?: string
+          owner_id?: string | null
           payload?: Json
           source_id?: string | null
           source_table?: string | null
@@ -40,6 +42,7 @@ export type Database = {
           dispatched_at?: string | null
           event_type?: string
           id?: string
+          owner_id?: string | null
           payload?: Json
           source_id?: string | null
           source_table?: string | null
@@ -729,6 +732,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      has_active_autopilot: { Args: { _user_id: string }; Returns: boolean }
       is_room_creator: {
         Args: { _room_id: string; _user_id: string }
         Returns: boolean
