@@ -5,12 +5,14 @@ import type { ReactNode } from "react";
 const navLinks = [
   { to: "/", label: "Home" },
   { to: "/about", label: "About" },
+  { to: "/agents", label: "AI Agents" },
   { to: "/blog", label: "Blog" },
   { to: "/dashboard", label: "App" },
 ] as const;
 
 
 const featureLinks = [
+  { to: "/agents", label: "AI Autopilot" },
   { to: "/jobs", label: "Off-Campus Jobs" },
   { to: "/hackathons", label: "Hackathons" },
   { to: "/applications", label: "Application Tracker" },
