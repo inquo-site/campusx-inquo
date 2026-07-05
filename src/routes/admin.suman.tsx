@@ -1944,7 +1944,7 @@ function PaymentsPanel() {
                       </td>
                     </tr>
                   )}
-                </>
+                </React.Fragment>
               ))}
             </tbody>
           </table>
