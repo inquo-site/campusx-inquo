@@ -88,6 +88,8 @@ function Dashboard() {
         </div>
       </section>
 
+      <AiAgentsSection />
+
       <section>
         <div className="mb-4 flex items-baseline justify-between">
           <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">— Snapshot</div>
@@ -140,8 +142,6 @@ function Dashboard() {
           )}
         </div>
       </section>
-
-      <AiAgentsSection />
     </div>
   );
 }
