@@ -44,6 +44,7 @@ import { Route as ApiAdminAgentChatRouteImport } from './routes/api/admin/agent-
 import { Route as AuthenticatedRoomsSlugRouteImport } from './routes/_authenticated/rooms.$slug'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
+import { Route as ApiPublicHooksAgentDispatchRouteImport } from './routes/api/public/hooks/agent-dispatch'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -225,6 +226,12 @@ const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
   path: '/.lovable/oauth/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHooksAgentDispatchRoute =
+  ApiPublicHooksAgentDispatchRouteImport.update({
+    id: '/api/public/hooks/agent-dispatch',
+    path: '/api/public/hooks/agent-dispatch',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -261,6 +268,7 @@ export interface FileRoutesByFullPath {
   '/rooms/$slug': typeof AuthenticatedRoomsSlugRoute
   '/api/admin/agent-chat': typeof ApiAdminAgentChatRoute
   '/rooms/': typeof AuthenticatedRoomsIndexRoute
+  '/api/public/hooks/agent-dispatch': typeof ApiPublicHooksAgentDispatchRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -297,6 +305,7 @@ export interface FileRoutesByTo {
   '/rooms/$slug': typeof AuthenticatedRoomsSlugRoute
   '/api/admin/agent-chat': typeof ApiAdminAgentChatRoute
   '/rooms': typeof AuthenticatedRoomsIndexRoute
+  '/api/public/hooks/agent-dispatch': typeof ApiPublicHooksAgentDispatchRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -335,6 +344,7 @@ export interface FileRoutesById {
   '/_authenticated/rooms/$slug': typeof AuthenticatedRoomsSlugRoute
   '/api/admin/agent-chat': typeof ApiAdminAgentChatRoute
   '/_authenticated/rooms/': typeof AuthenticatedRoomsIndexRoute
+  '/api/public/hooks/agent-dispatch': typeof ApiPublicHooksAgentDispatchRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -373,6 +383,7 @@ export interface FileRouteTypes {
     | '/rooms/$slug'
     | '/api/admin/agent-chat'
     | '/rooms/'
+    | '/api/public/hooks/agent-dispatch'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -409,6 +420,7 @@ export interface FileRouteTypes {
     | '/rooms/$slug'
     | '/api/admin/agent-chat'
     | '/rooms'
+    | '/api/public/hooks/agent-dispatch'
   id:
     | '__root__'
     | '/'
@@ -446,6 +458,7 @@ export interface FileRouteTypes {
     | '/_authenticated/rooms/$slug'
     | '/api/admin/agent-chat'
     | '/_authenticated/rooms/'
+    | '/api/public/hooks/agent-dispatch'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -468,6 +481,7 @@ export interface RootRouteChildren {
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiAdminAgentChatRoute: typeof ApiAdminAgentChatRoute
+  ApiPublicHooksAgentDispatchRoute: typeof ApiPublicHooksAgentDispatchRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -717,6 +731,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DotlovableOauthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/agent-dispatch': {
+      id: '/api/public/hooks/agent-dispatch'
+      path: '/api/public/hooks/agent-dispatch'
+      fullPath: '/api/public/hooks/agent-dispatch'
+      preLoaderRoute: typeof ApiPublicHooksAgentDispatchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -782,6 +803,7 @@ const rootRouteChildren: RootRouteChildren = {
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   ApiAdminAgentChatRoute: ApiAdminAgentChatRoute,
+  ApiPublicHooksAgentDispatchRoute: ApiPublicHooksAgentDispatchRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
