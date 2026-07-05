@@ -113,7 +113,9 @@ export function AppLayout({ children }: { children: ReactNode }) {
                     to={item.to}
                     className={
                       "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-300 " +
-                      (active ? "bg-sidebar-accent text-cream" : "text-sidebar-foreground/65 hover:text-cream")
+                      (active
+                        ? "bg-gold/10 text-foreground"
+                        : "text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-foreground")
                     }
                   >
                     {active && (
