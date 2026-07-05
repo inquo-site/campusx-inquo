@@ -252,24 +252,21 @@ function ActiveAgentsGrid({ runs }: { runs: Run[] }) {
   ];
   return (
     <section>
-      <div className="mb-5 flex items-baseline justify-between">
-        <h2 className="font-display text-2xl">
-          Live <span className="italic-serif">team</span>
-        </h2>
-        <span className="font-mono text-xs text-muted-foreground">7 agents · always on</span>
+      <div className="mb-3 flex items-baseline justify-between">
+        <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">— The team · always on</span>
+        <span className="font-mono text-[11px] text-muted-foreground">{runs.length} total runs</span>
       </div>
-      <div className="grid gap-px overflow-hidden rounded-2xl border border-border bg-border md:grid-cols-2 lg:grid-cols-4">
+      <div className="flex flex-wrap gap-2">
         {agents.map((name) => (
-          <div key={name} className="card-noir-hover flex items-center gap-3 bg-surface p-5">
-            <div className="grid h-10 w-10 place-items-center rounded-lg border border-gold/30 bg-gold/5 text-gold">
-              <Bot className="h-4 w-4" />
-            </div>
-            <div className="min-w-0">
-              <div className="truncate font-display text-sm">{name}</div>
-              <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                {counts[name] ?? 0} runs
-              </div>
-            </div>
+          <div
+            key={name}
+            className="group inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-3 py-1.5 transition hover:border-gold/40"
+          >
+            <span className="grid h-5 w-5 place-items-center rounded-full bg-gold/10 text-gold">
+              <Bot className="h-3 w-3" />
+            </span>
+            <span className="text-xs text-foreground/85">{name}</span>
+            <span className="font-mono text-[10px] text-muted-foreground">{counts[name] ?? 0}</span>
           </div>
         ))}
       </div>
