@@ -142,8 +142,6 @@ function Dashboard() {
           )}
         </div>
       </section>
-
-      <AiAgentsSection />
     </div>
   );
 }
