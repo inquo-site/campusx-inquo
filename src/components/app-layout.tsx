@@ -47,6 +47,7 @@ const navItems = [
 
 const titleMap: Record<string, { eyebrow: string; title: string; italic: string }> = {
   "/dashboard": { eyebrow: "Home", title: "Builders that", italic: "ship things" },
+  "/agents": { eyebrow: "Autopilot", title: "Your AI team,", italic: "always on" },
   "/discover": { eyebrow: "Network", title: "Peers who", italic: "build with you" },
   "/projects": { eyebrow: "Showcase", title: "Projects that", italic: "actually run" },
   "/internships": { eyebrow: "Opportunities", title: "Internships worth", italic: "your hours" },
