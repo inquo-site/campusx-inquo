@@ -1667,3 +1667,136 @@ function AgentPanel() {
     </div>
   );
 }
+
+function AutopilotPanel() {
+  const token = getToken();
+  const qc = useQueryClient();
+  const eventsQ = useQuery({
+    queryKey: ["agent-events"],
+    queryFn: () => adminListAgentEvents({ data: { token, limit: 50 } }),
+    refetchInterval: 5000,
+  });
+  const runsQ = useQuery({
+    queryKey: ["agent-runs"],
+    queryFn: () => adminListAgentRuns({ data: { token, limit: 50 } }),
+    refetchInterval: 5000,
+  });
+  const trigger = useMutation({
+    mutationFn: () => adminTriggerDailyAnalytics({ data: { token } }),
+    onSuccess: () => {
+      setTimeout(() => {
+        qc.invalidateQueries({ queryKey: ["agent-events"] });
+        qc.invalidateQueries({ queryKey: ["agent-runs"] });
+      }, 1500);
+    },
+  });
+  const events = eventsQ.data ?? [];
+  const runs = runsQ.data ?? [];
+  const statusColor = (s: string) =>
+    s === "success" || s === "done"
+      ? "text-emerald-500"
+      : s === "error"
+        ? "text-red-500"
+        : s === "running" || s === "dispatched"
+          ? "text-amber-500"
+          : "text-muted-foreground";
+  return (
+    <div className="space-y-8">
+      <section className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-semibold">Autopilot</h2>
+          <p className="text-sm text-muted-foreground">
+            Site events → AI agents. Blog publish, new user, project/internship posts, and 9 AM daily analytics all trigger the matching agent automatically.
+          </p>
+        </div>
+        <button
+          onClick={() => trigger.mutate()}
+          disabled={trigger.isPending}
+          className="rounded-lg bg-primary text-primary-foreground px-3 py-1.5 text-sm disabled:opacity-50"
+        >
+          {trigger.isPending ? "Firing..." : "Fire daily digest"}
+        </button>
+      </section>
+
+      <section>
+        <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
+          Recent Agent Runs
+        </h3>
+        <div className="space-y-3">
+          {runs.length === 0 && (
+            <p className="text-sm text-muted-foreground">
+              No runs yet. Publish a blog, add a project/internship, or fire the daily digest.
+            </p>
+          )}
+          {runs.map((r) => (
+            <div key={r.id} className="rounded-xl border border-border bg-card p-4">
+              <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold">{r.agent_name}</span>
+                  <span className="text-muted-foreground">· {r.event_type}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className={statusColor(r.status)}>{r.status}</span>
+                  {r.duration_ms != null && (
+                    <span className="text-muted-foreground">{r.duration_ms}ms</span>
+                  )}
+                  <span className="text-muted-foreground">
+                    {new Date(r.created_at).toLocaleString()}
+                  </span>
+                </div>
+              </div>
+              {r.error && (
+                <p className="mt-2 text-xs text-red-500 whitespace-pre-wrap">{r.error}</p>
+              )}
+              {r.output && (
+                <div className="mt-3 rounded-lg bg-muted/40 p-3 text-xs prose prose-invert max-w-none prose-sm">
+                  <ReactMarkdown>{r.output}</ReactMarkdown>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
+          Event Feed
+        </h3>
+        <div className="rounded-xl border border-border overflow-hidden">
+          <table className="w-full text-xs">
+            <thead className="bg-muted/40">
+              <tr>
+                <th className="text-left px-3 py-2">Event</th>
+                <th className="text-left px-3 py-2">Source</th>
+                <th className="text-left px-3 py-2">Status</th>
+                <th className="text-left px-3 py-2">When</th>
+              </tr>
+            </thead>
+            <tbody>
+              {events.map((e) => (
+                <tr key={e.id} className="border-t border-border">
+                  <td className="px-3 py-2 font-mono">{e.event_type}</td>
+                  <td className="px-3 py-2 text-muted-foreground">
+                    {e.source_table}
+                    {e.source_id ? `#${String(e.source_id).slice(0, 8)}` : ""}
+                  </td>
+                  <td className={`px-3 py-2 ${statusColor(e.status)}`}>{e.status}</td>
+                  <td className="px-3 py-2 text-muted-foreground">
+                    {new Date(e.created_at).toLocaleString()}
+                  </td>
+                </tr>
+              ))}
+              {events.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="px-3 py-6 text-center text-muted-foreground">
+                    No events yet.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  );
+}
