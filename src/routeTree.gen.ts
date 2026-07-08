@@ -48,7 +48,7 @@ import { Route as AuthenticatedPrepTrackRouteImport } from './routes/_authentica
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as ApiPublicHooksAgentDispatchRouteImport } from './routes/api/public/hooks/agent-dispatch'
-import { Route as AuthenticatedPrepTrackNodeRouteImport } from './routes/_authenticated/prep_.$track.$node'
+import { Route as AuthenticatedPrepTrackNodeRouteImport } from './routes/_authenticated/prep_.$track_.$node'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -253,9 +253,9 @@ const ApiPublicHooksAgentDispatchRoute =
   } as any)
 const AuthenticatedPrepTrackNodeRoute =
   AuthenticatedPrepTrackNodeRouteImport.update({
-    id: '/$node',
-    path: '/$node',
-    getParentRoute: () => AuthenticatedPrepTrackRoute,
+    id: '/prep_/$track_/$node',
+    path: '/prep/$track/$node',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -292,7 +292,7 @@ export interface FileRoutesByFullPath {
   '/blog/': typeof BlogIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
-  '/prep/$track': typeof AuthenticatedPrepTrackRouteWithChildren
+  '/prep/$track': typeof AuthenticatedPrepTrackRoute
   '/rooms/$slug': typeof AuthenticatedRoomsSlugRoute
   '/api/admin/agent-chat': typeof ApiAdminAgentChatRoute
   '/rooms/': typeof AuthenticatedRoomsIndexRoute
@@ -333,7 +333,7 @@ export interface FileRoutesByTo {
   '/blog': typeof BlogIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
-  '/prep/$track': typeof AuthenticatedPrepTrackRouteWithChildren
+  '/prep/$track': typeof AuthenticatedPrepTrackRoute
   '/rooms/$slug': typeof AuthenticatedRoomsSlugRoute
   '/api/admin/agent-chat': typeof ApiAdminAgentChatRoute
   '/rooms': typeof AuthenticatedRoomsIndexRoute
@@ -376,11 +376,11 @@ export interface FileRoutesById {
   '/blog/': typeof BlogIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
-  '/_authenticated/prep_/$track': typeof AuthenticatedPrepTrackRouteWithChildren
+  '/_authenticated/prep_/$track': typeof AuthenticatedPrepTrackRoute
   '/_authenticated/rooms/$slug': typeof AuthenticatedRoomsSlugRoute
   '/api/admin/agent-chat': typeof ApiAdminAgentChatRoute
   '/_authenticated/rooms/': typeof AuthenticatedRoomsIndexRoute
-  '/_authenticated/prep_/$track/$node': typeof AuthenticatedPrepTrackNodeRoute
+  '/_authenticated/prep_/$track_/$node': typeof AuthenticatedPrepTrackNodeRoute
   '/api/public/hooks/agent-dispatch': typeof ApiPublicHooksAgentDispatchRoute
 }
 export interface FileRouteTypes {
@@ -506,7 +506,7 @@ export interface FileRouteTypes {
     | '/_authenticated/rooms/$slug'
     | '/api/admin/agent-chat'
     | '/_authenticated/rooms/'
-    | '/_authenticated/prep_/$track/$node'
+    | '/_authenticated/prep_/$track_/$node'
     | '/api/public/hooks/agent-dispatch'
   fileRoutesById: FileRoutesById
 }
@@ -808,29 +808,15 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksAgentDispatchRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/prep_/$track/$node': {
-      id: '/_authenticated/prep_/$track/$node'
-      path: '/$node'
+    '/_authenticated/prep_/$track_/$node': {
+      id: '/_authenticated/prep_/$track_/$node'
+      path: '/prep/$track/$node'
       fullPath: '/prep/$track/$node'
       preLoaderRoute: typeof AuthenticatedPrepTrackNodeRouteImport
-      parentRoute: typeof AuthenticatedPrepTrackRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
-
-interface AuthenticatedPrepTrackRouteChildren {
-  AuthenticatedPrepTrackNodeRoute: typeof AuthenticatedPrepTrackNodeRoute
-}
-
-const AuthenticatedPrepTrackRouteChildren: AuthenticatedPrepTrackRouteChildren =
-  {
-    AuthenticatedPrepTrackNodeRoute: AuthenticatedPrepTrackNodeRoute,
-  }
-
-const AuthenticatedPrepTrackRouteWithChildren =
-  AuthenticatedPrepTrackRoute._addFileChildren(
-    AuthenticatedPrepTrackRouteChildren,
-  )
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAgentsRoute: typeof AuthenticatedAgentsRoute
@@ -849,9 +835,10 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedProjectsRoute: typeof AuthenticatedProjectsRoute
   AuthenticatedResumeRoute: typeof AuthenticatedResumeRoute
   AuthenticatedStartupsRoute: typeof AuthenticatedStartupsRoute
-  AuthenticatedPrepTrackRoute: typeof AuthenticatedPrepTrackRouteWithChildren
+  AuthenticatedPrepTrackRoute: typeof AuthenticatedPrepTrackRoute
   AuthenticatedRoomsSlugRoute: typeof AuthenticatedRoomsSlugRoute
   AuthenticatedRoomsIndexRoute: typeof AuthenticatedRoomsIndexRoute
+  AuthenticatedPrepTrackNodeRoute: typeof AuthenticatedPrepTrackNodeRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -871,9 +858,10 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedProjectsRoute: AuthenticatedProjectsRoute,
   AuthenticatedResumeRoute: AuthenticatedResumeRoute,
   AuthenticatedStartupsRoute: AuthenticatedStartupsRoute,
-  AuthenticatedPrepTrackRoute: AuthenticatedPrepTrackRouteWithChildren,
+  AuthenticatedPrepTrackRoute: AuthenticatedPrepTrackRoute,
   AuthenticatedRoomsSlugRoute: AuthenticatedRoomsSlugRoute,
   AuthenticatedRoomsIndexRoute: AuthenticatedRoomsIndexRoute,
+  AuthenticatedPrepTrackNodeRoute: AuthenticatedPrepTrackNodeRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

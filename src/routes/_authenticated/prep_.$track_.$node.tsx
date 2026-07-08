@@ -18,7 +18,7 @@ import {
   RotateCcw,
 } from "lucide-react";
 
-export const Route = createFileRoute("/_authenticated/prep_/$track/$node")({
+export const Route = createFileRoute("/_authenticated/prep_/$track_/$node")({
   component: NodePage,
   head: ({ params }) => ({
     meta: [{ title: `${params.node} · Prep · Campus X` }],
