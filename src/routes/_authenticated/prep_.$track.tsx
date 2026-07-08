@@ -13,7 +13,7 @@ import {
   Flag,
 } from "lucide-react";
 
-export const Route = createFileRoute("/_authenticated/prep/$track")({
+export const Route = createFileRoute("/_authenticated/prep_/$track")({
   component: TrackJourney,
   head: ({ params }) => ({
     meta: [

@@ -44,11 +44,11 @@ import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]
 import { Route as AuthenticatedRoomsIndexRouteImport } from './routes/_authenticated/rooms.index'
 import { Route as ApiAdminAgentChatRouteImport } from './routes/api/admin/agent-chat'
 import { Route as AuthenticatedRoomsSlugRouteImport } from './routes/_authenticated/rooms.$slug'
-import { Route as AuthenticatedPrepTrackRouteImport } from './routes/_authenticated/prep.$track'
+import { Route as AuthenticatedPrepTrackRouteImport } from './routes/_authenticated/prep_.$track'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as ApiPublicHooksAgentDispatchRouteImport } from './routes/api/public/hooks/agent-dispatch'
-import { Route as AuthenticatedPrepTrackNodeRouteImport } from './routes/_authenticated/prep.$track.$node'
+import { Route as AuthenticatedPrepTrackNodeRouteImport } from './routes/_authenticated/prep_.$track.$node'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -230,9 +230,9 @@ const AuthenticatedRoomsSlugRoute = AuthenticatedRoomsSlugRouteImport.update({
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedPrepTrackRoute = AuthenticatedPrepTrackRouteImport.update({
-  id: '/$track',
-  path: '/$track',
-  getParentRoute: () => AuthenticatedPrepRoute,
+  id: '/prep_/$track',
+  path: '/prep/$track',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const Char91DotmcpChar93InvokeToolToolRoute =
   Char91DotmcpChar93InvokeToolToolRouteImport.update({
@@ -281,7 +281,7 @@ export interface FileRoutesByFullPath {
   '/jobs': typeof AuthenticatedJobsRoute
   '/linkedin-optimizer': typeof AuthenticatedLinkedinOptimizerRoute
   '/mentor': typeof AuthenticatedMentorRoute
-  '/prep': typeof AuthenticatedPrepRouteWithChildren
+  '/prep': typeof AuthenticatedPrepRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/projects': typeof AuthenticatedProjectsRoute
   '/resume': typeof AuthenticatedResumeRoute
@@ -322,7 +322,7 @@ export interface FileRoutesByTo {
   '/jobs': typeof AuthenticatedJobsRoute
   '/linkedin-optimizer': typeof AuthenticatedLinkedinOptimizerRoute
   '/mentor': typeof AuthenticatedMentorRoute
-  '/prep': typeof AuthenticatedPrepRouteWithChildren
+  '/prep': typeof AuthenticatedPrepRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/projects': typeof AuthenticatedProjectsRoute
   '/resume': typeof AuthenticatedResumeRoute
@@ -365,7 +365,7 @@ export interface FileRoutesById {
   '/_authenticated/jobs': typeof AuthenticatedJobsRoute
   '/_authenticated/linkedin-optimizer': typeof AuthenticatedLinkedinOptimizerRoute
   '/_authenticated/mentor': typeof AuthenticatedMentorRoute
-  '/_authenticated/prep': typeof AuthenticatedPrepRouteWithChildren
+  '/_authenticated/prep': typeof AuthenticatedPrepRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/projects': typeof AuthenticatedProjectsRoute
   '/_authenticated/resume': typeof AuthenticatedResumeRoute
@@ -376,11 +376,11 @@ export interface FileRoutesById {
   '/blog/': typeof BlogIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
-  '/_authenticated/prep/$track': typeof AuthenticatedPrepTrackRouteWithChildren
+  '/_authenticated/prep_/$track': typeof AuthenticatedPrepTrackRouteWithChildren
   '/_authenticated/rooms/$slug': typeof AuthenticatedRoomsSlugRoute
   '/api/admin/agent-chat': typeof ApiAdminAgentChatRoute
   '/_authenticated/rooms/': typeof AuthenticatedRoomsIndexRoute
-  '/_authenticated/prep/$track/$node': typeof AuthenticatedPrepTrackNodeRoute
+  '/_authenticated/prep_/$track/$node': typeof AuthenticatedPrepTrackNodeRoute
   '/api/public/hooks/agent-dispatch': typeof ApiPublicHooksAgentDispatchRoute
 }
 export interface FileRouteTypes {
@@ -502,11 +502,11 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
-    | '/_authenticated/prep/$track'
+    | '/_authenticated/prep_/$track'
     | '/_authenticated/rooms/$slug'
     | '/api/admin/agent-chat'
     | '/_authenticated/rooms/'
-    | '/_authenticated/prep/$track/$node'
+    | '/_authenticated/prep_/$track/$node'
     | '/api/public/hooks/agent-dispatch'
   fileRoutesById: FileRoutesById
 }
@@ -780,12 +780,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRoomsSlugRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/prep/$track': {
-      id: '/_authenticated/prep/$track'
-      path: '/$track'
+    '/_authenticated/prep_/$track': {
+      id: '/_authenticated/prep_/$track'
+      path: '/prep/$track'
       fullPath: '/prep/$track'
       preLoaderRoute: typeof AuthenticatedPrepTrackRouteImport
-      parentRoute: typeof AuthenticatedPrepRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/.mcp/invoke-tool/$tool': {
       id: '/.mcp/invoke-tool/$tool'
@@ -808,8 +808,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksAgentDispatchRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/prep/$track/$node': {
-      id: '/_authenticated/prep/$track/$node'
+    '/_authenticated/prep_/$track/$node': {
+      id: '/_authenticated/prep_/$track/$node'
       path: '/$node'
       fullPath: '/prep/$track/$node'
       preLoaderRoute: typeof AuthenticatedPrepTrackNodeRouteImport
@@ -832,17 +832,6 @@ const AuthenticatedPrepTrackRouteWithChildren =
     AuthenticatedPrepTrackRouteChildren,
   )
 
-interface AuthenticatedPrepRouteChildren {
-  AuthenticatedPrepTrackRoute: typeof AuthenticatedPrepTrackRouteWithChildren
-}
-
-const AuthenticatedPrepRouteChildren: AuthenticatedPrepRouteChildren = {
-  AuthenticatedPrepTrackRoute: AuthenticatedPrepTrackRouteWithChildren,
-}
-
-const AuthenticatedPrepRouteWithChildren =
-  AuthenticatedPrepRoute._addFileChildren(AuthenticatedPrepRouteChildren)
-
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAgentsRoute: typeof AuthenticatedAgentsRoute
   AuthenticatedAlumniRoute: typeof AuthenticatedAlumniRoute
@@ -855,11 +844,12 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedJobsRoute: typeof AuthenticatedJobsRoute
   AuthenticatedLinkedinOptimizerRoute: typeof AuthenticatedLinkedinOptimizerRoute
   AuthenticatedMentorRoute: typeof AuthenticatedMentorRoute
-  AuthenticatedPrepRoute: typeof AuthenticatedPrepRouteWithChildren
+  AuthenticatedPrepRoute: typeof AuthenticatedPrepRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedProjectsRoute: typeof AuthenticatedProjectsRoute
   AuthenticatedResumeRoute: typeof AuthenticatedResumeRoute
   AuthenticatedStartupsRoute: typeof AuthenticatedStartupsRoute
+  AuthenticatedPrepTrackRoute: typeof AuthenticatedPrepTrackRouteWithChildren
   AuthenticatedRoomsSlugRoute: typeof AuthenticatedRoomsSlugRoute
   AuthenticatedRoomsIndexRoute: typeof AuthenticatedRoomsIndexRoute
 }
@@ -876,11 +866,12 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedJobsRoute: AuthenticatedJobsRoute,
   AuthenticatedLinkedinOptimizerRoute: AuthenticatedLinkedinOptimizerRoute,
   AuthenticatedMentorRoute: AuthenticatedMentorRoute,
-  AuthenticatedPrepRoute: AuthenticatedPrepRouteWithChildren,
+  AuthenticatedPrepRoute: AuthenticatedPrepRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedProjectsRoute: AuthenticatedProjectsRoute,
   AuthenticatedResumeRoute: AuthenticatedResumeRoute,
   AuthenticatedStartupsRoute: AuthenticatedStartupsRoute,
+  AuthenticatedPrepTrackRoute: AuthenticatedPrepTrackRouteWithChildren,
   AuthenticatedRoomsSlugRoute: AuthenticatedRoomsSlugRoute,
   AuthenticatedRoomsIndexRoute: AuthenticatedRoomsIndexRoute,
 }
@@ -914,3 +905,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
