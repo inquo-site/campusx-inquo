@@ -6,6 +6,7 @@ const navLinks = [
   { to: "/", label: "Home" },
   { to: "/about", label: "About" },
   { to: "/agents", label: "AI Agents" },
+  { to: "/prep", label: "Prep Roadmap" },
   { to: "/blog", label: "Blog" },
   { to: "/dashboard", label: "App" },
 ] as const;
@@ -13,6 +14,7 @@ const navLinks = [
 
 const featureLinks = [
   { to: "/agents", label: "AI Autopilot" },
+  { to: "/prep", label: "Prep Roadmap" },
   { to: "/jobs", label: "Off-Campus Jobs" },
   { to: "/hackathons", label: "Hackathons" },
   { to: "/applications", label: "Application Tracker" },

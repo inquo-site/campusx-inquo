@@ -20,6 +20,7 @@ import {
   Github,
   Linkedin,
   Bot,
+  Map,
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { useAuth } from "@/hooks/use-auth";
@@ -29,6 +30,7 @@ import { useQueryClient } from "@tanstack/react-query";
 const navItems = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/agents", label: "AI Autopilot", icon: Bot },
+  { to: "/prep", label: "Prep Roadmap", icon: Map },
   { to: "/discover", label: "Discover Peers", icon: Users },
   { to: "/projects", label: "Project Hub", icon: FolderGit2 },
   { to: "/internships", label: "Internship Board", icon: Briefcase },
@@ -48,6 +50,7 @@ const navItems = [
 const titleMap: Record<string, { eyebrow: string; title: string; italic: string }> = {
   "/dashboard": { eyebrow: "Home", title: "Builders that", italic: "ship things" },
   "/agents": { eyebrow: "Autopilot", title: "Your AI team,", italic: "always on" },
+  "/prep": { eyebrow: "Prep", title: "Not a checklist.", italic: "A journey." },
   "/discover": { eyebrow: "Network", title: "Peers who", italic: "build with you" },
   "/projects": { eyebrow: "Showcase", title: "Projects that", italic: "actually run" },
   "/internships": { eyebrow: "Opportunities", title: "Internships worth", italic: "your hours" },
