@@ -27,6 +27,7 @@ import { Route as AuthenticatedStartupsRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedResumeRouteImport } from './routes/_authenticated/resume'
 import { Route as AuthenticatedProjectsRouteImport } from './routes/_authenticated/projects'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedPrepRouteImport } from './routes/_authenticated/prep'
 import { Route as AuthenticatedMentorRouteImport } from './routes/_authenticated/mentor'
 import { Route as AuthenticatedLinkedinOptimizerRouteImport } from './routes/_authenticated/linkedin-optimizer'
 import { Route as AuthenticatedJobsRouteImport } from './routes/_authenticated/jobs'
@@ -43,9 +44,11 @@ import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]
 import { Route as AuthenticatedRoomsIndexRouteImport } from './routes/_authenticated/rooms.index'
 import { Route as ApiAdminAgentChatRouteImport } from './routes/api/admin/agent-chat'
 import { Route as AuthenticatedRoomsSlugRouteImport } from './routes/_authenticated/rooms.$slug'
+import { Route as AuthenticatedPrepTrackRouteImport } from './routes/_authenticated/prep_.$track'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as ApiPublicHooksAgentDispatchRouteImport } from './routes/api/public/hooks/agent-dispatch'
+import { Route as AuthenticatedPrepTrackNodeRouteImport } from './routes/_authenticated/prep_.$track_.$node'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -136,6 +139,11 @@ const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPrepRoute = AuthenticatedPrepRouteImport.update({
+  id: '/prep',
+  path: '/prep',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedMentorRoute = AuthenticatedMentorRouteImport.update({
   id: '/mentor',
   path: '/mentor',
@@ -221,6 +229,11 @@ const AuthenticatedRoomsSlugRoute = AuthenticatedRoomsSlugRouteImport.update({
   path: '/rooms/$slug',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPrepTrackRoute = AuthenticatedPrepTrackRouteImport.update({
+  id: '/prep_/$track',
+  path: '/prep/$track',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const Char91DotmcpChar93InvokeToolToolRoute =
   Char91DotmcpChar93InvokeToolToolRouteImport.update({
     id: '/.mcp/invoke-tool/$tool',
@@ -237,6 +250,12 @@ const ApiPublicHooksAgentDispatchRoute =
     id: '/api/public/hooks/agent-dispatch',
     path: '/api/public/hooks/agent-dispatch',
     getParentRoute: () => rootRouteImport,
+  } as any)
+const AuthenticatedPrepTrackNodeRoute =
+  AuthenticatedPrepTrackNodeRouteImport.update({
+    id: '/prep_/$track_/$node',
+    path: '/prep/$track/$node',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -262,6 +281,7 @@ export interface FileRoutesByFullPath {
   '/jobs': typeof AuthenticatedJobsRoute
   '/linkedin-optimizer': typeof AuthenticatedLinkedinOptimizerRoute
   '/mentor': typeof AuthenticatedMentorRoute
+  '/prep': typeof AuthenticatedPrepRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/projects': typeof AuthenticatedProjectsRoute
   '/resume': typeof AuthenticatedResumeRoute
@@ -272,9 +292,11 @@ export interface FileRoutesByFullPath {
   '/blog/': typeof BlogIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/prep/$track': typeof AuthenticatedPrepTrackRoute
   '/rooms/$slug': typeof AuthenticatedRoomsSlugRoute
   '/api/admin/agent-chat': typeof ApiAdminAgentChatRoute
   '/rooms/': typeof AuthenticatedRoomsIndexRoute
+  '/prep/$track/$node': typeof AuthenticatedPrepTrackNodeRoute
   '/api/public/hooks/agent-dispatch': typeof ApiPublicHooksAgentDispatchRoute
 }
 export interface FileRoutesByTo {
@@ -300,6 +322,7 @@ export interface FileRoutesByTo {
   '/jobs': typeof AuthenticatedJobsRoute
   '/linkedin-optimizer': typeof AuthenticatedLinkedinOptimizerRoute
   '/mentor': typeof AuthenticatedMentorRoute
+  '/prep': typeof AuthenticatedPrepRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/projects': typeof AuthenticatedProjectsRoute
   '/resume': typeof AuthenticatedResumeRoute
@@ -310,9 +333,11 @@ export interface FileRoutesByTo {
   '/blog': typeof BlogIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/prep/$track': typeof AuthenticatedPrepTrackRoute
   '/rooms/$slug': typeof AuthenticatedRoomsSlugRoute
   '/api/admin/agent-chat': typeof ApiAdminAgentChatRoute
   '/rooms': typeof AuthenticatedRoomsIndexRoute
+  '/prep/$track/$node': typeof AuthenticatedPrepTrackNodeRoute
   '/api/public/hooks/agent-dispatch': typeof ApiPublicHooksAgentDispatchRoute
 }
 export interface FileRoutesById {
@@ -340,6 +365,7 @@ export interface FileRoutesById {
   '/_authenticated/jobs': typeof AuthenticatedJobsRoute
   '/_authenticated/linkedin-optimizer': typeof AuthenticatedLinkedinOptimizerRoute
   '/_authenticated/mentor': typeof AuthenticatedMentorRoute
+  '/_authenticated/prep': typeof AuthenticatedPrepRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/projects': typeof AuthenticatedProjectsRoute
   '/_authenticated/resume': typeof AuthenticatedResumeRoute
@@ -350,9 +376,11 @@ export interface FileRoutesById {
   '/blog/': typeof BlogIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/_authenticated/prep_/$track': typeof AuthenticatedPrepTrackRoute
   '/_authenticated/rooms/$slug': typeof AuthenticatedRoomsSlugRoute
   '/api/admin/agent-chat': typeof ApiAdminAgentChatRoute
   '/_authenticated/rooms/': typeof AuthenticatedRoomsIndexRoute
+  '/_authenticated/prep_/$track_/$node': typeof AuthenticatedPrepTrackNodeRoute
   '/api/public/hooks/agent-dispatch': typeof ApiPublicHooksAgentDispatchRoute
 }
 export interface FileRouteTypes {
@@ -380,6 +408,7 @@ export interface FileRouteTypes {
     | '/jobs'
     | '/linkedin-optimizer'
     | '/mentor'
+    | '/prep'
     | '/profile'
     | '/projects'
     | '/resume'
@@ -390,9 +419,11 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/prep/$track'
     | '/rooms/$slug'
     | '/api/admin/agent-chat'
     | '/rooms/'
+    | '/prep/$track/$node'
     | '/api/public/hooks/agent-dispatch'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -418,6 +449,7 @@ export interface FileRouteTypes {
     | '/jobs'
     | '/linkedin-optimizer'
     | '/mentor'
+    | '/prep'
     | '/profile'
     | '/projects'
     | '/resume'
@@ -428,9 +460,11 @@ export interface FileRouteTypes {
     | '/blog'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/prep/$track'
     | '/rooms/$slug'
     | '/api/admin/agent-chat'
     | '/rooms'
+    | '/prep/$track/$node'
     | '/api/public/hooks/agent-dispatch'
   id:
     | '__root__'
@@ -457,6 +491,7 @@ export interface FileRouteTypes {
     | '/_authenticated/jobs'
     | '/_authenticated/linkedin-optimizer'
     | '/_authenticated/mentor'
+    | '/_authenticated/prep'
     | '/_authenticated/profile'
     | '/_authenticated/projects'
     | '/_authenticated/resume'
@@ -467,9 +502,11 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/_authenticated/prep_/$track'
     | '/_authenticated/rooms/$slug'
     | '/api/admin/agent-chat'
     | '/_authenticated/rooms/'
+    | '/_authenticated/prep_/$track_/$node'
     | '/api/public/hooks/agent-dispatch'
   fileRoutesById: FileRoutesById
 }
@@ -624,6 +661,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfileRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/prep': {
+      id: '/_authenticated/prep'
+      path: '/prep'
+      fullPath: '/prep'
+      preLoaderRoute: typeof AuthenticatedPrepRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/mentor': {
       id: '/_authenticated/mentor'
       path: '/mentor'
@@ -736,6 +780,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRoomsSlugRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/prep_/$track': {
+      id: '/_authenticated/prep_/$track'
+      path: '/prep/$track'
+      fullPath: '/prep/$track'
+      preLoaderRoute: typeof AuthenticatedPrepTrackRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/.mcp/invoke-tool/$tool': {
       id: '/.mcp/invoke-tool/$tool'
       path: '/.mcp/invoke-tool/$tool'
@@ -757,6 +808,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksAgentDispatchRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/prep_/$track_/$node': {
+      id: '/_authenticated/prep_/$track_/$node'
+      path: '/prep/$track/$node'
+      fullPath: '/prep/$track/$node'
+      preLoaderRoute: typeof AuthenticatedPrepTrackNodeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -772,12 +830,15 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedJobsRoute: typeof AuthenticatedJobsRoute
   AuthenticatedLinkedinOptimizerRoute: typeof AuthenticatedLinkedinOptimizerRoute
   AuthenticatedMentorRoute: typeof AuthenticatedMentorRoute
+  AuthenticatedPrepRoute: typeof AuthenticatedPrepRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedProjectsRoute: typeof AuthenticatedProjectsRoute
   AuthenticatedResumeRoute: typeof AuthenticatedResumeRoute
   AuthenticatedStartupsRoute: typeof AuthenticatedStartupsRoute
+  AuthenticatedPrepTrackRoute: typeof AuthenticatedPrepTrackRoute
   AuthenticatedRoomsSlugRoute: typeof AuthenticatedRoomsSlugRoute
   AuthenticatedRoomsIndexRoute: typeof AuthenticatedRoomsIndexRoute
+  AuthenticatedPrepTrackNodeRoute: typeof AuthenticatedPrepTrackNodeRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -792,12 +853,15 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedJobsRoute: AuthenticatedJobsRoute,
   AuthenticatedLinkedinOptimizerRoute: AuthenticatedLinkedinOptimizerRoute,
   AuthenticatedMentorRoute: AuthenticatedMentorRoute,
+  AuthenticatedPrepRoute: AuthenticatedPrepRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedProjectsRoute: AuthenticatedProjectsRoute,
   AuthenticatedResumeRoute: AuthenticatedResumeRoute,
   AuthenticatedStartupsRoute: AuthenticatedStartupsRoute,
+  AuthenticatedPrepTrackRoute: AuthenticatedPrepTrackRoute,
   AuthenticatedRoomsSlugRoute: AuthenticatedRoomsSlugRoute,
   AuthenticatedRoomsIndexRoute: AuthenticatedRoomsIndexRoute,
+  AuthenticatedPrepTrackNodeRoute: AuthenticatedPrepTrackNodeRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

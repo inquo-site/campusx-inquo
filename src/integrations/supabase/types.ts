@@ -429,6 +429,151 @@ export type Database = {
         }
         Relationships: []
       }
+      prep_nodes: {
+        Row: {
+          created_at: string
+          depends_on: string[]
+          detail_md: string | null
+          difficulty: string
+          id: string
+          mcqs: Json
+          resources: Json
+          slug: string
+          sort_order: number
+          summary: string | null
+          title: string
+          track_id: string
+          updated_at: string
+          xp: number
+        }
+        Insert: {
+          created_at?: string
+          depends_on?: string[]
+          detail_md?: string | null
+          difficulty?: string
+          id?: string
+          mcqs?: Json
+          resources?: Json
+          slug: string
+          sort_order?: number
+          summary?: string | null
+          title: string
+          track_id: string
+          updated_at?: string
+          xp?: number
+        }
+        Update: {
+          created_at?: string
+          depends_on?: string[]
+          detail_md?: string | null
+          difficulty?: string
+          id?: string
+          mcqs?: Json
+          resources?: Json
+          slug?: string
+          sort_order?: number
+          summary?: string | null
+          title?: string
+          track_id?: string
+          updated_at?: string
+          xp?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prep_nodes_track_id_fkey"
+            columns: ["track_id"]
+            isOneToOne: false
+            referencedRelation: "prep_tracks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prep_progress: {
+        Row: {
+          attempts: number
+          best_score: number
+          completed_at: string | null
+          created_at: string
+          id: string
+          node_id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          best_score?: number
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          node_id: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          best_score?: number
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          node_id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prep_progress_node_id_fkey"
+            columns: ["node_id"]
+            isOneToOne: false
+            referencedRelation: "prep_nodes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prep_tracks: {
+        Row: {
+          accent: string | null
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          is_published: boolean
+          slug: string
+          sort_order: number
+          tagline: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          accent?: string | null
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_published?: boolean
+          slug: string
+          sort_order?: number
+          tagline?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          accent?: string | null
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_published?: boolean
+          slug?: string
+          sort_order?: number
+          tagline?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
