@@ -291,14 +291,16 @@ export const adminSendTaskEmail = createServerFn({ method: "POST" })
     if (dErr) throw new Error(dErr.message);
 
     const send = await trySendEmail(recipient, subject, body);
-    const patch: Record<string, unknown> = {
-      attempts: 1,
-      provider: send.provider,
-      provider_message_id: send.message_id ?? null,
-      last_error: send.error ?? null,
-      status: send.ok ? "sent" : "failed",
-    };
-    await supabaseAdmin.from("admin_email_deliveries").update(patch).eq("id", delivery.id);
+    await supabaseAdmin
+      .from("admin_email_deliveries")
+      .update({
+        attempts: 1,
+        provider: send.provider,
+        provider_message_id: send.message_id ?? null,
+        last_error: send.error ?? null,
+        status: send.ok ? "sent" : "failed",
+      })
+      .eq("id", delivery.id);
 
     await supabaseAdmin
       .from("admin_agent_tasks")
