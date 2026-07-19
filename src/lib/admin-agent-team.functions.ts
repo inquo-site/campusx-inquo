@@ -75,7 +75,12 @@ export const adminUpdateAgentTask = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     verifyAdmin(data.token);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const patch: Record<string, unknown> = {};
+    const patch: {
+      status?: string;
+      execution_output?: string;
+      emailed_at?: string | null;
+      completed_at?: string;
+    } = {};
     if (data.status !== undefined) {
       patch.status = data.status;
       if (data.status === "done") patch.completed_at = new Date().toISOString();
