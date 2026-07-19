@@ -122,19 +122,19 @@ function Profile() {
               <button onClick={() => setEditing(false)} className="rounded-full p-2 hover:bg-muted"><X className="h-4 w-4" /></button>
             </div>
             <form className="mt-5 space-y-3" onSubmit={(e) => { e.preventDefault(); save.mutate(); }}>
-              <Row><Inp label="Full name" v={form.full_name} on={(v) => setForm({ ...form, full_name: v })} /></Row>
+              <Row><Inp label="Full name" v={form.full_name} on={(v) => setForm({ ...form, full_name: v })} aiContext="name" /></Row>
               <Row>
-                <Inp label="College" v={form.college} on={(v) => setForm({ ...form, college: v })} />
-                <Inp label="Location" v={form.location} on={(v) => setForm({ ...form, location: v })} />
+                <Inp label="College" v={form.college} on={(v) => setForm({ ...form, college: v })} aiContext="college" />
+                <Inp label="Location" v={form.location} on={(v) => setForm({ ...form, location: v })} aiContext="location" />
               </Row>
-              <Row><Inp label="Bio" v={form.bio} on={(v) => setForm({ ...form, bio: v })} textarea /></Row>
-              <Row><Inp label="Skills (comma-separated)" v={form.skills} on={(v) => setForm({ ...form, skills: v })} placeholder="React, TypeScript, Rust" /></Row>
-              <Row><Inp label="Looking for (comma-separated)" v={form.looking_for} on={(v) => setForm({ ...form, looking_for: v })} placeholder="Co-founder, Internship, Hackathon team" /></Row>
+              <Row><Inp label="Bio" v={form.bio} on={(v) => setForm({ ...form, bio: v })} textarea aiContext="bio" /></Row>
+              <Row><Inp label="Skills (comma-separated)" v={form.skills} on={(v) => setForm({ ...form, skills: v })} placeholder="React, TypeScript, Rust" aiContext="skills" /></Row>
+              <Row><Inp label="Looking for (comma-separated)" v={form.looking_for} on={(v) => setForm({ ...form, looking_for: v })} placeholder="Co-founder, Internship, Hackathon team" aiContext="looking_for" /></Row>
               <Row>
-                <Inp label="GitHub URL" v={form.github_url} on={(v) => setForm({ ...form, github_url: v })} />
-                <Inp label="LinkedIn URL" v={form.linkedin_url} on={(v) => setForm({ ...form, linkedin_url: v })} />
+                <Inp label="GitHub URL" v={form.github_url} on={(v) => setForm({ ...form, github_url: v })} aiContext="url" />
+                <Inp label="LinkedIn URL" v={form.linkedin_url} on={(v) => setForm({ ...form, linkedin_url: v })} aiContext="url" />
               </Row>
-              <Row><Inp label="Website" v={form.website_url} on={(v) => setForm({ ...form, website_url: v })} /></Row>
+              <Row><Inp label="Website" v={form.website_url} on={(v) => setForm({ ...form, website_url: v })} aiContext="url" /></Row>
               <label className="flex items-center gap-3 text-sm">
                 <input type="checkbox" checked={form.open_to_collab} onChange={(e) => setForm({ ...form, open_to_collab: e.target.checked })} className="h-4 w-4 accent-[--gold]" />
                 <span>Open to collaborate</span>
