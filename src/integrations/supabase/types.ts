@@ -17,10 +17,17 @@ export type Database = {
       admin_agent_tasks: {
         Row: {
           agent_role: string
+          approval_status: string
+          approved_at: string | null
+          approved_by: string | null
           assigned_by: string
           brief: string | null
           completed_at: string | null
           created_at: string
+          email_attempts: number
+          email_last_attempt_at: string | null
+          email_last_error: string | null
+          email_status: string | null
           email_to: string | null
           emailed_at: string | null
           execution_output: string | null
@@ -29,6 +36,8 @@ export type Database = {
           parent_id: string | null
           plan: string | null
           priority: string
+          requires_approval: boolean
+          run_id: string | null
           status: string
           tags: string[]
           title: string
@@ -36,10 +45,17 @@ export type Database = {
         }
         Insert: {
           agent_role: string
+          approval_status?: string
+          approved_at?: string | null
+          approved_by?: string | null
           assigned_by?: string
           brief?: string | null
           completed_at?: string | null
           created_at?: string
+          email_attempts?: number
+          email_last_attempt_at?: string | null
+          email_last_error?: string | null
+          email_status?: string | null
           email_to?: string | null
           emailed_at?: string | null
           execution_output?: string | null
@@ -48,6 +64,8 @@ export type Database = {
           parent_id?: string | null
           plan?: string | null
           priority?: string
+          requires_approval?: boolean
+          run_id?: string | null
           status?: string
           tags?: string[]
           title: string
@@ -55,10 +73,17 @@ export type Database = {
         }
         Update: {
           agent_role?: string
+          approval_status?: string
+          approved_at?: string | null
+          approved_by?: string | null
           assigned_by?: string
           brief?: string | null
           completed_at?: string | null
           created_at?: string
+          email_attempts?: number
+          email_last_attempt_at?: string | null
+          email_last_error?: string | null
+          email_status?: string | null
           email_to?: string | null
           emailed_at?: string | null
           execution_output?: string | null
@@ -67,6 +92,8 @@ export type Database = {
           parent_id?: string | null
           plan?: string | null
           priority?: string
+          requires_approval?: boolean
+          run_id?: string | null
           status?: string
           tags?: string[]
           title?: string
@@ -76,6 +103,106 @@ export type Database = {
           {
             foreignKeyName: "admin_agent_tasks_parent_id_fkey"
             columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "admin_agent_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      admin_agent_tool_calls: {
+        Row: {
+          agent_role: string | null
+          created_at: string
+          duration_ms: number | null
+          error: string | null
+          id: string
+          input: Json
+          output: Json | null
+          run_id: string | null
+          task_id: string | null
+          tool_name: string
+        }
+        Insert: {
+          agent_role?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          error?: string | null
+          id?: string
+          input?: Json
+          output?: Json | null
+          run_id?: string | null
+          task_id?: string | null
+          tool_name: string
+        }
+        Update: {
+          agent_role?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          error?: string | null
+          id?: string
+          input?: Json
+          output?: Json | null
+          run_id?: string | null
+          task_id?: string | null
+          tool_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_agent_tool_calls_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "admin_agent_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      admin_email_deliveries: {
+        Row: {
+          attempts: number
+          body: string
+          created_at: string
+          id: string
+          last_error: string | null
+          provider: string | null
+          provider_message_id: string | null
+          recipient: string
+          status: string
+          subject: string
+          task_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          attempts?: number
+          body: string
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          provider?: string | null
+          provider_message_id?: string | null
+          recipient: string
+          status?: string
+          subject: string
+          task_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          attempts?: number
+          body?: string
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          provider?: string | null
+          provider_message_id?: string | null
+          recipient?: string
+          status?: string
+          subject?: string
+          task_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_email_deliveries_task_id_fkey"
+            columns: ["task_id"]
             isOneToOne: false
             referencedRelation: "admin_agent_tasks"
             referencedColumns: ["id"]
