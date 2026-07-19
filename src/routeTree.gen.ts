@@ -24,6 +24,7 @@ import { Route as UHandleRouteImport } from './routes/u.$handle'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AdminSumanRouteImport } from './routes/admin.suman'
 import { Route as AuthenticatedStartupsRouteImport } from './routes/_authenticated/startups'
+import { Route as AuthenticatedRoadmapMakerRouteImport } from './routes/_authenticated/roadmap-maker'
 import { Route as AuthenticatedResumeRouteImport } from './routes/_authenticated/resume'
 import { Route as AuthenticatedProjectsRouteImport } from './routes/_authenticated/projects'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
@@ -124,6 +125,12 @@ const AuthenticatedStartupsRoute = AuthenticatedStartupsRouteImport.update({
   path: '/startups',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedRoadmapMakerRoute =
+  AuthenticatedRoadmapMakerRouteImport.update({
+    id: '/roadmap-maker',
+    path: '/roadmap-maker',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedResumeRoute = AuthenticatedResumeRouteImport.update({
   id: '/resume',
   path: '/resume',
@@ -285,6 +292,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof AuthenticatedProfileRoute
   '/projects': typeof AuthenticatedProjectsRoute
   '/resume': typeof AuthenticatedResumeRoute
+  '/roadmap-maker': typeof AuthenticatedRoadmapMakerRoute
   '/startups': typeof AuthenticatedStartupsRoute
   '/admin/suman': typeof AdminSumanRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -326,6 +334,7 @@ export interface FileRoutesByTo {
   '/profile': typeof AuthenticatedProfileRoute
   '/projects': typeof AuthenticatedProjectsRoute
   '/resume': typeof AuthenticatedResumeRoute
+  '/roadmap-maker': typeof AuthenticatedRoadmapMakerRoute
   '/startups': typeof AuthenticatedStartupsRoute
   '/admin/suman': typeof AdminSumanRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -369,6 +378,7 @@ export interface FileRoutesById {
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/projects': typeof AuthenticatedProjectsRoute
   '/_authenticated/resume': typeof AuthenticatedResumeRoute
+  '/_authenticated/roadmap-maker': typeof AuthenticatedRoadmapMakerRoute
   '/_authenticated/startups': typeof AuthenticatedStartupsRoute
   '/admin/suman': typeof AdminSumanRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -412,6 +422,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/projects'
     | '/resume'
+    | '/roadmap-maker'
     | '/startups'
     | '/admin/suman'
     | '/blog/$slug'
@@ -453,6 +464,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/projects'
     | '/resume'
+    | '/roadmap-maker'
     | '/startups'
     | '/admin/suman'
     | '/blog/$slug'
@@ -495,6 +507,7 @@ export interface FileRouteTypes {
     | '/_authenticated/profile'
     | '/_authenticated/projects'
     | '/_authenticated/resume'
+    | '/_authenticated/roadmap-maker'
     | '/_authenticated/startups'
     | '/admin/suman'
     | '/blog/$slug'
@@ -638,6 +651,13 @@ declare module '@tanstack/react-router' {
       path: '/startups'
       fullPath: '/startups'
       preLoaderRoute: typeof AuthenticatedStartupsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/roadmap-maker': {
+      id: '/_authenticated/roadmap-maker'
+      path: '/roadmap-maker'
+      fullPath: '/roadmap-maker'
+      preLoaderRoute: typeof AuthenticatedRoadmapMakerRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/resume': {
@@ -834,6 +854,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedProjectsRoute: typeof AuthenticatedProjectsRoute
   AuthenticatedResumeRoute: typeof AuthenticatedResumeRoute
+  AuthenticatedRoadmapMakerRoute: typeof AuthenticatedRoadmapMakerRoute
   AuthenticatedStartupsRoute: typeof AuthenticatedStartupsRoute
   AuthenticatedPrepTrackRoute: typeof AuthenticatedPrepTrackRoute
   AuthenticatedRoomsSlugRoute: typeof AuthenticatedRoomsSlugRoute
@@ -857,6 +878,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedProjectsRoute: AuthenticatedProjectsRoute,
   AuthenticatedResumeRoute: AuthenticatedResumeRoute,
+  AuthenticatedRoadmapMakerRoute: AuthenticatedRoadmapMakerRoute,
   AuthenticatedStartupsRoute: AuthenticatedStartupsRoute,
   AuthenticatedPrepTrackRoute: AuthenticatedPrepTrackRoute,
   AuthenticatedRoomsSlugRoute: AuthenticatedRoomsSlugRoute,

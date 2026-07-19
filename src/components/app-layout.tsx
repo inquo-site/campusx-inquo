@@ -22,6 +22,7 @@ import {
   Linkedin,
   Bot,
   Map,
+  Compass,
   ChevronDown,
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
@@ -41,6 +42,7 @@ const navGroups: { label: string; items: { to: string; label: string; icon: type
     label: "Learn",
     items: [
       { to: "/prep", label: "Prep Roadmap", icon: Map },
+      { to: "/roadmap-maker", label: "Roadmap Maker", icon: Compass },
       { to: "/mentor", label: "AI Mentor", icon: Sparkles },
     ],
   },
