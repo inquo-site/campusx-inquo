@@ -43,6 +43,7 @@ import { Route as AuthenticatedAgentsRouteImport } from './routes/_authenticated
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as AuthenticatedRoomsIndexRouteImport } from './routes/_authenticated/rooms.index'
+import { Route as ApiAdminAgentTeamChatRouteImport } from './routes/api/admin/agent-team-chat'
 import { Route as ApiAdminAgentChatRouteImport } from './routes/api/admin/agent-chat'
 import { Route as AuthenticatedRoomsSlugRouteImport } from './routes/_authenticated/rooms.$slug'
 import { Route as AuthenticatedPrepTrackRouteImport } from './routes/_authenticated/prep_.$track'
@@ -226,6 +227,11 @@ const AuthenticatedRoomsIndexRoute = AuthenticatedRoomsIndexRouteImport.update({
   path: '/rooms/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiAdminAgentTeamChatRoute = ApiAdminAgentTeamChatRouteImport.update({
+  id: '/api/admin/agent-team-chat',
+  path: '/api/admin/agent-team-chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAdminAgentChatRoute = ApiAdminAgentChatRouteImport.update({
   id: '/api/admin/agent-chat',
   path: '/api/admin/agent-chat',
@@ -303,6 +309,7 @@ export interface FileRoutesByFullPath {
   '/prep/$track': typeof AuthenticatedPrepTrackRoute
   '/rooms/$slug': typeof AuthenticatedRoomsSlugRoute
   '/api/admin/agent-chat': typeof ApiAdminAgentChatRoute
+  '/api/admin/agent-team-chat': typeof ApiAdminAgentTeamChatRoute
   '/rooms/': typeof AuthenticatedRoomsIndexRoute
   '/prep/$track/$node': typeof AuthenticatedPrepTrackNodeRoute
   '/api/public/hooks/agent-dispatch': typeof ApiPublicHooksAgentDispatchRoute
@@ -345,6 +352,7 @@ export interface FileRoutesByTo {
   '/prep/$track': typeof AuthenticatedPrepTrackRoute
   '/rooms/$slug': typeof AuthenticatedRoomsSlugRoute
   '/api/admin/agent-chat': typeof ApiAdminAgentChatRoute
+  '/api/admin/agent-team-chat': typeof ApiAdminAgentTeamChatRoute
   '/rooms': typeof AuthenticatedRoomsIndexRoute
   '/prep/$track/$node': typeof AuthenticatedPrepTrackNodeRoute
   '/api/public/hooks/agent-dispatch': typeof ApiPublicHooksAgentDispatchRoute
@@ -389,6 +397,7 @@ export interface FileRoutesById {
   '/_authenticated/prep_/$track': typeof AuthenticatedPrepTrackRoute
   '/_authenticated/rooms/$slug': typeof AuthenticatedRoomsSlugRoute
   '/api/admin/agent-chat': typeof ApiAdminAgentChatRoute
+  '/api/admin/agent-team-chat': typeof ApiAdminAgentTeamChatRoute
   '/_authenticated/rooms/': typeof AuthenticatedRoomsIndexRoute
   '/_authenticated/prep_/$track_/$node': typeof AuthenticatedPrepTrackNodeRoute
   '/api/public/hooks/agent-dispatch': typeof ApiPublicHooksAgentDispatchRoute
@@ -433,6 +442,7 @@ export interface FileRouteTypes {
     | '/prep/$track'
     | '/rooms/$slug'
     | '/api/admin/agent-chat'
+    | '/api/admin/agent-team-chat'
     | '/rooms/'
     | '/prep/$track/$node'
     | '/api/public/hooks/agent-dispatch'
@@ -475,6 +485,7 @@ export interface FileRouteTypes {
     | '/prep/$track'
     | '/rooms/$slug'
     | '/api/admin/agent-chat'
+    | '/api/admin/agent-team-chat'
     | '/rooms'
     | '/prep/$track/$node'
     | '/api/public/hooks/agent-dispatch'
@@ -518,6 +529,7 @@ export interface FileRouteTypes {
     | '/_authenticated/prep_/$track'
     | '/_authenticated/rooms/$slug'
     | '/api/admin/agent-chat'
+    | '/api/admin/agent-team-chat'
     | '/_authenticated/rooms/'
     | '/_authenticated/prep_/$track_/$node'
     | '/api/public/hooks/agent-dispatch'
@@ -543,6 +555,7 @@ export interface RootRouteChildren {
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiAdminAgentChatRoute: typeof ApiAdminAgentChatRoute
+  ApiAdminAgentTeamChatRoute: typeof ApiAdminAgentTeamChatRoute
   ApiPublicHooksAgentDispatchRoute: typeof ApiPublicHooksAgentDispatchRoute
 }
 
@@ -786,6 +799,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRoomsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/admin/agent-team-chat': {
+      id: '/api/admin/agent-team-chat'
+      path: '/api/admin/agent-team-chat'
+      fullPath: '/api/admin/agent-team-chat'
+      preLoaderRoute: typeof ApiAdminAgentTeamChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/admin/agent-chat': {
       id: '/api/admin/agent-chat'
       path: '/api/admin/agent-chat'
@@ -910,6 +930,7 @@ const rootRouteChildren: RootRouteChildren = {
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   ApiAdminAgentChatRoute: ApiAdminAgentChatRoute,
+  ApiAdminAgentTeamChatRoute: ApiAdminAgentTeamChatRoute,
   ApiPublicHooksAgentDispatchRoute: ApiPublicHooksAgentDispatchRoute,
 }
 export const routeTree = rootRouteImport
