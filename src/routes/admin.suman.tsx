@@ -1449,7 +1449,6 @@ function BlogPanel() {
           }}
         />
       )}
-      <div style={{ display: "none" }}>
 
       {isLoading ? (
         <p className="text-sm text-muted-foreground">Loading…</p>
