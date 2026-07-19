@@ -43,6 +43,7 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import ReactMarkdown from "react-markdown";
 import { useRef } from "react";
+import { AgentTeamPanel } from "@/components/admin/agent-team-panel";
 
 
 
