@@ -22,6 +22,7 @@ import {
   Linkedin,
   Bot,
   Map,
+  ChevronDown,
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { useAuth } from "@/hooks/use-auth";
