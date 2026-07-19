@@ -107,6 +107,15 @@ export function AppLayout({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const [displayName, setDisplayName] = useState("");
   const [college, setCollege] = useState("");
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
+    // Auto-open group containing active route; open all by default first render
+    const init: Record<string, boolean> = {};
+    navGroups.forEach((g) => (init[g.label] = true));
+    return init;
+  });
+  const toggleGroup = (label: string) =>
+    setOpenGroups((s) => ({ ...s, [label]: !s[label] }));
+
 
   useEffect(() => {
     if (!user) return;
