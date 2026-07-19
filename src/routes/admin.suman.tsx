@@ -204,6 +204,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       <main className="mx-auto max-w-7xl px-6 py-8">
         {tab === "overview" && <OverviewPanel />}
         {tab === "agent" && <AgentPanel />}
+        {tab === "team" && <AgentTeamPanel token={getToken()} />}
         {tab === "autopilot" && <AutopilotPanel />}
         {tab === "payments" && <PaymentsPanel />}
         {tab === "blog" && <BlogPanel />}
