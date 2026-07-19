@@ -27,25 +27,56 @@ import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 
-const navItems = [
-  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/agents", label: "AI Autopilot", icon: Bot },
-  { to: "/prep", label: "Prep Roadmap", icon: Map },
-  { to: "/discover", label: "Discover Peers", icon: Users },
-  { to: "/projects", label: "Project Hub", icon: FolderGit2 },
-  { to: "/internships", label: "Internship Board", icon: Briefcase },
-  { to: "/jobs", label: "Off-Campus Jobs", icon: Briefcase },
-  { to: "/hackathons", label: "Hackathons", icon: Trophy },
-  { to: "/applications", label: "Applications", icon: ClipboardList },
-  { to: "/alumni", label: "Alumni Referrals", icon: Users2 },
-  { to: "/rooms", label: "Peer Rooms", icon: MessagesSquare },
-  { to: "/devprofile", label: "Dev Report Card", icon: Github },
-  { to: "/linkedin-optimizer", label: "LinkedIn Optimizer", icon: Linkedin },
-  { to: "/startups", label: "Startup Incubator", icon: Rocket },
-  { to: "/mentor", label: "AI Mentor", icon: Sparkles },
-  { to: "/resume", label: "Resume Builder", icon: FileText },
-  { to: "/profile", label: "My Profile", icon: UserCircle },
-] as const;
+const navGroups: { label: string; items: { to: string; label: string; icon: typeof LayoutDashboard }[] }[] = [
+  {
+    label: "Home",
+    items: [
+      { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+      { to: "/agents", label: "AI Autopilot", icon: Bot },
+    ],
+  },
+  {
+    label: "Learn",
+    items: [
+      { to: "/prep", label: "Prep Roadmap", icon: Map },
+      { to: "/mentor", label: "AI Mentor", icon: Sparkles },
+    ],
+  },
+  {
+    label: "Opportunity",
+    items: [
+      { to: "/internships", label: "Internship Board", icon: Briefcase },
+      { to: "/jobs", label: "Off-Campus Jobs", icon: Briefcase },
+      { to: "/hackathons", label: "Hackathons", icon: Trophy },
+      { to: "/applications", label: "Applications", icon: ClipboardList },
+    ],
+  },
+  {
+    label: "Network",
+    items: [
+      { to: "/discover", label: "Discover Peers", icon: Users },
+      { to: "/rooms", label: "Peer Rooms", icon: MessagesSquare },
+      { to: "/alumni", label: "Alumni Referrals", icon: Users2 },
+    ],
+  },
+  {
+    label: "Build",
+    items: [
+      { to: "/projects", label: "Project Hub", icon: FolderGit2 },
+      { to: "/startups", label: "Startup Incubator", icon: Rocket },
+    ],
+  },
+  {
+    label: "Profile & Tools",
+    items: [
+      { to: "/devprofile", label: "Dev Report Card", icon: Github },
+      { to: "/linkedin-optimizer", label: "LinkedIn Optimizer", icon: Linkedin },
+      { to: "/resume", label: "Resume Builder", icon: FileText },
+      { to: "/profile", label: "My Profile", icon: UserCircle },
+    ],
+  },
+];
+
 
 const titleMap: Record<string, { eyebrow: string; title: string; italic: string }> = {
   "/dashboard": { eyebrow: "Home", title: "Builders that", italic: "ship things" },
