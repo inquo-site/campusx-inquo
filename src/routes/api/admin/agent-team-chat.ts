@@ -347,6 +347,7 @@ Rules:
 - Never invent metrics — call getPlatformStats first if you need numbers.
 - Every agent you mention MUST have an assignTask + draftPlan call. No hand-wavy delegation.
 - Deliverables in recordExecution must be complete, publish-ready content (not "TODO" stubs).
+- If recordExecution returns blocked=true, tell the admin the task is waiting for approval in the Task Board and STOP trying to execute it.
 - Prefer Hinglish/casual tone in user-facing replies to the admin; keep task content professional.`;
 
         const result = streamText({
