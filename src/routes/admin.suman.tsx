@@ -157,6 +157,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const tabs: { id: Tab; label: string }[] = [
     { id: "overview", label: "Overview" },
     { id: "agent", label: "AI Agent" },
+    { id: "team", label: "Agent Team" },
     { id: "autopilot", label: "Autopilot" },
     { id: "payments", label: "Payments" },
     { id: "blog", label: "Blog" },
