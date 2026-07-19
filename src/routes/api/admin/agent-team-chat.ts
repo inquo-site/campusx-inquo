@@ -64,19 +64,61 @@ export const Route = createFileRoute("/api/admin/agent-team-chat")({
         const model = gateway("google/gemini-2.5-flash");
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
+        // Every request in this chat call = one "run". Tool calls get logged to it.
+        const runId = crypto.randomUUID();
+
+        // Roles whose tasks must be approved before execution/email
+        const APPROVAL_REQUIRED_ROLES = new Set([
+          "fullstack_developer",
+          "cto",
+          "system_designer",
+          "bug_fixer",
+        ]);
+
+        async function logToolCall(
+          toolName: string,
+          input: unknown,
+          output: unknown,
+          error: string | null,
+          durationMs: number,
+          taskId?: string,
+          agentRole?: string,
+        ) {
+          try {
+            await supabaseAdmin.from("admin_agent_tool_calls").insert({
+              run_id: runId,
+              task_id: taskId ?? null,
+              agent_role: agentRole ?? null,
+              tool_name: toolName,
+              input: (input ?? {}) as never,
+              output: (output ?? null) as never,
+              error,
+              duration_ms: durationMs,
+            });
+          } catch {
+            /* swallow logging errors */
+          }
+        }
+
         const AgentRoleSchema = z.enum(AGENT_ROLES);
 
         const tools = {
           listAgents: tool({
             description: "List every available agent role and what they do.",
             inputSchema: z.object({}),
-            execute: async () => ({ agents: AGENT_BRIEFS }),
+            execute: async () => {
+              const t0 = Date.now();
+              const out = { agents: AGENT_BRIEFS };
+              await logToolCall("listAgents", {}, out, null, Date.now() - t0);
+              return out;
+            },
           }),
 
           getPlatformStats: tool({
             description: "Get platform counts (users, blogs, rooms, jobs, projects).",
             inputSchema: z.object({}),
             execute: async () => {
+              const t0 = Date.now();
               const [users, blogs, rooms, msgs, jobs, projects] = await Promise.all([
                 supabaseAdmin.from("profiles").select("*", { count: "exact", head: true }),
                 supabaseAdmin.from("blogs").select("*", { count: "exact", head: true }),
@@ -85,7 +127,7 @@ export const Route = createFileRoute("/api/admin/agent-team-chat")({
                 supabaseAdmin.from("internships").select("*", { count: "exact", head: true }),
                 supabaseAdmin.from("projects").select("*", { count: "exact", head: true }),
               ]);
-              return {
+              const out = {
                 users: users.count ?? 0,
                 blogs: blogs.count ?? 0,
                 rooms: rooms.count ?? 0,
@@ -93,12 +135,14 @@ export const Route = createFileRoute("/api/admin/agent-team-chat")({
                 jobs: jobs.count ?? 0,
                 projects: projects.count ?? 0,
               };
+              await logToolCall("getPlatformStats", {}, out, null, Date.now() - t0);
+              return out;
             },
           }),
 
           assignTask: tool({
             description:
-              "CEO/Manager assigns a task to a specific agent role. Creates a new task row in status='planned'. Use this to delegate work. For each agent that must produce a plan, call assignTask AND then draftPlan.",
+              "Assign a task to a specific agent role. Creates a task row. Dev/CTO/system_designer/bug_fixer tasks are automatically marked requires_approval — admin must approve before recordExecution or queueForHuman can send an email.",
             inputSchema: z.object({
               agent_role: AgentRoleSchema,
               title: z.string().min(3).max(200),
@@ -108,6 +152,8 @@ export const Route = createFileRoute("/api/admin/agent-team-chat")({
               tags: z.array(z.string()).max(10).default([]),
             }),
             execute: async (input) => {
+              const t0 = Date.now();
+              const requiresApproval = APPROVAL_REQUIRED_ROLES.has(input.agent_role);
               const { data, error } = await supabaseAdmin
                 .from("admin_agent_tasks")
                 .insert({
@@ -119,39 +165,89 @@ export const Route = createFileRoute("/api/admin/agent-team-chat")({
                   tags: input.tags,
                   status: "planned",
                   assigned_by: "ceo",
+                  run_id: runId,
+                  requires_approval: requiresApproval,
+                  approval_status: requiresApproval ? "pending" : "auto",
                 })
                 .select("id")
                 .single();
-              if (error) return { ok: false, error: error.message };
-              return { ok: true, task_id: data.id, agent_role: input.agent_role };
+              const out = error
+                ? { ok: false as const, error: error.message }
+                : {
+                    ok: true as const,
+                    task_id: data.id,
+                    agent_role: input.agent_role,
+                    requires_approval: requiresApproval,
+                  };
+              await logToolCall(
+                "assignTask",
+                input,
+                out,
+                error?.message ?? null,
+                Date.now() - t0,
+                data?.id,
+                input.agent_role,
+              );
+              return out;
             },
           }),
 
           draftPlan: tool({
             description:
-              "Attach a concrete step-by-step plan (markdown) to an existing task. The plan should include: goal, steps, deliverables, dependencies, risks. Use after assignTask.",
+              "Attach a step-by-step plan (markdown) to an existing task. Include: goal, steps, deliverables, dependencies, risks.",
             inputSchema: z.object({
               task_id: z.string().uuid(),
               plan_markdown: z.string().min(20).max(20000),
             }),
             execute: async (input) => {
+              const t0 = Date.now();
               const { error } = await supabaseAdmin
                 .from("admin_agent_tasks")
                 .update({ plan: input.plan_markdown, status: "planned" })
                 .eq("id", input.task_id);
-              if (error) return { ok: false, error: error.message };
-              return { ok: true };
+              const out = error ? { ok: false, error: error.message } : { ok: true };
+              await logToolCall(
+                "draftPlan",
+                { task_id: input.task_id, plan_length: input.plan_markdown.length },
+                out,
+                error?.message ?? null,
+                Date.now() - t0,
+                input.task_id,
+              );
+              return out;
             },
           }),
 
           recordExecution: tool({
             description:
-              "For agents whose work is text-only (writers, designers describing specs, marketers, SEO). Store the final deliverable and mark task done. For dev/build tasks that need real code changes, DO NOT call this — call queueForHuman instead.",
+              "Store final deliverable and mark task done. BLOCKED if task requires_approval and approval_status != 'approved'. Use only for text/spec/copy/design deliverables.",
             inputSchema: z.object({
               task_id: z.string().uuid(),
               output_markdown: z.string().min(10).max(60000),
             }),
             execute: async (input) => {
+              const t0 = Date.now();
+              const { data: task } = await supabaseAdmin
+                .from("admin_agent_tasks")
+                .select("requires_approval, approval_status")
+                .eq("id", input.task_id)
+                .maybeSingle();
+              if (task?.requires_approval && task?.approval_status !== "approved") {
+                const out = {
+                  ok: false as const,
+                  blocked: true as const,
+                  reason: "Requires admin approval before execution.",
+                };
+                await logToolCall(
+                  "recordExecution",
+                  { task_id: input.task_id },
+                  out,
+                  "blocked_pending_approval",
+                  Date.now() - t0,
+                  input.task_id,
+                );
+                return out;
+              }
               const { error } = await supabaseAdmin
                 .from("admin_agent_tasks")
                 .update({
@@ -160,49 +256,74 @@ export const Route = createFileRoute("/api/admin/agent-team-chat")({
                   completed_at: new Date().toISOString(),
                 })
                 .eq("id", input.task_id);
-              if (error) return { ok: false, error: error.message };
-              return { ok: true };
+              const out = error ? { ok: false, error: error.message } : { ok: true };
+              await logToolCall(
+                "recordExecution",
+                { task_id: input.task_id, output_length: input.output_markdown.length },
+                out,
+                error?.message ?? null,
+                Date.now() - t0,
+                input.task_id,
+              );
+              return out;
             },
           }),
 
           queueForHuman: tool({
             description:
-              "For tasks the AI cannot execute directly (deploys, code changes, ad spend, external API calls). Marks the task as pending_email so the admin will send/apply it manually.",
+              "For tasks the AI cannot execute (deploys, code, ad spend). Marks pending_email. Admin still has to approve before an actual send.",
             inputSchema: z.object({
               task_id: z.string().uuid(),
               reason: z.string().max(500).optional(),
             }),
             execute: async (input) => {
+              const t0 = Date.now();
+              // Force approval gate for anything queued for human hands
               const { error } = await supabaseAdmin
                 .from("admin_agent_tasks")
                 .update({
                   status: "pending_email",
                   email_to: NOTIFY_EMAIL,
+                  requires_approval: true,
+                  approval_status: "pending",
                   metadata: { queued_reason: input.reason ?? "requires human execution" },
                 })
                 .eq("id", input.task_id);
-              if (error) return { ok: false, error: error.message };
-              return { ok: true, email_to: NOTIFY_EMAIL };
+              const out = error
+                ? { ok: false, error: error.message }
+                : { ok: true, email_to: NOTIFY_EMAIL, pending_approval: true };
+              await logToolCall(
+                "queueForHuman",
+                input,
+                out,
+                error?.message ?? null,
+                Date.now() - t0,
+                input.task_id,
+              );
+              return out;
             },
           }),
 
           summarizeRun: tool({
-            description:
-              "Return a short overall summary of everything done in this run: how many tasks, per-agent breakdown, what's done, what's queued for the human.",
+            description: "Summary of tasks in this run: counts, per-agent, done, pending approval.",
             inputSchema: z.object({}),
             execute: async () => {
+              const t0 = Date.now();
               const { data } = await supabaseAdmin
                 .from("admin_agent_tasks")
-                .select("agent_role, status")
-                .order("created_at", { ascending: false })
-                .limit(100);
+                .select("agent_role, status, approval_status")
+                .eq("run_id", runId);
               const byStatus: Record<string, number> = {};
               const byRole: Record<string, number> = {};
+              const byApproval: Record<string, number> = {};
               for (const r of data ?? []) {
                 byStatus[r.status] = (byStatus[r.status] ?? 0) + 1;
                 byRole[r.agent_role] = (byRole[r.agent_role] ?? 0) + 1;
+                byApproval[r.approval_status ?? "auto"] = (byApproval[r.approval_status ?? "auto"] ?? 0) + 1;
               }
-              return { last_100: { byStatus, byRole } };
+              const out = { run_id: runId, byStatus, byRole, byApproval, total: data?.length ?? 0 };
+              await logToolCall("summarizeRun", {}, out, null, Date.now() - t0);
+              return out;
             },
           }),
         };
