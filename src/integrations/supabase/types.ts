@@ -14,6 +14,74 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_agent_tasks: {
+        Row: {
+          agent_role: string
+          assigned_by: string
+          brief: string | null
+          completed_at: string | null
+          created_at: string
+          email_to: string | null
+          emailed_at: string | null
+          execution_output: string | null
+          id: string
+          metadata: Json
+          parent_id: string | null
+          plan: string | null
+          priority: string
+          status: string
+          tags: string[]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          agent_role: string
+          assigned_by?: string
+          brief?: string | null
+          completed_at?: string | null
+          created_at?: string
+          email_to?: string | null
+          emailed_at?: string | null
+          execution_output?: string | null
+          id?: string
+          metadata?: Json
+          parent_id?: string | null
+          plan?: string | null
+          priority?: string
+          status?: string
+          tags?: string[]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          agent_role?: string
+          assigned_by?: string
+          brief?: string | null
+          completed_at?: string | null
+          created_at?: string
+          email_to?: string | null
+          emailed_at?: string | null
+          execution_output?: string | null
+          id?: string
+          metadata?: Json
+          parent_id?: string | null
+          plan?: string | null
+          priority?: string
+          status?: string
+          tags?: string[]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_agent_tasks_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "admin_agent_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agent_events: {
         Row: {
           created_at: string
