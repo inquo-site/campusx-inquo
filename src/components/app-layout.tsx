@@ -152,39 +152,93 @@ export function AppLayout({ children }: { children: ReactNode }) {
               <div className="px-3 pb-2 text-[10px] font-medium uppercase tracking-[0.22em] text-sidebar-foreground/40">
                 — {group.label}
               </div>
-              <ul className="space-y-0.5">
-                {group.items.map((item) => {
-                  const active = pathname === item.to;
-                  const Icon = item.icon;
-                  return (
-                    <li key={item.to}>
-                      <Link
-                        to={item.to}
-                        className={
-                          "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-300 " +
-                          (active
-                            ? "bg-gold/10 text-foreground"
-                            : "text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-foreground")
-                        }
-                      >
-                        {active && (
-                          <motion.span
-                            layoutId="sidebar-active"
-                            className="absolute left-0 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-r-full bg-gold"
-                            transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                          />
-                        )}
-                        <Icon className="h-4 w-4 shrink-0" />
-                        <span className="truncate">{item.label}</span>
-                        {active && <ArrowUpRight className="ml-auto h-3 w-3 text-gold" />}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          ))}
+        <nav className="flex-1 overflow-y-auto px-3 py-5 space-y-2">
+          {navGroups.map((group) => {
+            const open = openGroups[group.label];
+            const hasActive = group.items.some((i) => pathname === i.to);
+            return (
+              <div key={group.label} className="rounded-xl">
+                <button
+                  onClick={() => toggleGroup(group.label)}
+                  className={
+                    "group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-[10px] font-medium uppercase tracking-[0.22em] transition-colors " +
+                    (hasActive
+                      ? "text-gold"
+                      : "text-sidebar-foreground/50 hover:text-foreground")
+                  }
+                >
+                  <span className="h-px w-3 bg-current opacity-60" />
+                  <span className="flex-1 text-left">{group.label}</span>
+                  <motion.span
+                    animate={{ rotate: open ? 0 : -90 }}
+                    transition={{ type: "spring", stiffness: 220, damping: 22, mass: 1.4 }}
+                  >
+                    <ChevronDown className="h-3 w-3" />
+                  </motion.span>
+                </button>
+                <AnimatePresence initial={false}>
+                  {open && (
+                    <motion.ul
+                      key="content"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{
+                        height: { type: "spring", stiffness: 90, damping: 20, mass: 1.6 },
+                        opacity: { duration: 0.4, ease: [0.22, 1, 0.36, 1] },
+                      }}
+                      className="overflow-hidden space-y-0.5 pt-1"
+                    >
+                      {group.items.map((item, idx) => {
+                        const active = pathname === item.to;
+                        const Icon = item.icon;
+                        return (
+                          <motion.li
+                            key={item.to}
+                            initial={{ opacity: 0, y: -18, filter: "blur(6px)" }}
+                            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                            exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
+                            transition={{
+                              // Low-gravity floaty drop: slow spring + stagger
+                              type: "spring",
+                              stiffness: 55,
+                              damping: 14,
+                              mass: 1.8,
+                              delay: idx * 0.06,
+                            }}
+                          >
+                            <Link
+                              to={item.to}
+                              className={
+                                "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-300 " +
+                                (active
+                                  ? "bg-gold/10 text-foreground"
+                                  : "text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-foreground")
+                              }
+                            >
+                              {active && (
+                                <motion.span
+                                  layoutId="sidebar-active"
+                                  className="absolute left-0 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-r-full bg-gold"
+                                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                                />
+                              )}
+                              <Icon className="h-4 w-4 shrink-0" />
+                              <span className="truncate">{item.label}</span>
+                              {active && <ArrowUpRight className="ml-auto h-3 w-3 text-gold" />}
+                            </Link>
+                          </motion.li>
+                        );
+                      })}
+                    </motion.ul>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
         </nav>
+
+
 
 
         <button
