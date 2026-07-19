@@ -153,10 +153,13 @@ function Profile() {
 function Row({ children }: { children: React.ReactNode }) {
   return <div className="grid grid-cols-1 gap-3 md:grid-cols-2">{children}</div>;
 }
-function Inp({ label, v, on, placeholder, textarea }: { label: string; v: string; on: (v: string) => void; placeholder?: string; textarea?: boolean }) {
+function Inp({ label, v, on, placeholder, textarea, aiContext }: { label: string; v: string; on: (v: string) => void; placeholder?: string; textarea?: boolean; aiContext?: string }) {
   return (
     <label className="block md:col-span-2">
-      <span className="mb-1.5 block text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{label}</span>
+      <span className="mb-1.5 flex items-center justify-between gap-2 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+        <span>{label}</span>
+        {aiContext && <AiFixButton value={v} onChange={on} context={aiContext} />}
+      </span>
       {textarea ? (
         <textarea rows={3} value={v} onChange={(e) => on(e.target.value)} placeholder={placeholder} className="w-full rounded-xl border border-border bg-background p-3 text-sm outline-none focus:border-gold/60" />
       ) : (
