@@ -44,6 +44,7 @@ import { DefaultChatTransport } from "ai";
 import ReactMarkdown from "react-markdown";
 import { useRef } from "react";
 import { AgentTeamPanel } from "@/components/admin/agent-team-panel";
+import { BlogStudioWizard } from "@/components/admin/blog-studio-wizard";
 
 
 
@@ -738,6 +739,7 @@ function BlogPanel() {
     host?: string;
   }>(null);
   const [seoIssues, setSeoIssues] = useState<SeoIssue[] | null>(null);
+  const [studioOpen, setStudioOpen] = useState(false);
 
   const invalidate = () => qc.invalidateQueries({ queryKey: ["admin-blogs"] });
 
@@ -1420,13 +1422,33 @@ function BlogPanel() {
             Publish, edit, feature and unpublish posts. Published posts appear on /blog.
           </p>
         </div>
-        <button
-          onClick={openNew}
-          className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
-        >
-          + New post
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setStudioOpen(true)}
+            className="rounded-lg border border-gold/40 bg-gold/10 px-4 py-2 text-sm font-medium text-gold hover:bg-gold/20"
+          >
+            ✨ AI Studio
+          </button>
+          <button
+            onClick={openNew}
+            className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+          >
+            + New post
+          </button>
+        </div>
       </div>
+
+      {studioOpen && (
+        <BlogStudioWizard
+          token={getToken()}
+          onClose={() => setStudioOpen(false)}
+          onDone={(info) => {
+            setStudioOpen(false);
+            setNotice(info.status === "published" ? `Published ✓ /${info.slug}` : "Saved as draft ✓");
+            invalidate();
+          }}
+        />
+      )}
 
       {isLoading ? (
         <p className="text-sm text-muted-foreground">Loading…</p>
