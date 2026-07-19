@@ -146,13 +146,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
 
         <div className="hairline mx-6" />
 
-        <nav className="flex-1 overflow-y-auto px-3 py-5 space-y-5">
-          {navGroups.map((group) => (
-            <div key={group.label}>
-              <div className="px-3 pb-2 text-[10px] font-medium uppercase tracking-[0.22em] text-sidebar-foreground/40">
-                — {group.label}
-              </div>
         <nav className="flex-1 overflow-y-auto px-3 py-5 space-y-2">
+
           {navGroups.map((group) => {
             const open = openGroups[group.label];
             const hasActive = group.items.some((i) => pathname === i.to);
