@@ -62,7 +62,7 @@ const ADMIN_PASSWORD = "SUMAN@12suman";
 const STORAGE_KEY = "admin-suman-auth";
 const TOKEN_KEY = "admin-suman-token";
 
-type Tab = "overview" | "agent" | "autopilot" | "payments" | "rooms" | "jobs" | "profiles" | "users" | "analytics" | "promo" | "blog";
+type Tab = "overview" | "agent" | "team" | "autopilot" | "payments" | "rooms" | "jobs" | "profiles" | "users" | "analytics" | "promo" | "blog";
 
 function AdminSuman() {
   const [authed, setAuthed] = useState(false);
