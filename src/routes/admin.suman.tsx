@@ -739,6 +739,7 @@ function BlogPanel() {
     host?: string;
   }>(null);
   const [seoIssues, setSeoIssues] = useState<SeoIssue[] | null>(null);
+  const [studioOpen, setStudioOpen] = useState(false);
 
   const invalidate = () => qc.invalidateQueries({ queryKey: ["admin-blogs"] });
 
