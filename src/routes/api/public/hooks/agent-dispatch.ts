@@ -113,10 +113,15 @@ export const Route = createFileRoute("/api/public/hooks/agent-dispatch")({
         // Gate: only run agents for owners with an active autopilot subscription.
         // System-wide cron events (owner_id is null) always run.
         if (event.owner_id) {
-          const { data: active } = await supabaseAdmin.rpc("has_team_access", {
-            _user_id: event.owner_id,
-            _team_slug: "company-bundle",
-          });
+          const { data: activeRow } = await supabaseAdmin
+            .from("ai_team_subscriptions")
+            .select("id")
+            .eq("user_id", event.owner_id)
+            .eq("status", "approved")
+            .or(`active_until.is.null,active_until.gt.${new Date().toISOString()}`)
+            .limit(1)
+            .maybeSingle();
+          const active = !!activeRow;
           if (!active) {
             await supabaseAdmin
               .from("agent_events")
