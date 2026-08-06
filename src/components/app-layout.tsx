@@ -120,6 +120,10 @@ export function AppLayout({ children }: { children: ReactNode }) {
   });
   const toggleGroup = (label: string) =>
     setOpenGroups((s) => ({ ...s, [label]: !s[label] }));
+  const [mobileOpen, setMobileOpen] = useState(false);
+  useEffect(() => { setMobileOpen(false); }, [pathname]);
+
+
 
 
   useEffect(() => {
