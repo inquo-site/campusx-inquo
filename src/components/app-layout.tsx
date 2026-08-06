@@ -24,7 +24,10 @@ import {
   Map,
   Compass,
   ChevronDown,
+  Menu,
+  X,
 } from "lucide-react";
+
 import { useEffect, useState, type ReactNode } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
