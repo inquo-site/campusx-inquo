@@ -34,7 +34,7 @@ function AiCompanyPage() {
   return (
     <MarketingLayout>
       <AiosHero />
-      <AiosArchitecture />
+      <AiosJourney />
       <AiosWorkflow />
       <AiosTeamsPricing />
       <AiosFaq />
