@@ -334,7 +334,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
       </AnimatePresence>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 grid h-20 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 border-b border-border bg-background/70 px-4 backdrop-blur-xl md:flex md:px-8">
+        <header className="sticky top-0 z-30 grid h-20 grid-cols-[auto_minmax(0,1fr)] items-center gap-3 border-b border-border bg-background/70 px-4 backdrop-blur-xl md:flex md:px-8">
           <button
             onClick={() => setMobileOpen(true)}
             aria-label="Open navigation"
