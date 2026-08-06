@@ -115,6 +115,7 @@ export const Route = createFileRoute("/api/public/hooks/agent-dispatch")({
         if (event.owner_id) {
           const { data: active } = await supabaseAdmin.rpc("has_team_access", {
             _user_id: event.owner_id,
+            _team_slug: "company-bundle",
           });
           if (!active) {
             await supabaseAdmin
