@@ -1858,8 +1858,8 @@ function PaymentsPanel() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold">Autopilot Payments</h2>
-          <p className="text-sm text-muted-foreground">Manual UPI verification for ₹999 activations.</p>
+          <h2 className="text-xl font-semibold">AI Team Payments</h2>
+          <p className="text-sm text-muted-foreground">Manual UPI verification for AI team & company bundle purchases.</p>
         </div>
         <div className="flex gap-1 rounded-lg border border-border bg-surface p-1">
           {(["pending", "approved", "rejected", "all"] as const).map((s) => (
@@ -1886,6 +1886,7 @@ function PaymentsPanel() {
             <thead className="bg-surface text-left text-[10px] uppercase tracking-widest text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">User</th>
+                <th className="px-4 py-3">Team</th>
                 <th className="px-4 py-3">Txn ID</th>
                 <th className="px-4 py-3">Amount</th>
                 <th className="px-4 py-3">Status</th>
@@ -1901,6 +1902,10 @@ function PaymentsPanel() {
                     <td className="px-4 py-3">
                       <div className="font-medium">{s.user_name || "—"}</div>
                       <div className="text-xs text-muted-foreground">{s.user_email}</div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="text-xs font-medium">{s.team_slug}</div>
+                      <div className="text-[10px] uppercase tracking-widest text-muted-foreground">{s.billing_cycle}</div>
                     </td>
                     <td className="px-4 py-3 font-mono text-xs">{s.upi_txn_id}</td>
                     <td className="px-4 py-3">₹{s.amount_inr}</td>
@@ -1945,7 +1950,7 @@ function PaymentsPanel() {
                   </tr>
                   {noteFor === s.id && (
                     <tr>
-                      <td colSpan={7} className="bg-surface px-4 py-3">
+                      <td colSpan={8} className="bg-surface px-4 py-3">
                         <div className="flex gap-2">
                           <input
                             value={note}

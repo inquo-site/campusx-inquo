@@ -249,8 +249,8 @@ export const adminListSubscriptions = createServerFn({ method: "POST" })
     verify(data.token);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     let q = supabaseAdmin
-      .from("agent_subscriptions")
-      .select("id,user_id,upi_txn_id,screenshot_url,amount_inr,status,admin_note,created_at,reviewed_at,active_until")
+      .from("ai_team_subscriptions")
+      .select("id,user_id,team_slug,billing_cycle,upi_txn_id,screenshot_url,amount_inr,status,admin_note,created_at,reviewed_at,active_until")
       .order("created_at", { ascending: false })
       .limit(200);
     if (data.status && data.status !== "all") q = q.eq("status", data.status);
@@ -293,12 +293,17 @@ export const adminReviewSubscription = createServerFn({ method: "POST" })
       reviewed_at: now.toISOString(),
     };
     if (data.action === "approve") {
+      const { data: row } = await supabaseAdmin
+        .from("ai_team_subscriptions")
+        .select("billing_cycle")
+        .eq("id", data.id)
+        .maybeSingle();
       const until = new Date(now);
-      until.setDate(until.getDate() + 30);
+      until.setDate(until.getDate() + (row?.billing_cycle === "yearly" ? 365 : 30));
       patch.active_until = until.toISOString();
     }
     const { error } = await supabaseAdmin
-      .from("agent_subscriptions")
+      .from("ai_team_subscriptions")
       .update(patch)
       .eq("id", data.id);
     if (error) throw new Error(error.message);

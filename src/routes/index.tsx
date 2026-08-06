@@ -19,7 +19,7 @@ import { FeatureCarousel } from "@/components/feature-carousel";
 import { TestimonialsShowcase } from "@/components/testimonials-showcase";
 import { OpportunityNetworkSection } from "@/components/opportunity-network";
 import { FeaturedBlogsSection } from "@/components/featured-blogs";
-import { AiAgentsSection } from "@/components/ai-agents-section";
+import { AiosTeaser } from "@/components/aios/aios-sections";
 
 
 export const Route = createFileRoute("/")({
@@ -172,7 +172,7 @@ function Landing() {
       <OpportunityNetworkSection />
 
       {/* AI Agents autopilot */}
-      <AiAgentsSection />
+      <AiosTeaser />
 
 
 

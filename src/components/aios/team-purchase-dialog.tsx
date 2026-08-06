@@ -4,11 +4,19 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Copy, Check, Upload, Loader2, X, ShieldCheck, Clock, XCircle } from "lucide-react";
+import { findTeam, inr } from "@/lib/aios-teams";
 
 const UPI_ID = "inquosite12@okhdfcbank";
-const AMOUNT = 999;
 
-export function AutopilotActivateDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+export type PurchaseTarget = { slug: string; cycle: "monthly" | "yearly" } | null;
+
+export function TeamPurchaseDialog({
+  target,
+  onClose,
+}: {
+  target: PurchaseTarget;
+  onClose: () => void;
+}) {
   const { user } = useAuth();
   const qc = useQueryClient();
   const [copied, setCopied] = useState(false);
@@ -16,14 +24,18 @@ export function AutopilotActivateDialog({ open, onClose }: { open: boolean; onCl
   const [file, setFile] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
+  const team = target ? findTeam(target.slug) : null;
+  const amount = team ? (target!.cycle === "yearly" ? team.yearly : team.monthly) : 0;
+
   const { data: existing, isLoading } = useQuery({
-    queryKey: ["my-autopilot-sub", user?.id],
-    enabled: !!user && open,
+    queryKey: ["my-team-sub", user?.id, target?.slug],
+    enabled: !!user && !!target,
     queryFn: async () => {
       const { data } = await supabase
-        .from("agent_subscriptions")
+        .from("ai_team_subscriptions")
         .select("*")
         .eq("user_id", user!.id)
+        .eq("team_slug", target!.slug)
         .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle();
@@ -31,7 +43,7 @@ export function AutopilotActivateDialog({ open, onClose }: { open: boolean; onCl
     },
   });
 
-  if (!open) return null;
+  if (!target || !team) return null;
 
   const pending = existing?.status === "pending";
   const approved = existing?.status === "approved";
@@ -46,7 +58,7 @@ export function AutopilotActivateDialog({ open, onClose }: { open: boolean; onCl
   const submit = async () => {
     if (!user) return;
     if (!txnId.trim()) {
-      toast.error("UPI transaction ID daaliye");
+      toast.error("Enter your UPI transaction ID");
       return;
     }
     setSubmitting(true);
@@ -64,20 +76,23 @@ export function AutopilotActivateDialog({ open, onClose }: { open: boolean; onCl
           .createSignedUrl(path, 60 * 60 * 24 * 365);
         screenshotUrl = signed?.signedUrl ?? path;
       }
-      const { error } = await supabase.from("agent_subscriptions").insert({
+      const { error } = await supabase.from("ai_team_subscriptions").insert({
         user_id: user.id,
+        team_slug: team.slug,
+        billing_cycle: target.cycle,
+        amount_inr: amount,
         upi_txn_id: txnId.trim(),
         screenshot_url: screenshotUrl,
-        amount_inr: AMOUNT,
         status: "pending",
       });
       if (error) throw error;
       toast.success("Payment submitted — admin verification pending");
-      qc.invalidateQueries({ queryKey: ["my-autopilot-sub"] });
+      qc.invalidateQueries({ queryKey: ["my-team-sub"] });
+      qc.invalidateQueries({ queryKey: ["my-team-subs"] });
       setTxnId("");
       setFile(null);
-    } catch (e: any) {
-      toast.error(e.message ?? "Submit failed");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Submit failed");
     } finally {
       setSubmitting(false);
     }
@@ -94,37 +109,43 @@ export function AutopilotActivateDialog({ open, onClose }: { open: boolean; onCl
         </button>
 
         <div className="border-b border-border p-6">
-          <div className="text-[10px] uppercase tracking-[0.22em] text-gold">— AI Autopilot</div>
-          <h3 className="mt-2 font-display text-2xl">Activate all 7 agents</h3>
+          <div className="text-[10px] uppercase tracking-[0.22em] text-gold">— Hire this team</div>
+          <h3 className="mt-2 font-display text-2xl">{team.name}</h3>
           <p className="mt-1 text-sm text-muted-foreground">
-            ₹{AMOUNT}/month · Manual UPI payment
+            {inr(amount)} / {target.cycle === "yearly" ? "year" : "month"} · Manual UPI payment
           </p>
         </div>
 
         <div className="max-h-[65vh] overflow-y-auto p-6">
-          {isLoading ? (
+          {!user ? (
+            <p className="py-6 text-center text-sm text-muted-foreground">Sign in to hire an AI team.</p>
+          ) : isLoading ? (
             <div className="grid place-items-center py-10">
               <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
             </div>
           ) : approved ? (
             <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-5 text-center">
               <ShieldCheck className="mx-auto h-8 w-8 text-emerald-500" />
-              <h4 className="mt-3 font-display text-lg">Autopilot Active</h4>
+              <h4 className="mt-3 font-display text-lg">Team active</h4>
               <p className="mt-1 text-sm text-muted-foreground">
-                All 7 agents are running on your workspace.
+                This team is hired and reporting to your AI CEO.
               </p>
             </div>
           ) : pending ? (
-            <div className="space-y-4">
-              <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-5 text-center">
-                <Clock className="mx-auto h-7 w-7 text-amber-500" />
-                <h4 className="mt-3 font-display text-lg">Verification pending</h4>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Admin aapke payment ko verify kar rahe hain. Usually within 24 hrs.
-                </p>
-                <div className="mt-4 space-y-1 text-left text-xs">
-                  <div className="flex justify-between"><span className="text-muted-foreground">Txn ID</span><span className="font-mono">{existing?.upi_txn_id}</span></div>
-                  <div className="flex justify-between"><span className="text-muted-foreground">Submitted</span><span>{new Date(existing!.created_at).toLocaleString()}</span></div>
+            <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-5 text-center">
+              <Clock className="mx-auto h-7 w-7 text-amber-500" />
+              <h4 className="mt-3 font-display text-lg">Verification pending</h4>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Admin is verifying your payment — usually within 24 hrs.
+              </p>
+              <div className="mt-4 space-y-1 text-left text-xs">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Txn ID</span>
+                  <span className="font-mono">{existing?.upi_txn_id}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Submitted</span>
+                  <span>{new Date(existing!.created_at).toLocaleString()}</span>
                 </div>
               </div>
             </div>
@@ -136,15 +157,18 @@ export function AutopilotActivateDialog({ open, onClose }: { open: boolean; onCl
                     <XCircle className="h-4 w-4 shrink-0" />
                     <div>
                       <div className="font-medium">Previous request rejected</div>
-                      {existing?.admin_note && <div className="mt-1 text-muted-foreground">{existing.admin_note}</div>}
+                      {existing?.admin_note && (
+                        <div className="mt-1 text-muted-foreground">{existing.admin_note}</div>
+                      )}
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* Step 1: UPI */}
               <div>
-                <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Step 1 — Pay ₹{AMOUNT} via UPI</div>
+                <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                  Step 1 — Pay {inr(amount)} via UPI
+                </div>
                 <div className="mt-3 flex items-center justify-between rounded-xl border border-gold/30 bg-gold/5 p-4">
                   <div>
                     <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">UPI ID</div>
@@ -158,22 +182,19 @@ export function AutopilotActivateDialog({ open, onClose }: { open: boolean; onCl
                     {copied ? "Copied" : "Copy"}
                   </button>
                 </div>
-                <p className="mt-2 text-[11px] text-muted-foreground">
-                  Kisi bhi UPI app (GPay / PhonePe / Paytm) se ₹{AMOUNT} bhejiye.
-                </p>
               </div>
 
-              {/* Step 2: proof */}
               <div>
-                <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Step 2 — Submit proof</div>
+                <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                  Step 2 — Submit proof
+                </div>
                 <label className="mt-3 block text-xs font-medium">UPI Transaction ID *</label>
                 <input
                   value={txnId}
                   onChange={(e) => setTxnId(e.target.value)}
                   placeholder="e.g. 424318273645"
-                  className="mt-1.5 w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm font-mono focus:border-gold/50 focus:outline-none"
+                  className="mt-1.5 w-full rounded-lg border border-border bg-surface px-3 py-2 font-mono text-sm focus:border-gold/50 focus:outline-none"
                 />
-
                 <label className="mt-4 block text-xs font-medium">Payment screenshot (optional)</label>
                 <label className="mt-1.5 flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-border bg-surface px-3 py-3 text-sm text-muted-foreground hover:border-gold/40">
                   <Upload className="h-4 w-4" />
@@ -195,7 +216,7 @@ export function AutopilotActivateDialog({ open, onClose }: { open: boolean; onCl
                 {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Submit for verification"}
               </button>
               <p className="text-center text-[11px] text-muted-foreground">
-                Admin will manually verify. Approve hone par 7 agents unlock ho jayenge.
+                Admin verifies manually. On approval this team joins your AI organization.
               </p>
             </div>
           )}
