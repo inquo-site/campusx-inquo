@@ -1,17 +1,17 @@
 import { Link } from "@tanstack/react-router";
-import { Mail, MapPin, ArrowUpRight } from "lucide-react";
-import type { ReactNode } from "react";
+import { Mail, MapPin, ArrowUpRight, Menu, X } from "lucide-react";
+import { useState, type ReactNode } from "react";
+import { AnimatePresence, motion } from "motion/react";
 
+/** Primary nav — kept short on purpose so nothing feels hidden. */
 const navLinks = [
   { to: "/", label: "Home" },
-  { to: "/about", label: "About" },
-  { to: "/ai-company", label: "AI Company" },
-  { to: "/agents", label: "AI Agents" },
-  { to: "/prep", label: "Prep Roadmap" },
+  { to: "/features", label: "Features" },
+  { to: "/ai-company", label: "AI Teams & Pricing" },
+  { to: "/prep", label: "Prep" },
   { to: "/blog", label: "Blog" },
-  { to: "/dashboard", label: "App" },
+  { to: "/about", label: "About" },
 ] as const;
-
 
 const featureLinks = [
   { to: "/ai-company", label: "AI Company OS" },
@@ -33,44 +33,113 @@ const footerLinks = [
 ] as const;
 
 export function MarketingLayout({ children }: { children: ReactNode }) {
+  const [open, setOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Glass Navbar */}
-      <header className="fixed inset-x-0 top-4 z-50 mx-auto flex max-w-6xl items-center justify-between rounded-full border border-white/10 bg-background/40 px-4 py-3 backdrop-blur-2xl md:px-6"
+      <header
+        className="fixed inset-x-0 top-4 z-50 mx-auto flex max-w-6xl items-center justify-between gap-3 rounded-full border border-white/10 bg-background/40 px-4 py-3 backdrop-blur-2xl md:px-6"
         style={{ boxShadow: "0 8px 32px oklch(0 0 0 / 0.35), inset 0 1px 0 oklch(1 0 0 / 0.06)" }}
       >
-        <Link to="/" className="flex items-center gap-2">
-          <div className="grid h-8 w-8 place-items-center rounded-md border border-gold/40 bg-gold/10 font-display text-lg italic text-gold">
+        <Link to="/" className="flex min-w-0 items-center gap-2">
+          <div className="grid h-8 w-8 shrink-0 place-items-center rounded-md border border-gold/40 bg-gold/10 font-display text-lg italic text-gold">
             X
           </div>
-          <span className="font-display text-xl leading-none">
+          <span className="truncate font-display text-xl leading-none">
             Campus<span className="italic-serif">X</span>
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-7 md:flex">
-          {navLinks.map((l) => (
+        <nav className="hidden items-center gap-6 lg:flex">
+          {navLinks.slice(1).map((l) => (
             <Link
               key={l.to}
               to={l.to}
+              activeProps={{ className: "text-gold" }}
               className="text-sm text-foreground/70 transition hover:text-gold"
             >
               {l.label}
             </Link>
           ))}
-          <Link to="/features" className="text-sm text-foreground/70 transition hover:text-gold">
-            Features
-          </Link>
         </nav>
 
-        <Link
-          to="/dashboard"
-          className="group inline-flex items-center gap-1.5 rounded-full bg-gold px-4 py-2 text-xs font-medium text-primary-foreground transition hover:brightness-110 md:text-sm"
-        >
-          Launch App
-          <ArrowUpRight className="h-3.5 w-3.5 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-        </Link>
+        <div className="flex shrink-0 items-center gap-2">
+          <Link
+            to="/dashboard"
+            className="group inline-flex items-center gap-1.5 rounded-full bg-gold px-4 py-2 text-xs font-medium text-primary-foreground transition hover:brightness-110 md:text-sm"
+          >
+            Launch App
+            <ArrowUpRight className="h-3.5 w-3.5 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+          </Link>
+          <button
+            onClick={() => setOpen((v) => !v)}
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            className="grid h-9 w-9 place-items-center rounded-full border border-border bg-surface text-foreground/80 transition hover:border-gold/40 hover:text-gold lg:hidden"
+          >
+            {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          </button>
+        </div>
       </header>
+
+      {/* Mobile menu */}
+      <AnimatePresence>
+        {open && (
+          <>
+            <motion.button
+              key="scrim"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setOpen(false)}
+              aria-label="Close menu"
+              className="fixed inset-0 z-40 bg-background/70 backdrop-blur-sm lg:hidden"
+            />
+            <motion.div
+              key="panel"
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ type: "spring", stiffness: 260, damping: 26 }}
+              className="fixed inset-x-4 top-20 z-50 max-h-[75vh] overflow-y-auto rounded-3xl border border-white/10 bg-background/95 p-5 backdrop-blur-2xl lg:hidden"
+            >
+              <div className="mb-2 text-[10px] uppercase tracking-[0.22em] text-muted-foreground">— Menu</div>
+              <ul className="space-y-1">
+                {navLinks.map((l) => (
+                  <li key={l.to}>
+                    <Link
+                      to={l.to}
+                      onClick={() => setOpen(false)}
+                      activeProps={{ className: "bg-gold/10 text-gold" }}
+                      className="flex items-center justify-between rounded-xl px-3 py-3 text-sm text-foreground/80 transition hover:bg-surface hover:text-foreground"
+                    >
+                      {l.label}
+                      <ArrowUpRight className="h-3.5 w-3.5 opacity-50" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="hairline my-4" />
+              <div className="mb-2 text-[10px] uppercase tracking-[0.22em] text-muted-foreground">— Inside the app</div>
+              <ul className="grid grid-cols-2 gap-1">
+                {featureLinks.map((l) => (
+                  <li key={l.to}>
+                    <Link
+                      to={l.to}
+                      onClick={() => setOpen(false)}
+                      className="block rounded-lg px-3 py-2 text-xs text-foreground/70 transition hover:bg-surface hover:text-foreground"
+                    >
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       <main className="ambient-glow pt-28">{children}</main>
 
