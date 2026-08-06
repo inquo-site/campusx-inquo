@@ -361,6 +361,57 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_team_subscriptions: {
+        Row: {
+          active_until: string | null
+          admin_note: string | null
+          amount_inr: number
+          billing_cycle: string
+          created_at: string
+          id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          screenshot_url: string | null
+          status: string
+          team_slug: string
+          updated_at: string
+          upi_txn_id: string
+          user_id: string
+        }
+        Insert: {
+          active_until?: string | null
+          admin_note?: string | null
+          amount_inr: number
+          billing_cycle?: string
+          created_at?: string
+          id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          screenshot_url?: string | null
+          status?: string
+          team_slug: string
+          updated_at?: string
+          upi_txn_id: string
+          user_id: string
+        }
+        Update: {
+          active_until?: string | null
+          admin_note?: string | null
+          amount_inr?: number
+          billing_cycle?: string
+          created_at?: string
+          id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          screenshot_url?: string | null
+          status?: string
+          team_slug?: string
+          updated_at?: string
+          upi_txn_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       blogs: {
         Row: {
           author_id: string | null
@@ -1073,6 +1124,10 @@ export type Database = {
     }
     Functions: {
       has_active_autopilot: { Args: { _user_id: string }; Returns: boolean }
+      has_team_access: {
+        Args: { _team_slug: string; _user_id: string }
+        Returns: boolean
+      }
       is_room_creator: {
         Args: { _room_id: string; _user_id: string }
         Returns: boolean
