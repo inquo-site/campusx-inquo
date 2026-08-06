@@ -1310,6 +1310,60 @@ export type Database = {
         }
         Relationships: []
       }
+      team_tasks: {
+        Row: {
+          agent_name: string | null
+          brief: string
+          completed_at: string | null
+          created_at: string
+          duration_ms: number | null
+          error: string | null
+          id: string
+          model: string | null
+          output: string | null
+          plan: string | null
+          status: string
+          team_slug: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          agent_name?: string | null
+          brief: string
+          completed_at?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          error?: string | null
+          id?: string
+          model?: string | null
+          output?: string | null
+          plan?: string | null
+          status?: string
+          team_slug: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          agent_name?: string | null
+          brief?: string
+          completed_at?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          error?: string | null
+          id?: string
+          model?: string | null
+          output?: string | null
+          plan?: string | null
+          status?: string
+          team_slug?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
