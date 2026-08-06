@@ -16,6 +16,7 @@ import { Route as McpRouteImport } from './routes/mcp'
 import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as DisclaimerRouteImport } from './routes/disclaimer'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AiCompanyRouteImport } from './routes/ai-company'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -85,6 +86,11 @@ const DisclaimerRoute = DisclaimerRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiCompanyRoute = AiCompanyRouteImport.update({
+  id: '/ai-company',
+  path: '/ai-company',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -274,6 +280,7 @@ const AuthenticatedPrepTrackNodeRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/ai-company': typeof AiCompanyRoute
   '/auth': typeof AuthRoute
   '/disclaimer': typeof DisclaimerRoute
   '/features': typeof FeaturesRoute
@@ -317,6 +324,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/ai-company': typeof AiCompanyRoute
   '/auth': typeof AuthRoute
   '/disclaimer': typeof DisclaimerRoute
   '/features': typeof FeaturesRoute
@@ -362,6 +370,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/about': typeof AboutRoute
+  '/ai-company': typeof AiCompanyRoute
   '/auth': typeof AuthRoute
   '/disclaimer': typeof DisclaimerRoute
   '/features': typeof FeaturesRoute
@@ -407,6 +416,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/ai-company'
     | '/auth'
     | '/disclaimer'
     | '/features'
@@ -450,6 +460,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/ai-company'
     | '/auth'
     | '/disclaimer'
     | '/features'
@@ -494,6 +505,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/about'
+    | '/ai-company'
     | '/auth'
     | '/disclaimer'
     | '/features'
@@ -539,6 +551,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
+  AiCompanyRoute: typeof AiCompanyRoute
   AuthRoute: typeof AuthRoute
   DisclaimerRoute: typeof DisclaimerRoute
   FeaturesRoute: typeof FeaturesRoute
@@ -608,6 +621,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-company': {
+      id: '/ai-company'
+      path: '/ai-company'
+      fullPath: '/ai-company'
+      preLoaderRoute: typeof AiCompanyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -913,6 +933,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
+  AiCompanyRoute: AiCompanyRoute,
   AuthRoute: AuthRoute,
   DisclaimerRoute: DisclaimerRoute,
   FeaturesRoute: FeaturesRoute,
