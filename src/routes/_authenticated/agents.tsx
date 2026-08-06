@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { TeamPurchaseDialog, type PurchaseTarget } from "@/components/aios/team-purchase-dialog";
 import { BUNDLE } from "@/lib/aios-teams";
+import { TeamConsole } from "@/components/aios/team-console";
 
 export const Route = createFileRoute("/_authenticated/agents")({
   component: MyAgentsPage,
@@ -105,6 +106,7 @@ function MyAgentsPage() {
       ) : (
         <>
           <ActiveAgentsGrid runs={runs ?? []} />
+          <TeamConsole />
           <section>
             <div className="mb-5 flex items-baseline justify-between">
               <h2 className="font-display text-2xl">
