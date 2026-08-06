@@ -253,9 +253,97 @@ export function AppLayout({ children }: { children: ReactNode }) {
         </button>
       </aside>
 
+      {/* Mobile workspace navigation */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <>
+            <motion.button
+              key="ws-scrim"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileOpen(false)}
+              aria-label="Close navigation"
+              className="fixed inset-0 z-40 bg-background/70 backdrop-blur-sm lg:hidden"
+            />
+            <motion.aside
+              key="ws-panel"
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", stiffness: 260, damping: 30 }}
+              className="fixed inset-y-0 left-0 z-50 flex w-[82vw] max-w-xs flex-col border-r border-border bg-sidebar text-sidebar-foreground lg:hidden"
+            >
+              <div className="flex h-16 items-center justify-between px-4">
+                <Link to="/" className="flex items-center gap-2">
+                  <div className="grid h-8 w-8 place-items-center rounded-md border border-gold/40 bg-gold/10 font-display text-lg italic text-gold">X</div>
+                  <span className="font-display text-xl leading-none">
+                    Campus<span className="italic-serif">X</span>
+                  </span>
+                </Link>
+                <button
+                  onClick={() => setMobileOpen(false)}
+                  aria-label="Close navigation"
+                  className="grid h-9 w-9 place-items-center rounded-full border border-border text-sidebar-foreground/70 hover:text-foreground"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+              <div className="hairline mx-4" />
+              <nav className="flex-1 space-y-5 overflow-y-auto px-3 py-4">
+                {navGroups.map((group) => (
+                  <div key={group.label}>
+                    <div className="px-3 pb-1 text-[10px] font-medium uppercase tracking-[0.22em] text-sidebar-foreground/50">
+                      {group.label}
+                    </div>
+                    <ul className="space-y-0.5">
+                      {group.items.map((item) => {
+                        const active = pathname === item.to;
+                        const Icon = item.icon;
+                        return (
+                          <li key={item.to}>
+                            <Link
+                              to={item.to}
+                              onClick={() => setMobileOpen(false)}
+                              className={
+                                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition " +
+                                (active
+                                  ? "bg-gold/10 text-gold"
+                                  : "text-sidebar-foreground/75 hover:bg-sidebar-accent/60 hover:text-foreground")
+                              }
+                            >
+                              <Icon className="h-4 w-4 shrink-0" />
+                              <span className="truncate">{item.label}</span>
+                            </Link>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                ))}
+              </nav>
+              <button
+                onClick={signOut}
+                className="m-3 inline-flex items-center gap-2 rounded-lg border border-border bg-sidebar-accent/60 px-3 py-2.5 text-xs text-sidebar-foreground/80 hover:border-gold/40 hover:text-foreground"
+              >
+                <LogOut className="h-3.5 w-3.5" /> Sign out
+              </button>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 grid h-20 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b border-border bg-background/70 px-4 backdrop-blur-xl md:flex md:px-8">
+        <header className="sticky top-0 z-30 grid h-20 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 border-b border-border bg-background/70 px-4 backdrop-blur-xl md:flex md:px-8">
+          <button
+            onClick={() => setMobileOpen(true)}
+            aria-label="Open navigation"
+            className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-border bg-surface text-foreground/80 transition hover:border-gold/40 hover:text-gold lg:hidden"
+          >
+            <Menu className="h-4 w-4" />
+          </button>
           <div className="min-w-0 flex-1">
+
             <div className="flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
               <span className="h-px w-4 bg-gold/60" /> {head.eyebrow}
             </div>
