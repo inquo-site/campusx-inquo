@@ -435,3 +435,53 @@ export function AiosFaq() {
     </section>
   );
 }
+
+/* ---------------- Compact teaser (landing + dashboard) ---------------- */
+
+export function AiosTeaser() {
+  return (
+    <section id="ai-company" className="px-4 py-24 md:px-8">
+      <div className="mx-auto max-w-6xl">
+        <div className="ambient-glow grid gap-8 rounded-3xl border border-gold/20 bg-surface p-8 md:grid-cols-[1.05fr_1fr] md:p-12">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/5 px-3 py-1 text-[10px] uppercase tracking-widest text-gold">
+              <Sparkles className="h-3 w-3" /> AI Company Operating System
+            </div>
+            <h2 className="mt-5 font-display text-4xl leading-tight md:text-5xl">
+              Hire an entire <span className="italic-serif">AI company</span>
+            </h2>
+            <p className="mt-4 max-w-lg text-sm text-muted-foreground md:text-base">
+              An AI CEO plans, a coordinator assigns, and 16 specialised teams execute — engineering,
+              design, QA, marketing, security, finance and more. Pick single teams or the full bundle.
+            </p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link to="/ai-company" className="btn-ink group">
+                Explore AI teams
+                <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </Link>
+              <Link
+                to="/agents"
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-3 text-sm font-medium hover:border-gold/40"
+              >
+                Open workspace
+              </Link>
+            </div>
+            <p className="mt-4 text-[11px] text-muted-foreground">
+              Teams from {inr(749)}/month · Full company bundle {inr(BUNDLE.monthly)}/month · INR, UPI payment.
+            </p>
+          </div>
+
+          <div className="grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2">
+            {AI_TEAMS.slice(0, 6).map((t) => (
+              <div key={t.slug} className="bg-card p-4">
+                <div className="text-[10px] uppercase tracking-widest text-gold">{t.category}</div>
+                <div className="mt-1.5 font-display text-sm leading-tight">{t.name}</div>
+                <div className="mt-2 text-[11px] text-muted-foreground">{inr(t.monthly)}/mo</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
