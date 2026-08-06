@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { MarketingLayout } from "@/components/marketing-layout";
 import {
   AiosHero,
-  AiosArchitecture,
+  AiosJourney,
   AiosWorkflow,
   AiosTeamsPricing,
   AiosFaq,
