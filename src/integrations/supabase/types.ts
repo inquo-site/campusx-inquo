@@ -412,6 +412,93 @@ export type Database = {
         }
         Relationships: []
       }
+      alumni_profiles: {
+        Row: {
+          batch: string | null
+          college: string | null
+          company: string
+          created_at: string
+          domains: string[]
+          id: string
+          linkedin_url: string | null
+          name: string
+          note: string | null
+          open_to_referrals: boolean
+          role: string | null
+          user_id: string | null
+        }
+        Insert: {
+          batch?: string | null
+          college?: string | null
+          company: string
+          created_at?: string
+          domains?: string[]
+          id?: string
+          linkedin_url?: string | null
+          name: string
+          note?: string | null
+          open_to_referrals?: boolean
+          role?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          batch?: string | null
+          college?: string | null
+          company?: string
+          created_at?: string
+          domains?: string[]
+          id?: string
+          linkedin_url?: string | null
+          name?: string
+          note?: string | null
+          open_to_referrals?: boolean
+          role?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      applications: {
+        Row: {
+          applied_on: string | null
+          company: string
+          created_at: string
+          id: string
+          link: string | null
+          notes: string | null
+          role: string
+          source: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          applied_on?: string | null
+          company: string
+          created_at?: string
+          id?: string
+          link?: string | null
+          notes?: string | null
+          role: string
+          source?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          applied_on?: string | null
+          company?: string
+          created_at?: string
+          id?: string
+          link?: string | null
+          notes?: string | null
+          role?: string
+          source?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       blogs: {
         Row: {
           author_id: string | null
@@ -556,6 +643,60 @@ export type Database = {
         }
         Relationships: []
       }
+      hackathons: {
+        Row: {
+          created_at: string
+          ends_at: string | null
+          id: string
+          is_featured: boolean
+          location: string | null
+          mode: string
+          name: string
+          organiser: string | null
+          posted_by: string | null
+          prize_pool: string | null
+          register_url: string | null
+          starts_at: string | null
+          tags: string[]
+          team_size: string | null
+          theme: string | null
+        }
+        Insert: {
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          is_featured?: boolean
+          location?: string | null
+          mode?: string
+          name: string
+          organiser?: string | null
+          posted_by?: string | null
+          prize_pool?: string | null
+          register_url?: string | null
+          starts_at?: string | null
+          tags?: string[]
+          team_size?: string | null
+          theme?: string | null
+        }
+        Update: {
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          is_featured?: boolean
+          location?: string | null
+          mode?: string
+          name?: string
+          organiser?: string | null
+          posted_by?: string | null
+          prize_pool?: string | null
+          register_url?: string | null
+          starts_at?: string | null
+          tags?: string[]
+          team_size?: string | null
+          theme?: string | null
+        }
+        Relationships: []
+      }
       internship_applications: {
         Row: {
           applicant_id: string
@@ -638,6 +779,57 @@ export type Database = {
           requirements?: string[] | null
           stipend?: string | null
           tech_stack?: string[] | null
+          title?: string
+        }
+        Relationships: []
+      }
+      jobs: {
+        Row: {
+          apply_url: string | null
+          company: string
+          created_at: string
+          description: string | null
+          experience: string | null
+          id: string
+          is_featured: boolean
+          location: string | null
+          posted_by: string | null
+          role_type: string
+          salary: string | null
+          source: string | null
+          tech_stack: string[]
+          title: string
+        }
+        Insert: {
+          apply_url?: string | null
+          company: string
+          created_at?: string
+          description?: string | null
+          experience?: string | null
+          id?: string
+          is_featured?: boolean
+          location?: string | null
+          posted_by?: string | null
+          role_type?: string
+          salary?: string | null
+          source?: string | null
+          tech_stack?: string[]
+          title: string
+        }
+        Update: {
+          apply_url?: string | null
+          company?: string
+          created_at?: string
+          description?: string | null
+          experience?: string | null
+          id?: string
+          is_featured?: boolean
+          location?: string | null
+          posted_by?: string | null
+          role_type?: string
+          salary?: string | null
+          source?: string | null
+          tech_stack?: string[]
           title?: string
         }
         Relationships: []
