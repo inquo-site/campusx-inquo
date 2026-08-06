@@ -97,6 +97,7 @@ function RootComponent() {
       <AuthProvider>
         <Outlet />
         <Toaster theme="dark" position="top-right" />
+        <SpeedInsights />
       </AuthProvider>
     </QueryClientProvider>
   );
