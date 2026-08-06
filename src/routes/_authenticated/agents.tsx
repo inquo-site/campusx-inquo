@@ -288,7 +288,7 @@ function EmptyRuns() {
           Post a project <ArrowUpRight className="h-4 w-4" />
         </Link>
         <Link
-          to="/blogs"
+          to="/blog"
           className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-5 py-3 text-sm font-medium hover:border-gold/40"
         >
           Publish a blog
