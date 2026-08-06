@@ -35,7 +35,7 @@ const navGroups: { label: string; items: { to: string; label: string; icon: type
     label: "Home",
     items: [
       { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-      { to: "/agents", label: "AI Autopilot", icon: Bot },
+      { to: "/agents", label: "AI Company OS", icon: Bot },
     ],
   },
   {
@@ -84,7 +84,7 @@ const navGroups: { label: string; items: { to: string; label: string; icon: type
 
 const titleMap: Record<string, { eyebrow: string; title: string; italic: string }> = {
   "/dashboard": { eyebrow: "Home", title: "Builders that", italic: "ship things" },
-  "/agents": { eyebrow: "Autopilot", title: "Your AI team,", italic: "always on" },
+  "/agents": { eyebrow: "AI Company OS", title: "Your AI teams,", italic: "always on" },
   "/prep": { eyebrow: "Prep", title: "Not a checklist.", italic: "A journey." },
   "/discover": { eyebrow: "Network", title: "Peers who", italic: "build with you" },
   "/projects": { eyebrow: "Showcase", title: "Projects that", italic: "actually run" },

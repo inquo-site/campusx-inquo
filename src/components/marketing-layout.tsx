@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 const navLinks = [
   { to: "/", label: "Home" },
   { to: "/about", label: "About" },
+  { to: "/ai-company", label: "AI Company" },
   { to: "/agents", label: "AI Agents" },
   { to: "/prep", label: "Prep Roadmap" },
   { to: "/blog", label: "Blog" },
@@ -13,7 +14,8 @@ const navLinks = [
 
 
 const featureLinks = [
-  { to: "/agents", label: "AI Autopilot" },
+  { to: "/ai-company", label: "AI Company OS" },
+  { to: "/agents", label: "AI Workspace" },
   { to: "/prep", label: "Prep Roadmap" },
   { to: "/jobs", label: "Off-Campus Jobs" },
   { to: "/hackathons", label: "Hackathons" },
