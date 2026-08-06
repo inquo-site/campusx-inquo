@@ -16,7 +16,8 @@ import {
   ChevronUp,
   Loader2,
 } from "lucide-react";
-import { AutopilotActivateDialog } from "@/components/autopilot-activate-dialog";
+import { TeamPurchaseDialog, type PurchaseTarget } from "@/components/aios/team-purchase-dialog";
+import { BUNDLE } from "@/lib/aios-teams";
 
 export const Route = createFileRoute("/_authenticated/agents")({
   component: MyAgentsPage,
@@ -43,14 +44,14 @@ type Run = {
 function MyAgentsPage() {
   const { user } = useAuth();
   const [openId, setOpenId] = useState<string | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [target, setTarget] = useState<PurchaseTarget>(null);
 
   const { data: sub, isLoading: subLoading } = useQuery({
     queryKey: ["my-autopilot-sub", user?.id],
     enabled: !!user,
     queryFn: async () => {
       const { data } = await supabase
-        .from("agent_subscriptions")
+        .from("ai_team_subscriptions")
         .select("status,active_until,created_at,upi_txn_id,admin_note")
         .eq("user_id", user!.id)
         .order("created_at", { ascending: false })
@@ -96,11 +97,11 @@ function MyAgentsPage() {
             Your AI team, <span className="italic-serif">quietly shipping.</span>
           </h1>
         </div>
-        <SubscriptionBadge sub={sub} loading={subLoading} onActivate={() => setDialogOpen(true)} />
+        <SubscriptionBadge sub={sub} loading={subLoading} onActivate={() => setTarget({ slug: BUNDLE.slug, cycle: "monthly" })} />
       </header>
 
       {!active ? (
-        <InactiveState onActivate={() => setDialogOpen(true)} sub={sub} />
+        <InactiveState onActivate={() => setTarget({ slug: BUNDLE.slug, cycle: "monthly" })} sub={sub} />
       ) : (
         <>
           <ActiveAgentsGrid runs={runs ?? []} />
@@ -173,7 +174,7 @@ function MyAgentsPage() {
         </>
       )}
 
-      <AutopilotActivateDialog open={dialogOpen} onClose={() => setDialogOpen(false)} />
+      <TeamPurchaseDialog target={target} onClose={() => setTarget(null)} />
     </div>
   );
 }
@@ -214,7 +215,7 @@ function SubscriptionBadge({
   }
   return (
     <button onClick={onActivate} className="btn-ink group">
-      <Sparkles className="h-3.5 w-3.5" /> Activate Autopilot
+      <Sparkles className="h-3.5 w-3.5" /> Hire AI teams
       <ArrowUpRight className="h-4 w-4" />
     </button>
   );
@@ -321,7 +322,7 @@ function InactiveState({
         </div>
       )}
       <button onClick={onActivate} className="btn-ink group mt-8">
-        {sub?.status === "pending" ? "View pending request" : "Activate Autopilot"}
+        {sub?.status === "pending" ? "View pending request" : "Hire AI teams"}
         <ArrowUpRight className="h-4 w-4" />
       </button>
     </div>
