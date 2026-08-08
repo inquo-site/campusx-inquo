@@ -49,11 +49,6 @@ export function TeamPurchaseDialog({
   const approved = existing?.status === "approved";
   const rejected = existing?.status === "rejected";
 
-  const copyUpi = () => {
-    navigator.clipboard.writeText(UPI_ID);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  };
 
   const submit = async () => {
     if (!user) return;
