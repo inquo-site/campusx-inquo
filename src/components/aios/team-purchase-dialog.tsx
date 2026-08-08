@@ -167,26 +167,26 @@ export function TeamPurchaseDialog({
 
               <div>
                 <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                  Step 1 — Pay {inr(amount)} via UPI
+                  Step 1 — Pay {inr(amount)} — tap your UPI app
                 </div>
-                <div className="mt-3 flex items-center justify-between rounded-xl border border-gold/30 bg-gold/5 p-4">
-                  <div>
-                    <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">UPI ID</div>
-                    <div className="mt-1 font-mono text-base text-foreground">{UPI_ID}</div>
-                  </div>
-                  <button
-                    onClick={copyUpi}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-gold/40 bg-background px-3 py-2 text-xs font-medium hover:bg-gold/10"
-                  >
-                    {copied ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
-                    {copied ? "Copied" : "Copy"}
-                  </button>
+                <div className="mt-3 rounded-xl border border-gold/30 bg-gold/5 p-4">
+                  <UpiPayButtons
+                    amount={amount}
+                    note={`${team.name} · ${target.cycle}`}
+                    onLaunched={(ref) => setTxnRef(ref)}
+                  />
+                  {txnRef && (
+                    <p className="mt-2 text-[11px] text-muted-foreground">
+                      Reference <span className="font-mono">{txnRef}</span> — after paying, paste your UPI
+                      transaction ID below.
+                    </p>
+                  )}
                 </div>
               </div>
 
               <div>
                 <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                  Step 2 — Submit proof
+                  Step 2 — Confirm payment
                 </div>
                 <label className="mt-3 block text-xs font-medium">UPI Transaction ID *</label>
                 <input
