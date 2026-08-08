@@ -3,10 +3,10 @@ import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Copy, Check, Upload, Loader2, X, ShieldCheck, Clock, XCircle } from "lucide-react";
+import { Loader2, X, ShieldCheck, Clock, XCircle, Upload } from "lucide-react";
 import { findTeam, inr } from "@/lib/aios-teams";
+import { UpiPayButtons } from "@/components/aios/upi-pay-buttons";
 
-const UPI_ID = "inquosite12@okhdfcbank";
 
 export type PurchaseTarget = { slug: string; cycle: "monthly" | "yearly" } | null;
 
