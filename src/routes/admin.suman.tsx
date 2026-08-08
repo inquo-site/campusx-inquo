@@ -26,14 +26,23 @@ import {
   adminGetBlog,
   adminUpsertBlog,
   adminDeleteBlog,
+  adminDuplicateBlog,
   adminToggleBlogFeatured,
   adminSetBlogStatus,
   adminAiWriteBlog,
   adminAiOptimizeBlog,
   adminAiSummarizeBlog,
+  adminAiSeoKit,
+  adminListBlogTemplates,
+  adminSaveBlogTemplate,
+  adminDeleteBlogTemplate,
   validateBlogSeo,
   type SeoIssue,
 } from "@/lib/blog.functions";
+import type { Block, BlogTypography } from "@/lib/blog-blocks";
+import { estimateReadMinutes } from "@/lib/blog-blocks";
+import { BlockEditor, TypographyPanel } from "@/components/admin/block-editor";
+import { BlocksRenderer } from "@/components/blog/block-renderer";
 import {
   adminListAgentEvents,
   adminListAgentRuns,
@@ -688,11 +697,24 @@ type BlogFormState = {
   excerpt: string;
   content: string;
   content_format: "markdown" | "html";
+  blocks: Block[];
+  typography: BlogTypography;
+  faq: Array<{ q: string; a: string }>;
+  keywords: string;
+  show_toc: boolean;
   cover_image: string;
+  image_alt: string;
+  image_caption: string;
   tags: string;
-  status: "draft" | "published";
+  category: string;
+  subcategory: string;
+  series: string;
+  status: "draft" | "published" | "scheduled";
+  scheduled_at: string;
   is_featured: boolean;
   author_name: string;
+  author_bio: string;
+  author_avatar: string;
   read_minutes: number;
 };
 
@@ -703,11 +725,24 @@ const emptyBlog: BlogFormState = {
   excerpt: "",
   content: "",
   content_format: "markdown",
+  blocks: [],
+  typography: {},
+  faq: [],
+  keywords: "",
+  show_toc: true,
   cover_image: "",
+  image_alt: "",
+  image_caption: "",
   tags: "",
+  category: "",
+  subcategory: "",
+  series: "",
   status: "draft",
+  scheduled_at: "",
   is_featured: false,
   author_name: "",
+  author_bio: "",
+  author_avatar: "",
   read_minutes: 3,
 };
 
@@ -722,6 +757,11 @@ function BlogPanel() {
   const aiWrite = useServerFn(adminAiWriteBlog);
   const aiOptimize = useServerFn(adminAiOptimizeBlog);
   const aiSummarize = useServerFn(adminAiSummarizeBlog);
+  const aiSeoKit = useServerFn(adminAiSeoKit);
+  const duplicate = useServerFn(adminDuplicateBlog);
+  const listTemplates = useServerFn(adminListBlogTemplates);
+  const saveTemplate = useServerFn(adminSaveBlogTemplate);
+  const deleteTemplate = useServerFn(adminDeleteBlogTemplate);
   const validateSeo = useServerFn(validateBlogSeo);
   const qc = useQueryClient();
 
@@ -731,6 +771,7 @@ function BlogPanel() {
   const [aiTone, setAiTone] = useState("");
   const [aiBusy, setAiBusy] = useState(false);
   const [optResult, setOptResult] = useState<null | Awaited<ReturnType<typeof aiOptimize>>>(null);
+  const [seoKit, setSeoKit] = useState<null | Awaited<ReturnType<typeof aiSeoKit>>>(null);
   const [notice, setNotice] = useState<string>("");
   const [publishError, setPublishError] = useState<null | {
     kind: "forbidden" | "domain" | "generic";
@@ -740,12 +781,29 @@ function BlogPanel() {
   }>(null);
   const [seoIssues, setSeoIssues] = useState<SeoIssue[] | null>(null);
   const [studioOpen, setStudioOpen] = useState(false);
+  const [autoSave, setAutoSave] = useState(true);
+  const [showPreview, setShowPreview] = useState(false);
+  const [editorTab, setEditorTab] = useState<"body" | "blocks" | "seo" | "design">("body");
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "draft" | "published" | "scheduled">("all");
 
   const invalidate = () => qc.invalidateQueries({ queryKey: ["admin-blogs"] });
 
   const { data, isLoading } = useQuery({
     queryKey: ["admin-blogs"],
     queryFn: () => list({ data: { token: getToken() } }),
+  });
+
+  const filteredPosts = (data ?? []).filter((p) => {
+    const rec = p as unknown as Record<string, unknown>;
+    const q = search.trim().toLowerCase();
+    const hay = [p.title, p.slug, rec["category"], rec["series"]]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+    if (q && !hay.includes(q)) return false;
+    if (statusFilter !== "all" && p.status !== statusFilter) return false;
+    return true;
   });
 
   const openNew = () => {
@@ -757,6 +815,7 @@ function BlogPanel() {
   const openEdit = async (id: string) => {
     const row = await getOne({ data: { token: getToken(), id } });
     if (!row) return;
+    const r = row as Record<string, unknown>;
     setForm({
       id: row.id,
       title: row.title,
@@ -764,11 +823,24 @@ function BlogPanel() {
       excerpt: row.excerpt ?? "",
       content: row.content ?? "",
       content_format: ((row as { content_format?: string }).content_format === "html" ? "html" : "markdown"),
+      blocks: Array.isArray(r.blocks) ? (r.blocks as Block[]) : [],
+      typography: (r.typography as BlogTypography) ?? {},
+      faq: Array.isArray(r.faq) ? (r.faq as Array<{ q: string; a: string }>) : [],
+      keywords: ((r.keywords as string[]) ?? []).join(", "),
+      show_toc: r.show_toc !== false,
       cover_image: row.cover_image ?? "",
+      image_alt: (r.image_alt as string) ?? "",
+      image_caption: (r.image_caption as string) ?? "",
       tags: (row.tags ?? []).join(", "),
-      status: (row.status as "draft" | "published") ?? "draft",
+      category: (r.category as string) ?? "",
+      subcategory: (r.subcategory as string) ?? "",
+      series: (r.series as string) ?? "",
+      status: (row.status as "draft" | "published" | "scheduled") ?? "draft",
+      scheduled_at: r.scheduled_at ? String(r.scheduled_at).slice(0, 16) : "",
       is_featured: !!row.is_featured,
       author_name: row.author_name ?? "",
+      author_bio: (r.author_bio as string) ?? "",
+      author_avatar: (r.author_avatar as string) ?? "",
       read_minutes: row.read_minutes ?? 3,
     });
     setOptResult(null);
@@ -835,9 +907,11 @@ function BlogPanel() {
     return { kind: "generic", title: "Publish failed", detail: raw, host };
   };
 
-  const save = async (publish?: boolean, force?: boolean) => {
-    setNotice("");
-    setPublishError(null);
+  const save = async (publish?: boolean, force?: boolean, silent?: boolean) => {
+    if (!silent) {
+      setNotice("");
+      setPublishError(null);
+    }
     // On publish, run SEO validation first; block if errors and not forced.
     if (publish && !force) {
       const issues = await runSeoCheck();
@@ -850,6 +924,13 @@ function BlogPanel() {
       }
     }
     try {
+      const status: "draft" | "published" | "scheduled" = publish
+        ? "published"
+        : form.status === "scheduled" && form.scheduled_at
+          ? "scheduled"
+          : form.status === "scheduled"
+            ? "draft"
+            : form.status;
       const payload = {
         token: getToken(),
         id: form.id,
@@ -858,22 +939,61 @@ function BlogPanel() {
         excerpt: form.excerpt || null,
         content: form.content,
         content_format: form.content_format,
+        blocks: form.blocks,
+        typography: form.typography as Record<string, unknown>,
+        faq: form.faq.filter((f) => f.q.trim()),
+        keywords: form.keywords.split(",").map((k) => k.trim()).filter(Boolean),
+        show_toc: form.show_toc,
         cover_image: form.cover_image || null,
+        image_alt: form.image_alt || null,
+        image_caption: form.image_caption || null,
         tags: buildTags(),
-        status: (publish ? "published" : form.status) as "draft" | "published",
+        category: form.category || null,
+        subcategory: form.subcategory || null,
+        series: form.series || null,
+        status,
+        scheduled_at: form.scheduled_at ? new Date(form.scheduled_at).toISOString() : null,
         is_featured: form.is_featured,
         author_name: form.author_name || null,
+        author_bio: form.author_bio || null,
+        author_avatar: form.author_avatar || null,
         read_minutes: Number(form.read_minutes) || 3,
         force: !!force,
       };
       const res = await upsert({ data: payload });
-      setNotice(publish ? "Published ✓" : "Saved ✓");
-      setSeoIssues(null);
-      setForm((f) => ({ ...f, id: res.id, slug: res.slug, status: payload.status }));
+      setNotice(silent ? `Auto-saved ${new Date().toLocaleTimeString()}` : publish ? "Published ✓" : "Saved ✓");
+      if (!silent) setSeoIssues(null);
+      setForm((f) => ({ ...f, id: res.id, slug: res.slug, status }));
       invalidate();
     } catch (e) {
       console.error("[blog save] failed", e);
-      setPublishError(classifyPublishError(e));
+      if (!silent) setPublishError(classifyPublishError(e));
+    }
+  };
+
+  // Auto-save drafts every 45s once the post exists and has a title.
+  useEffect(() => {
+    if (!editing || !autoSave || !form.id || !form.title) return;
+    const t = setInterval(() => {
+      if (form.status !== "published") void save(false, false, true);
+    }, 45_000);
+    return () => clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editing, autoSave, form]);
+
+  const runSeoKit = async () => {
+    if (!form.title || !form.content) return;
+    setAiBusy(true);
+    setNotice("");
+    try {
+      const res = await aiSeoKit({
+        data: { token: getToken(), title: form.title, content: form.content },
+      });
+      setSeoKit(res);
+    } catch (e) {
+      setNotice((e as Error).message || "SEO kit failed");
+    } finally {
+      setAiBusy(false);
     }
   };
 
@@ -1160,42 +1280,217 @@ function BlogPanel() {
                 className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
               />
             </Field>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-medium text-muted-foreground">Content format:</span>
-              {(["markdown", "html"] as const).map((fmt) => (
+            <div className="flex flex-wrap items-center gap-2 border-b border-border pb-2">
+              {(["body", "blocks", "seo", "design"] as const).map((t) => (
                 <button
-                  key={fmt}
+                  key={t}
                   type="button"
-                  onClick={() => setForm({ ...form, content_format: fmt })}
-                  className={`rounded-md border px-2.5 py-1 text-xs uppercase tracking-wide transition ${
-                    form.content_format === fmt
-                      ? "border-gold/50 bg-gold/10 text-gold"
-                      : "border-border text-muted-foreground hover:bg-accent"
+                  onClick={() => setEditorTab(t)}
+                  className={`rounded-md px-3 py-1.5 text-xs uppercase tracking-wide transition ${
+                    editorTab === t ? "bg-gold/15 text-gold" : "text-muted-foreground hover:bg-accent"
                   }`}
                 >
-                  {fmt}
+                  {t === "seo" ? "SEO & FAQ" : t}
                 </button>
               ))}
+              <label className="ml-auto flex items-center gap-1.5 text-xs text-muted-foreground">
+                <input type="checkbox" checked={autoSave} onChange={(e) => setAutoSave(e.target.checked)} />
+                Auto-save
+              </label>
+              <button
+                type="button"
+                onClick={() => setShowPreview((v) => !v)}
+                className="rounded-md border border-border px-3 py-1.5 text-xs hover:bg-accent"
+              >
+                {showPreview ? "Hide preview" : "Live preview"}
+              </button>
             </div>
-            <Field
-              label={
-                form.content_format === "html"
-                  ? "Content (raw HTML — paste your <h2>, <p>, <img> etc.)"
-                  : "Content (Markdown)"
-              }
-            >
-              <textarea
-                value={form.content}
-                onChange={(e) => setForm({ ...form, content: e.target.value })}
-                rows={22}
-                placeholder={
-                  form.content_format === "html"
-                    ? "<h2>Section title</h2>\n<p>Your HTML paragraph…</p>"
-                    : "## Section title\n\nYour markdown paragraph…"
-                }
-                className="w-full rounded-lg border border-input bg-background px-3 py-2 font-mono text-xs leading-relaxed"
-              />
-            </Field>
+
+            {editorTab === "body" && (
+              <>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-medium text-muted-foreground">Content format:</span>
+                  {(["markdown", "html"] as const).map((fmt) => (
+                    <button
+                      key={fmt}
+                      type="button"
+                      onClick={() => setForm({ ...form, content_format: fmt })}
+                      className={`rounded-md border px-2.5 py-1 text-xs uppercase tracking-wide transition ${
+                        form.content_format === fmt
+                          ? "border-gold/50 bg-gold/10 text-gold"
+                          : "border-border text-muted-foreground hover:bg-accent"
+                      }`}
+                    >
+                      {fmt}
+                    </button>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setForm((f) => ({ ...f, read_minutes: estimateReadMinutes(f.content, f.blocks) }))
+                    }
+                    className="ml-auto rounded-md border border-border px-2.5 py-1 text-xs hover:bg-accent"
+                  >
+                    Recalculate read time
+                  </button>
+                </div>
+                <Field
+                  label={
+                    form.content_format === "html"
+                      ? "Content (raw HTML — paste your <h2>, <p>, <img> etc.)"
+                      : "Content (Markdown)"
+                  }
+                >
+                  <textarea
+                    value={form.content}
+                    onChange={(e) => setForm({ ...form, content: e.target.value })}
+                    rows={22}
+                    placeholder={
+                      form.content_format === "html"
+                        ? "<h2>Section title</h2>\n<p>Your HTML paragraph…</p>"
+                        : "## Section title\n\nYour markdown paragraph…"
+                    }
+                    className="w-full rounded-lg border border-input bg-background px-3 py-2 font-mono text-xs leading-relaxed"
+                  />
+                </Field>
+              </>
+            )}
+
+            {editorTab === "blocks" && (
+              <BlockEditor blocks={form.blocks} onChange={(blocks) => setForm((f) => ({ ...f, blocks }))} />
+            )}
+
+            {editorTab === "design" && (
+              <div className="space-y-3">
+                <TypographyPanel
+                  value={form.typography}
+                  onChange={(typography) => setForm((f) => ({ ...f, typography }))}
+                />
+                <label className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={form.show_toc}
+                    onChange={(e) => setForm({ ...form, show_toc: e.target.checked })}
+                  />
+                  Show table of contents on the post
+                </label>
+              </div>
+            )}
+
+            {editorTab === "seo" && (
+              <div className="space-y-4">
+                <div className="rounded-2xl border border-gold/20 bg-gold/5 p-4">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-medium uppercase tracking-wide text-gold">AI SEO kit</p>
+                    <button
+                      type="button"
+                      onClick={runSeoKit}
+                      disabled={aiBusy || !form.title || !form.content}
+                      className="rounded-lg bg-primary px-3 py-1.5 text-xs text-primary-foreground disabled:opacity-50"
+                    >
+                      {aiBusy ? "Thinking…" : "Generate keywords, tags, FAQ & fixes"}
+                    </button>
+                  </div>
+                  {seoKit && (
+                    <div className="mt-3 space-y-3 text-sm">
+                      <div>
+                        <span className="text-xs uppercase tracking-wide text-muted-foreground">Score</span>{" "}
+                        <strong>{seoKit.score}/100</strong>
+                      </div>
+                      <div>
+                        <p className="text-xs uppercase tracking-wide text-muted-foreground">Meta title</p>
+                        <p>{seoKit.meta_title}</p>
+                        <button className="text-xs text-gold underline" onClick={() => setForm((f) => ({ ...f, title: seoKit.meta_title }))}>Apply</button>
+                      </div>
+                      <div>
+                        <p className="text-xs uppercase tracking-wide text-muted-foreground">Meta description</p>
+                        <p>{seoKit.meta_description}</p>
+                        <button className="text-xs text-gold underline" onClick={() => setForm((f) => ({ ...f, excerpt: seoKit.meta_description }))}>Apply</button>
+                      </div>
+                      <div className="flex flex-wrap gap-3">
+                        <button className="text-xs text-gold underline" onClick={() => setForm((f) => ({ ...f, keywords: seoKit.keywords.join(", ") }))}>Apply keywords</button>
+                        <button className="text-xs text-gold underline" onClick={() => setForm((f) => ({ ...f, tags: seoKit.tags.join(", ") }))}>Apply tags</button>
+                        <button className="text-xs text-gold underline" onClick={() => setForm((f) => ({ ...f, faq: seoKit.faq }))}>Apply FAQ</button>
+                      </div>
+                      {seoKit.outline.length > 0 && (
+                        <div>
+                          <p className="text-xs uppercase tracking-wide text-muted-foreground">Suggested outline</p>
+                          <ul className="list-disc pl-5">{seoKit.outline.map((o, i) => <li key={i}>{o}</li>)}</ul>
+                        </div>
+                      )}
+                      {seoKit.improvements.length > 0 && (
+                        <div>
+                          <p className="text-xs uppercase tracking-wide text-muted-foreground">Improvements</p>
+                          <ul className="list-disc pl-5">{seoKit.improvements.map((o, i) => <li key={i}>{o}</li>)}</ul>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                <Field label="Focus keywords (comma separated)">
+                  <input
+                    value={form.keywords}
+                    onChange={(e) => setForm({ ...form, keywords: e.target.value })}
+                    placeholder="student resume, first internship, dsa prep"
+                    className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                  />
+                </Field>
+
+                <div className="rounded-2xl border border-border p-4">
+                  <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Google preview</p>
+                  <p className="mt-2 text-base text-[#8ab4f8]">{form.title || "Post title"}</p>
+                  <p className="text-xs text-emerald-500">campusx-inquo.lovable.app/blog/{form.slug || "slug"}</p>
+                  <p className="text-sm text-muted-foreground">{form.excerpt || "Meta description preview…"}</p>
+                </div>
+
+                <div className="space-y-2">
+                  <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">FAQ (adds FAQ schema)</p>
+                  {form.faq.map((f, i) => (
+                    <div key={i} className="space-y-1 rounded-lg border border-border p-2">
+                      <input
+                        value={f.q}
+                        placeholder="Question"
+                        onChange={(e) => {
+                          const next = [...form.faq];
+                          next[i] = { ...f, q: e.target.value };
+                          setForm({ ...form, faq: next });
+                        }}
+                        className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                      />
+                      <textarea
+                        rows={2}
+                        value={f.a}
+                        placeholder="Answer"
+                        onChange={(e) => {
+                          const next = [...form.faq];
+                          next[i] = { ...f, a: e.target.value };
+                          setForm({ ...form, faq: next });
+                        }}
+                        className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                      />
+                      <button className="text-xs text-destructive" onClick={() => setForm({ ...form, faq: form.faq.filter((_, j) => j !== i) })}>Remove</button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => setForm({ ...form, faq: [...form.faq, { q: "", a: "" }] })}
+                    className="rounded-lg border border-border px-3 py-1.5 text-xs hover:bg-accent"
+                  >
+                    + FAQ item
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {showPreview && (
+              <div className="rounded-2xl border border-border bg-background p-6">
+                <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Live preview</p>
+                <h1 className="mt-3 font-display text-3xl">{form.title || "Untitled"}</h1>
+                {form.excerpt && <p className="mt-2 text-sm text-muted-foreground">{form.excerpt}</p>}
+                <BlocksRenderer blocks={form.blocks} />
+              </div>
+            )}
           </div>
 
           <aside className="space-y-4">
@@ -1204,6 +1499,44 @@ function BlogPanel() {
                 value={form.cover_image}
                 onChange={(e) => setForm({ ...form, cover_image: e.target.value })}
                 placeholder="https://…"
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+              />
+            </Field>
+            <Field label="Cover alt text">
+              <input
+                value={form.image_alt}
+                onChange={(e) => setForm({ ...form, image_alt: e.target.value })}
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+              />
+            </Field>
+            <Field label="Cover caption">
+              <input
+                value={form.image_caption}
+                onChange={(e) => setForm({ ...form, image_caption: e.target.value })}
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+              />
+            </Field>
+            <Field label="Category">
+              <input
+                value={form.category}
+                onChange={(e) => setForm({ ...form, category: e.target.value })}
+                placeholder="Careers"
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+              />
+            </Field>
+            <Field label="Subcategory">
+              <input
+                value={form.subcategory}
+                onChange={(e) => setForm({ ...form, subcategory: e.target.value })}
+                placeholder="Internships"
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+              />
+            </Field>
+            <Field label="Series">
+              <input
+                value={form.series}
+                onChange={(e) => setForm({ ...form, series: e.target.value })}
+                placeholder="Placement Playbook"
                 className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
               />
             </Field>
@@ -1219,6 +1552,21 @@ function BlogPanel() {
               <input
                 value={form.author_name}
                 onChange={(e) => setForm({ ...form, author_name: e.target.value })}
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+              />
+            </Field>
+            <Field label="Author bio">
+              <textarea
+                rows={2}
+                value={form.author_bio}
+                onChange={(e) => setForm({ ...form, author_bio: e.target.value })}
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+              />
+            </Field>
+            <Field label="Author avatar URL">
+              <input
+                value={form.author_avatar}
+                onChange={(e) => setForm({ ...form, author_avatar: e.target.value })}
                 className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
               />
             </Field>
@@ -1246,14 +1594,25 @@ function BlogPanel() {
               <select
                 value={form.status}
                 onChange={(e) =>
-                  setForm({ ...form, status: e.target.value as "draft" | "published" })
+                  setForm({ ...form, status: e.target.value as BlogFormState["status"] })
                 }
                 className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
               >
                 <option value="draft">Draft</option>
                 <option value="published">Published</option>
+                <option value="scheduled">Scheduled</option>
               </select>
             </Field>
+            {form.status === "scheduled" && (
+              <Field label="Publish at">
+                <input
+                  type="datetime-local"
+                  value={form.scheduled_at}
+                  onChange={(e) => setForm({ ...form, scheduled_at: e.target.value })}
+                  className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                />
+              </Field>
+            )}
 
             <div className="grid gap-2 pt-2">
               <button
@@ -1450,6 +1809,26 @@ function BlogPanel() {
         />
       )}
 
+      <div className="flex flex-wrap items-center gap-2">
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search title, slug, category…"
+          className="w-64 rounded-lg border border-input bg-background px-3 py-2 text-sm"
+        />
+        {(["all", "draft", "published", "scheduled"] as const).map((s) => (
+          <button
+            key={s}
+            onClick={() => setStatusFilter(s)}
+            className={`rounded-md border px-3 py-1.5 text-xs uppercase tracking-wide ${
+              statusFilter === s ? "border-gold/50 bg-gold/10 text-gold" : "border-border text-muted-foreground hover:bg-accent"
+            }`}
+          >
+            {s}
+          </button>
+        ))}
+      </div>
+
       {isLoading ? (
         <p className="text-sm text-muted-foreground">Loading…</p>
       ) : (
@@ -1466,7 +1845,7 @@ function BlogPanel() {
               </tr>
             </thead>
             <tbody>
-              {(data ?? []).map((p) => (
+              {filteredPosts.map((p) => (
                 <tr key={p.id} className="border-t border-border">
                   <td className="px-4 py-3">{p.title}</td>
                   <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{p.slug}</td>
@@ -1501,6 +1880,16 @@ function BlogPanel() {
                       className="rounded-md border border-border px-3 py-1 text-xs hover:bg-accent"
                     >
                       Edit
+                    </button>
+                    <button
+                      onClick={() =>
+                        duplicate({ data: { token: getToken(), id: p.id } })
+                          .then(invalidate)
+                          .catch((e) => setPublishError(classifyPublishError(e)))
+                      }
+                      className="rounded-md border border-border px-3 py-1 text-xs hover:bg-accent"
+                    >
+                      Duplicate
                     </button>
                     {p.status === "published" ? (
                       <button

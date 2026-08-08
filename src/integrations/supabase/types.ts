@@ -499,61 +499,127 @@ export type Database = {
         }
         Relationships: []
       }
+      blog_templates: {
+        Row: {
+          created_at: string
+          data: Json
+          description: string | null
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          data?: Json
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       blogs: {
         Row: {
+          author_avatar: string | null
+          author_bio: string | null
           author_id: string | null
           author_name: string | null
+          blocks: Json
+          category: string | null
           content: string
           content_format: string
           cover_image: string | null
           created_at: string
           excerpt: string | null
+          faq: Json
           id: string
+          image_alt: string | null
+          image_caption: string | null
           is_featured: boolean
+          keywords: string[]
           published_at: string | null
           read_minutes: number
+          scheduled_at: string | null
+          series: string | null
+          show_toc: boolean
           slug: string
           status: string
+          subcategory: string | null
           tags: string[]
           title: string
+          typography: Json
           updated_at: string
           views: number
         }
         Insert: {
+          author_avatar?: string | null
+          author_bio?: string | null
           author_id?: string | null
           author_name?: string | null
+          blocks?: Json
+          category?: string | null
           content?: string
           content_format?: string
           cover_image?: string | null
           created_at?: string
           excerpt?: string | null
+          faq?: Json
           id?: string
+          image_alt?: string | null
+          image_caption?: string | null
           is_featured?: boolean
+          keywords?: string[]
           published_at?: string | null
           read_minutes?: number
+          scheduled_at?: string | null
+          series?: string | null
+          show_toc?: boolean
           slug: string
           status?: string
+          subcategory?: string | null
           tags?: string[]
           title: string
+          typography?: Json
           updated_at?: string
           views?: number
         }
         Update: {
+          author_avatar?: string | null
+          author_bio?: string | null
           author_id?: string | null
           author_name?: string | null
+          blocks?: Json
+          category?: string | null
           content?: string
           content_format?: string
           cover_image?: string | null
           created_at?: string
           excerpt?: string | null
+          faq?: Json
           id?: string
+          image_alt?: string | null
+          image_caption?: string | null
           is_featured?: boolean
+          keywords?: string[]
           published_at?: string | null
           read_minutes?: number
+          scheduled_at?: string | null
+          series?: string | null
+          show_toc?: boolean
           slug?: string
           status?: string
+          subcategory?: string | null
           tags?: string[]
           title?: string
+          typography?: Json
           updated_at?: string
           views?: number
         }
@@ -1382,6 +1448,7 @@ export type Database = {
         Args: { _room_id: string; _user_id: string }
         Returns: boolean
       }
+      publish_scheduled_blogs: { Args: never; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
