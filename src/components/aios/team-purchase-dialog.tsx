@@ -19,7 +19,7 @@ export function TeamPurchaseDialog({
 }) {
   const { user } = useAuth();
   const qc = useQueryClient();
-  const [copied, setCopied] = useState(false);
+  const [txnRef, setTxnRef] = useState("");
   const [txnId, setTxnId] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
