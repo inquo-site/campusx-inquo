@@ -107,7 +107,7 @@ export function TeamPurchaseDialog({
           <div className="text-[10px] uppercase tracking-[0.22em] text-gold">— Hire this team</div>
           <h3 className="mt-2 font-display text-2xl">{team.name}</h3>
           <p className="mt-1 text-sm text-muted-foreground">
-            {inr(amount)} / {target.cycle === "yearly" ? "year" : "month"} · Manual UPI payment
+            {inr(amount)} / {target.cycle === "yearly" ? "year" : "month"} · Pay instantly with any UPI app
           </p>
         </div>
 
