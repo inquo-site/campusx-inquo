@@ -18,31 +18,38 @@ function slugify(s: string) {
 }
 
 // ============ PUBLIC ============
+const LIST_COLS =
+  "id, title, slug, excerpt, cover_image, tags, author_name, read_minutes, published_at, is_featured, category, subcategory, series, views";
+
+const DETAIL_COLS =
+  "id, title, slug, excerpt, content, content_format, blocks, typography, faq, keywords, show_toc, cover_image, image_alt, image_caption, tags, category, subcategory, series, author_name, author_bio, author_avatar, read_minutes, published_at, views";
+
+async function publicClient() {
+  const { createClient } = await import("@supabase/supabase-js");
+  return createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_PUBLISHABLE_KEY!, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+}
+
 export const listPublishedBlogs = createServerFn({ method: "GET" })
   .handler(async () => {
-    const { createClient } = await import("@supabase/supabase-js");
-    const sb = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_PUBLISHABLE_KEY!, {
-      auth: { persistSession: false, autoRefreshToken: false },
-    });
+    const sb = await publicClient();
     const { data, error } = await sb
       .from("blogs")
-      .select("id, title, slug, excerpt, cover_image, tags, author_name, read_minutes, published_at, is_featured")
+      .select(LIST_COLS)
       .eq("status", "published")
       .order("published_at", { ascending: false })
-      .limit(100);
+      .limit(200);
     if (error) throw new Error(error.message);
     return data ?? [];
   });
 
 export const listFeaturedBlogs = createServerFn({ method: "GET" })
   .handler(async () => {
-    const { createClient } = await import("@supabase/supabase-js");
-    const sb = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_PUBLISHABLE_KEY!, {
-      auth: { persistSession: false, autoRefreshToken: false },
-    });
+    const sb = await publicClient();
     const { data, error } = await sb
       .from("blogs")
-      .select("id, title, slug, excerpt, cover_image, tags, author_name, read_minutes, published_at")
+      .select(LIST_COLS)
       .eq("status", "published")
       .eq("is_featured", true)
       .order("published_at", { ascending: false })
@@ -52,7 +59,7 @@ export const listFeaturedBlogs = createServerFn({ method: "GET" })
     // fallback: latest 3
     const { data: recent } = await sb
       .from("blogs")
-      .select("id, title, slug, excerpt, cover_image, tags, author_name, read_minutes, published_at")
+      .select(LIST_COLS)
       .eq("status", "published")
       .order("published_at", { ascending: false })
       .limit(3);
@@ -62,19 +69,57 @@ export const listFeaturedBlogs = createServerFn({ method: "GET" })
 export const getBlogBySlug = createServerFn({ method: "GET" })
   .inputValidator((data: { slug: string }) => data)
   .handler(async ({ data }) => {
-    const { createClient } = await import("@supabase/supabase-js");
-    const sb = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_PUBLISHABLE_KEY!, {
-      auth: { persistSession: false, autoRefreshToken: false },
-    });
+    const sb = await publicClient();
     const { data: row, error } = await sb
       .from("blogs")
-      .select("id, title, slug, excerpt, content, content_format, cover_image, tags, author_name, read_minutes, published_at")
+      .select(DETAIL_COLS)
       .eq("slug", data.slug)
       .eq("status", "published")
       .maybeSingle();
     if (error) throw new Error(error.message);
     return row;
   });
+
+/** Posts related by category / shared tags, excluding the current slug. */
+export const listRelatedBlogs = createServerFn({ method: "GET" })
+  .inputValidator((data: { slug: string; limit?: number }) => data)
+  .handler(async ({ data }) => {
+    const sb = await publicClient();
+    const { data: current } = await sb
+      .from("blogs")
+      .select("id, tags, category")
+      .eq("slug", data.slug)
+      .eq("status", "published")
+      .maybeSingle();
+    const { data: rows } = await sb
+      .from("blogs")
+      .select(LIST_COLS)
+      .eq("status", "published")
+      .neq("slug", data.slug)
+      .order("published_at", { ascending: false })
+      .limit(60);
+    const all = rows ?? [];
+    const tags: string[] = (current?.tags as string[]) ?? [];
+    const scored = all
+      .map((p) => {
+        const overlap = ((p.tags as string[]) ?? []).filter((t) => tags.includes(t)).length;
+        const cat = current?.category && p.category === current.category ? 2 : 0;
+        return { p, score: overlap + cat };
+      })
+      .sort((a, b) => b.score - a.score);
+    return scored.slice(0, data.limit ?? 3).map((s) => s.p);
+  });
+
+/** Categories, series and tags across published posts — powers /blog filters. */
+export const listBlogTaxonomy = createServerFn({ method: "GET" }).handler(async () => {
+  const sb = await publicClient();
+  const { data } = await sb.from("blogs").select("category, series, tags").eq("status", "published").limit(500);
+  const rows = data ?? [];
+  const categories = [...new Set(rows.map((r) => r.category).filter(Boolean))] as string[];
+  const series = [...new Set(rows.map((r) => r.series).filter(Boolean))] as string[];
+  const tags = [...new Set(rows.flatMap((r) => ((r.tags as string[]) ?? [])))].sort();
+  return { categories: categories.sort(), series: series.sort(), tags };
+});
 
 // ============ ADMIN ============
 export const adminListBlogs = createServerFn({ method: "POST" })
@@ -84,7 +129,7 @@ export const adminListBlogs = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: rows, error } = await supabaseAdmin
       .from("blogs")
-      .select("id, title, slug, excerpt, status, is_featured, author_name, read_minutes, tags, cover_image, content_format, published_at, updated_at")
+      .select("id, title, slug, excerpt, status, is_featured, author_name, read_minutes, tags, category, subcategory, series, views, scheduled_at, cover_image, content_format, published_at, updated_at")
 
       .order("updated_at", { ascending: false });
     if (error) throw new Error(error.message);
@@ -172,6 +217,12 @@ export const validateBlogSeo = createServerFn({ method: "POST" })
     return { issues: validateBlogSeoInput(data) };
   });
 
+const BlockSchema = z.object({
+  id: z.string(),
+  type: z.string(),
+  data: z.record(z.string(), z.unknown()).default({}),
+});
+
 const UpsertSchema = z.object({
   token: z.string(),
   id: z.string().nullable().optional(),
@@ -180,11 +231,24 @@ const UpsertSchema = z.object({
   excerpt: z.string().max(500).nullable().optional(),
   content: z.string().max(200000).default(""),
   content_format: z.enum(["markdown", "html"]).default("markdown"),
+  blocks: z.array(BlockSchema).default([]),
+  typography: z.record(z.string(), z.unknown()).default({}),
+  faq: z.array(z.object({ q: z.string(), a: z.string() })).default([]),
+  keywords: z.array(z.string()).default([]),
+  show_toc: z.boolean().default(true),
   cover_image: z.string().url().nullable().optional().or(z.literal("")),
+  image_alt: z.string().max(300).nullable().optional(),
+  image_caption: z.string().max(300).nullable().optional(),
   tags: z.array(z.string()).default([]),
-  status: z.enum(["draft", "published"]),
+  category: z.string().max(80).nullable().optional(),
+  subcategory: z.string().max(80).nullable().optional(),
+  series: z.string().max(120).nullable().optional(),
+  status: z.enum(["draft", "published", "scheduled"]),
+  scheduled_at: z.string().nullable().optional(),
   is_featured: z.boolean().default(false),
   author_name: z.string().max(120).nullable().optional(),
+  author_bio: z.string().max(600).nullable().optional(),
+  author_avatar: z.string().max(500).nullable().optional(),
   read_minutes: z.number().int().min(1).max(120).default(3),
   force: z.boolean().default(false),
 });
@@ -196,14 +260,17 @@ export const adminUpsertBlog = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const finalSlug = (data.slug && data.slug.trim()) || slugify(data.title);
 
-    // Enforce SEO validation when publishing (unless explicitly forced)
-    if (data.status === "published" && !data.force) {
+    // Enforce SEO validation when publishing or scheduling (unless explicitly forced)
+    if ((data.status === "published" || data.status === "scheduled") && !data.force) {
+      const blockText = data.blocks
+        .map((b) => Object.values(b.data).filter((v) => typeof v === "string").join(" "))
+        .join(" ");
       const issues = validateBlogSeoInput({
         title: data.title,
         slug: finalSlug,
         excerpt: data.excerpt ?? "",
         cover_image: data.cover_image ?? "",
-        content: data.content,
+        content: `${data.content} ${blockText}`,
         content_format: data.content_format,
         tags: data.tags,
       });
@@ -224,11 +291,24 @@ export const adminUpsertBlog = createServerFn({ method: "POST" })
       excerpt: data.excerpt ?? null,
       content: data.content,
       content_format: data.content_format,
+      blocks: data.blocks,
+      typography: data.typography,
+      faq: data.faq,
+      keywords: data.keywords,
+      show_toc: data.show_toc,
       cover_image: data.cover_image || null,
+      image_alt: data.image_alt ?? null,
+      image_caption: data.image_caption ?? null,
       tags: data.tags,
+      category: data.category || null,
+      subcategory: data.subcategory || null,
+      series: data.series || null,
       status: data.status,
+      scheduled_at: data.status === "scheduled" ? data.scheduled_at ?? null : null,
       is_featured: data.is_featured,
       author_name: data.author_name ?? null,
+      author_bio: data.author_bio ?? null,
+      author_avatar: data.author_avatar ?? null,
       read_minutes: data.read_minutes,
       published_at:
         data.status === "published" ? new Date().toISOString() : null,
@@ -247,18 +327,89 @@ export const adminUpsertBlog = createServerFn({ method: "POST" })
       }
       const { error } = await supabaseAdmin
         .from("blogs")
-        .update(payload)
+        .update(payload as never)
         .eq("id", data.id);
       if (error) throw new Error(error.message);
       return { ok: true, id: data.id, slug: finalSlug };
     }
     const { data: inserted, error } = await supabaseAdmin
       .from("blogs")
-      .insert(payload)
+      .insert(payload as never)
       .select("id, slug")
       .single();
     if (error) throw new Error(error.message);
     return { ok: true, id: inserted.id, slug: inserted.slug };
+  });
+
+/** Duplicate an existing post as a fresh draft. */
+export const adminDuplicateBlog = createServerFn({ method: "POST" })
+  .inputValidator((data: { token: string; id: string }) => data)
+  .handler(async ({ data }) => {
+    verifyAdmin(data.token);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row, error } = await supabaseAdmin.from("blogs").select("*").eq("id", data.id).maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!row) throw new Error("Post not found");
+    const copy = { ...(row as Record<string, unknown>) };
+    delete copy.id;
+    delete copy.created_at;
+    delete copy.updated_at;
+    copy.title = `${row.title} (copy)`;
+    copy.slug = `${row.slug}-copy-${Math.random().toString(36).slice(2, 6)}`;
+    copy.status = "draft";
+    copy.published_at = null;
+    copy.scheduled_at = null;
+    copy.is_featured = false;
+    copy.views = 0;
+    const { data: inserted, error: insErr } = await supabaseAdmin.from("blogs").insert(copy as never).select("id").single();
+    if (insErr) throw new Error(insErr.message);
+    return { ok: true, id: inserted.id };
+  });
+
+// ============ TEMPLATES ============
+export const adminListBlogTemplates = createServerFn({ method: "POST" })
+  .inputValidator((data: { token: string }) => data)
+  .handler(async ({ data }) => {
+    verifyAdmin(data.token);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: rows, error } = await supabaseAdmin
+      .from("blog_templates")
+      .select("id, name, description, data, created_at")
+      .order("created_at", { ascending: false });
+    if (error) throw new Error(error.message);
+    return rows ?? [];
+  });
+
+export const adminSaveBlogTemplate = createServerFn({ method: "POST" })
+  .inputValidator(
+    (input: unknown) =>
+      z
+        .object({
+          token: z.string(),
+          name: z.string().min(2).max(120),
+          description: z.string().max(300).optional(),
+          data: z.record(z.string(), z.unknown()),
+        })
+        .parse(input),
+  )
+  .handler(async ({ data }) => {
+    verifyAdmin(data.token);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin
+      .from("blog_templates")
+      .insert({ name: data.name, description: data.description ?? null, data: data.data as never });
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const adminDeleteBlogTemplate = createServerFn({ method: "POST" })
+  .inputValidator((data: { token: string; id: string }) => data)
+  .handler(async ({ data }) => {
+    verifyAdmin(data.token);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.from("blog_templates").delete().eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
   });
 
 export const adminDeleteBlog = createServerFn({ method: "POST" })
@@ -285,13 +436,21 @@ export const adminToggleBlogFeatured = createServerFn({ method: "POST" })
   });
 
 export const adminSetBlogStatus = createServerFn({ method: "POST" })
-  .inputValidator((data: { token: string; id: string; status: "draft" | "published" }) => data)
+  .inputValidator(
+    (data: { token: string; id: string; status: "draft" | "published" | "scheduled"; scheduled_at?: string | null }) =>
+      data,
+  )
   .handler(async ({ data }) => {
     verifyAdmin(data.token);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const patch: { status: "draft" | "published"; published_at?: string } = { status: data.status };
-    if (data.status === "published") patch.published_at = new Date().toISOString();
-    const { error } = await supabaseAdmin.from("blogs").update(patch).eq("id", data.id);
+    const patch: Record<string, unknown> = { status: data.status };
+    if (data.status === "published") {
+      patch.published_at = new Date().toISOString();
+      patch.scheduled_at = null;
+    }
+    if (data.status === "scheduled") patch.scheduled_at = data.scheduled_at ?? null;
+    if (data.status === "draft") patch.published_at = null;
+    const { error } = await supabaseAdmin.from("blogs").update(patch as never).eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
@@ -440,4 +599,60 @@ ${bodyPlain}
 Return ONLY the summary sentence with no preamble.`;
     const { text } = await generateText({ model, prompt });
     return { summary: text.trim().replace(/^["']|["']$/g, "").slice(0, 240) };
+  });
+
+// ============ AI SEO KIT (keywords / tags / FAQ / meta / improvements) ============
+const SeoKitSchema = z.object({
+  token: z.string(),
+  title: z.string().min(3),
+  content: z.string().min(20).max(200000),
+});
+
+function extractJson(text: string): unknown {
+  const cleaned = text.replace(/```json/gi, "").replace(/```/g, "").trim();
+  const start = cleaned.indexOf("{");
+  const end = cleaned.lastIndexOf("}");
+  if (start === -1 || end === -1) throw new Error("The AI returned an unexpected response. Please try again.");
+  return JSON.parse(cleaned.slice(start, end + 1));
+}
+
+export const adminAiSeoKit = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) => SeoKitSchema.parse(input))
+  .handler(async ({ data }) => {
+    verifyAdmin(data.token);
+    const key = process.env.LOVABLE_API_KEY;
+    if (!key) throw new Error("AI is not configured");
+    const { createLovableAiGatewayProvider } = await import("@/lib/ai-gateway.server");
+    const gateway = createLovableAiGatewayProvider(key);
+    const model = gateway("google/gemini-2.5-flash");
+    const body = data.content.replace(/<[^>]+>/g, " ").slice(0, 14000);
+    const prompt = `You are an SEO editor for an Indian student-developer blog.
+Return STRICT JSON only, no prose, with this exact shape:
+{
+  "meta_title": "max 65 chars",
+  "meta_description": "120-160 chars",
+  "keywords": ["6-10 search keywords"],
+  "tags": ["4-7 lowercase tags"],
+  "faq": [{"q": "question", "a": "2-3 sentence answer"}],
+  "outline": ["H2 headings that would improve structure"],
+  "improvements": ["4-7 specific, actionable fixes"],
+  "score": 0
+}
+Give 4-6 FAQ entries. score is 0-100 SEO readiness.
+
+Title: ${data.title}
+Content:
+${body}`;
+    const { text } = await generateText({ model, prompt });
+    const parsed = extractJson(text) as Record<string, unknown>;
+    return {
+      meta_title: String(parsed.meta_title ?? ""),
+      meta_description: String(parsed.meta_description ?? ""),
+      keywords: (parsed.keywords as string[]) ?? [],
+      tags: (parsed.tags as string[]) ?? [],
+      faq: (parsed.faq as Array<{ q: string; a: string }>) ?? [],
+      outline: (parsed.outline as string[]) ?? [],
+      improvements: (parsed.improvements as string[]) ?? [],
+      score: Number(parsed.score ?? 0),
+    };
   });
