@@ -61,6 +61,7 @@
     "isomorphic-dompurify": "^3.18.0",
     "lucide-react": "^0.575.0",
     "motion": "^12.41.0",
+    "qrcode.react": "^4.2.0",
     "react": "^19.2.0",
     "react-day-picker": "^9.14.0",
     "react-dom": "^19.2.0",
