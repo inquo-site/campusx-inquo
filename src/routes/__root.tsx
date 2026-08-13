@@ -58,6 +58,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "google-site-verification", content: "4nZJRQ6yjD7-oqJX3H6HZhbtzcuRmvOamTT3A1auclU" },
       { title: "Campus X — Where student builders meet" },
       { name: "description", content: "Campus X is where India's student builders share live projects, find internships and form startup teams." },
       { property: "og:title", content: "Campus X — Where student builders meet" },
