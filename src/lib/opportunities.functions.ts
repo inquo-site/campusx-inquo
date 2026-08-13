@@ -1,4 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+
 
 /** Last few auto-refresh runs, so the opportunity pages can show freshness. */
 export const getOpportunityFreshness = createServerFn({ method: "GET" }).handler(async () => {
