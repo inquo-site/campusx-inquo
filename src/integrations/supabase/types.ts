@@ -712,7 +712,11 @@ export type Database = {
       hackathons: {
         Row: {
           created_at: string
+          description: string | null
+          eligibility: string[]
           ends_at: string | null
+          enriched_at: string | null
+          faq: Json
           id: string
           is_featured: boolean
           location: string | null
@@ -722,14 +726,21 @@ export type Database = {
           posted_by: string | null
           prize_pool: string | null
           register_url: string | null
+          requirements: string[]
+          skills: string[]
           starts_at: string | null
           tags: string[]
           team_size: string | null
           theme: string | null
+          timeline: Json
         }
         Insert: {
           created_at?: string
+          description?: string | null
+          eligibility?: string[]
           ends_at?: string | null
+          enriched_at?: string | null
+          faq?: Json
           id?: string
           is_featured?: boolean
           location?: string | null
@@ -739,14 +750,21 @@ export type Database = {
           posted_by?: string | null
           prize_pool?: string | null
           register_url?: string | null
+          requirements?: string[]
+          skills?: string[]
           starts_at?: string | null
           tags?: string[]
           team_size?: string | null
           theme?: string | null
+          timeline?: Json
         }
         Update: {
           created_at?: string
+          description?: string | null
+          eligibility?: string[]
           ends_at?: string | null
+          enriched_at?: string | null
+          faq?: Json
           id?: string
           is_featured?: boolean
           location?: string | null
@@ -756,10 +774,13 @@ export type Database = {
           posted_by?: string | null
           prize_pool?: string | null
           register_url?: string | null
+          requirements?: string[]
+          skills?: string[]
           starts_at?: string | null
           tags?: string[]
           team_size?: string | null
           theme?: string | null
+          timeline?: Json
         }
         Relationships: []
       }
@@ -806,45 +827,63 @@ export type Database = {
           apply_url: string | null
           company: string
           created_at: string | null
+          deadline: string | null
           description: string | null
           duration: string | null
+          eligibility: string[]
+          enriched_at: string | null
+          faq: Json
           id: string
           is_featured: boolean
           location: string | null
           posted_by: string | null
           requirements: string[] | null
+          skills: string[]
           stipend: string | null
           tech_stack: string[] | null
+          timeline: Json
           title: string
         }
         Insert: {
           apply_url?: string | null
           company: string
           created_at?: string | null
+          deadline?: string | null
           description?: string | null
           duration?: string | null
+          eligibility?: string[]
+          enriched_at?: string | null
+          faq?: Json
           id?: string
           is_featured?: boolean
           location?: string | null
           posted_by?: string | null
           requirements?: string[] | null
+          skills?: string[]
           stipend?: string | null
           tech_stack?: string[] | null
+          timeline?: Json
           title: string
         }
         Update: {
           apply_url?: string | null
           company?: string
           created_at?: string | null
+          deadline?: string | null
           description?: string | null
           duration?: string | null
+          eligibility?: string[]
+          enriched_at?: string | null
+          faq?: Json
           id?: string
           is_featured?: boolean
           location?: string | null
           posted_by?: string | null
           requirements?: string[] | null
+          skills?: string[]
           stipend?: string | null
           tech_stack?: string[] | null
+          timeline?: Json
           title?: string
         }
         Relationships: []
@@ -854,48 +893,69 @@ export type Database = {
           apply_url: string | null
           company: string
           created_at: string
+          deadline: string | null
           description: string | null
+          eligibility: string[]
+          enriched_at: string | null
           experience: string | null
+          faq: Json
           id: string
           is_featured: boolean
           location: string | null
           posted_by: string | null
+          requirements: string[]
           role_type: string
           salary: string | null
+          skills: string[]
           source: string | null
           tech_stack: string[]
+          timeline: Json
           title: string
         }
         Insert: {
           apply_url?: string | null
           company: string
           created_at?: string
+          deadline?: string | null
           description?: string | null
+          eligibility?: string[]
+          enriched_at?: string | null
           experience?: string | null
+          faq?: Json
           id?: string
           is_featured?: boolean
           location?: string | null
           posted_by?: string | null
+          requirements?: string[]
           role_type?: string
           salary?: string | null
+          skills?: string[]
           source?: string | null
           tech_stack?: string[]
+          timeline?: Json
           title: string
         }
         Update: {
           apply_url?: string | null
           company?: string
           created_at?: string
+          deadline?: string | null
           description?: string | null
+          eligibility?: string[]
+          enriched_at?: string | null
           experience?: string | null
+          faq?: Json
           id?: string
           is_featured?: boolean
           location?: string | null
           posted_by?: string | null
+          requirements?: string[]
           role_type?: string
           salary?: string | null
+          skills?: string[]
           source?: string | null
           tech_stack?: string[]
+          timeline?: Json
           title?: string
         }
         Relationships: []
@@ -930,6 +990,42 @@ export type Database = {
           status?: string
           target_id?: string
           target_type?: string
+        }
+        Relationships: []
+      }
+      opportunity_sync_runs: {
+        Row: {
+          archived_count: number
+          created_at: string
+          enriched_count: number
+          error: string | null
+          finished_at: string | null
+          id: string
+          kind: string
+          note: string | null
+          status: string
+        }
+        Insert: {
+          archived_count?: number
+          created_at?: string
+          enriched_count?: number
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          kind: string
+          note?: string | null
+          status?: string
+        }
+        Update: {
+          archived_count?: number
+          created_at?: string
+          enriched_count?: number
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          kind?: string
+          note?: string | null
+          status?: string
         }
         Relationships: []
       }
