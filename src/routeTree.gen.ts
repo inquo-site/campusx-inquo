@@ -50,6 +50,7 @@ import { Route as AuthenticatedRoomsSlugRouteImport } from './routes/_authentica
 import { Route as AuthenticatedPrepTrackRouteImport } from './routes/_authenticated/prep_.$track'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
+import { Route as ApiPublicHooksRefreshOpportunitiesRouteImport } from './routes/api/public/hooks/refresh-opportunities'
 import { Route as ApiPublicHooksAgentDispatchRouteImport } from './routes/api/public/hooks/agent-dispatch'
 import { Route as AuthenticatedPrepTrackNodeRouteImport } from './routes/_authenticated/prep_.$track_.$node'
 
@@ -264,6 +265,12 @@ const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
   path: '/.lovable/oauth/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHooksRefreshOpportunitiesRoute =
+  ApiPublicHooksRefreshOpportunitiesRouteImport.update({
+    id: '/api/public/hooks/refresh-opportunities',
+    path: '/api/public/hooks/refresh-opportunities',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksAgentDispatchRoute =
   ApiPublicHooksAgentDispatchRouteImport.update({
     id: '/api/public/hooks/agent-dispatch',
@@ -320,6 +327,7 @@ export interface FileRoutesByFullPath {
   '/rooms/': typeof AuthenticatedRoomsIndexRoute
   '/prep/$track/$node': typeof AuthenticatedPrepTrackNodeRoute
   '/api/public/hooks/agent-dispatch': typeof ApiPublicHooksAgentDispatchRoute
+  '/api/public/hooks/refresh-opportunities': typeof ApiPublicHooksRefreshOpportunitiesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -364,6 +372,7 @@ export interface FileRoutesByTo {
   '/rooms': typeof AuthenticatedRoomsIndexRoute
   '/prep/$track/$node': typeof AuthenticatedPrepTrackNodeRoute
   '/api/public/hooks/agent-dispatch': typeof ApiPublicHooksAgentDispatchRoute
+  '/api/public/hooks/refresh-opportunities': typeof ApiPublicHooksRefreshOpportunitiesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -410,6 +419,7 @@ export interface FileRoutesById {
   '/_authenticated/rooms/': typeof AuthenticatedRoomsIndexRoute
   '/_authenticated/prep_/$track_/$node': typeof AuthenticatedPrepTrackNodeRoute
   '/api/public/hooks/agent-dispatch': typeof ApiPublicHooksAgentDispatchRoute
+  '/api/public/hooks/refresh-opportunities': typeof ApiPublicHooksRefreshOpportunitiesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -456,6 +466,7 @@ export interface FileRouteTypes {
     | '/rooms/'
     | '/prep/$track/$node'
     | '/api/public/hooks/agent-dispatch'
+    | '/api/public/hooks/refresh-opportunities'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -500,6 +511,7 @@ export interface FileRouteTypes {
     | '/rooms'
     | '/prep/$track/$node'
     | '/api/public/hooks/agent-dispatch'
+    | '/api/public/hooks/refresh-opportunities'
   id:
     | '__root__'
     | '/'
@@ -545,6 +557,7 @@ export interface FileRouteTypes {
     | '/_authenticated/rooms/'
     | '/_authenticated/prep_/$track_/$node'
     | '/api/public/hooks/agent-dispatch'
+    | '/api/public/hooks/refresh-opportunities'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -570,6 +583,7 @@ export interface RootRouteChildren {
   ApiAdminAgentChatRoute: typeof ApiAdminAgentChatRoute
   ApiAdminAgentTeamChatRoute: typeof ApiAdminAgentTeamChatRoute
   ApiPublicHooksAgentDispatchRoute: typeof ApiPublicHooksAgentDispatchRoute
+  ApiPublicHooksRefreshOpportunitiesRoute: typeof ApiPublicHooksRefreshOpportunitiesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -861,6 +875,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DotlovableOauthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/refresh-opportunities': {
+      id: '/api/public/hooks/refresh-opportunities'
+      path: '/api/public/hooks/refresh-opportunities'
+      fullPath: '/api/public/hooks/refresh-opportunities'
+      preLoaderRoute: typeof ApiPublicHooksRefreshOpportunitiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/agent-dispatch': {
       id: '/api/public/hooks/agent-dispatch'
       path: '/api/public/hooks/agent-dispatch'
@@ -953,6 +974,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAdminAgentChatRoute: ApiAdminAgentChatRoute,
   ApiAdminAgentTeamChatRoute: ApiAdminAgentTeamChatRoute,
   ApiPublicHooksAgentDispatchRoute: ApiPublicHooksAgentDispatchRoute,
+  ApiPublicHooksRefreshOpportunitiesRoute:
+    ApiPublicHooksRefreshOpportunitiesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
