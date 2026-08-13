@@ -8,6 +8,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/_authenticated/rooms/")({
+  head: () => ({
+    meta: [
+      { title: "Peer Discussion Rooms — Campus X" },
+      { name: "description", content: "College-wise and interest-wise rooms where student builders discuss, help and ship together." },
+      { property: "og:title", content: "Peer Discussion Rooms — Campus X" },
+      { property: "og:description", content: "College-wise and interest-wise rooms where student builders discuss, help and ship together." },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: RoomsList,
 });
 

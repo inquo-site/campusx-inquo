@@ -8,6 +8,15 @@ import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/applications")({
+  head: () => ({
+    meta: [
+      { title: "Application Tracker — Campus X" },
+      { name: "description", content: "Track every job, internship and hackathon application across a clean five-stage pipeline." },
+      { property: "og:title", content: "Application Tracker — Campus X" },
+      { property: "og:description", content: "Track every job, internship and hackathon application across a clean five-stage pipeline." },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: ApplicationsPage,
 });
 

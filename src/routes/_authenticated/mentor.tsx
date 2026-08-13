@@ -9,6 +9,15 @@ import { chatWithMentor } from "@/lib/ai.functions";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/mentor")({
+  head: () => ({
+    meta: [
+      { title: "AI Mentor — Campus X" },
+      { name: "description", content: "Ask the Campus X AI mentor about careers, prep, projects and interview strategy." },
+      { property: "og:title", content: "AI Mentor — Campus X" },
+      { property: "og:description", content: "Ask the Campus X AI mentor about careers, prep, projects and interview strategy." },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: Mentor,
 });
 

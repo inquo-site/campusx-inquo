@@ -7,6 +7,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
+  head: () => ({
+    meta: [
+      { title: "Workspace Dashboard — Campus X" },
+      { name: "description", content: "Your Campus X workspace: track applications, projects, prep streaks and AI team activity in one place." },
+      { property: "og:title", content: "Workspace Dashboard — Campus X" },
+      { property: "og:description", content: "Your Campus X workspace: track applications, projects, prep streaks and AI team activity in one place." },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: Dashboard,
 });
 

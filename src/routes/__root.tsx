@@ -59,7 +59,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Campus X — Where student builders meet" },
-      { name: "description", content: "Campus X is a collaborative platform for student developers, engineers, and tech innovators to share live projects, find internships, and form startup teams." },
+      { name: "description", content: "Campus X is where India's student builders share live projects, find internships and form startup teams." },
       { property: "og:title", content: "Campus X — Where student builders meet" },
       { property: "og:description", content: "Collaborate, build, intern, found." },
       { property: "og:type", content: "website" },

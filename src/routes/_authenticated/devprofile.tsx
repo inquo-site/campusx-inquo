@@ -8,6 +8,15 @@ import { toast } from "sonner";
 import { getMyDevProfile, saveDevProfile, syncDevProfile } from "@/lib/dev-profile.functions";
 
 export const Route = createFileRoute("/_authenticated/devprofile")({
+  head: () => ({
+    meta: [
+      { title: "Unified Dev Report Card — Campus X" },
+      { name: "description", content: "GitHub and Codeforces auto-synced with LeetCode and LinkedIn into one public builder profile." },
+      { property: "og:title", content: "Unified Dev Report Card — Campus X" },
+      { property: "og:description", content: "GitHub and Codeforces auto-synced with LeetCode and LinkedIn into one public builder profile." },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: DevProfileEditor,
 });
 

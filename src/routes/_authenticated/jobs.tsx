@@ -11,6 +11,15 @@ import { OpportunityFreshness } from "@/components/opportunity-freshness";
 import { jobToOpportunity, type Opportunity } from "@/lib/opportunity";
 
 export const Route = createFileRoute("/_authenticated/jobs")({
+  head: () => ({
+    meta: [
+      { title: "Off-Campus Jobs for Freshers — Campus X" },
+      { name: "description", content: "Curated off-campus and fresher tech jobs with skills, eligibility, timelines and apply links." },
+      { property: "og:title", content: "Off-Campus Jobs for Freshers — Campus X" },
+      { property: "og:description", content: "Curated off-campus and fresher tech jobs with skills, eligibility, timelines and apply links." },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: JobsPage,
 });
 
