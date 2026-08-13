@@ -8,6 +8,15 @@ import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/discover")({
+  head: () => ({
+    meta: [
+      { title: "Discover Student Builders — Campus X" },
+      { name: "description", content: "Find student developers by skill, college and interest, then connect for projects and startups." },
+      { property: "og:title", content: "Discover Student Builders — Campus X" },
+      { property: "og:description", content: "Find student developers by skill, college and interest, then connect for projects and startups." },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: Discover,
 });
 

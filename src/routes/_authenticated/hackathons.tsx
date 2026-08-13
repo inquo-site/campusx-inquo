@@ -11,6 +11,15 @@ import { OpportunityFreshness } from "@/components/opportunity-freshness";
 import { hackathonToOpportunity, type Opportunity } from "@/lib/opportunity";
 
 export const Route = createFileRoute("/_authenticated/hackathons")({
+  head: () => ({
+    meta: [
+      { title: "Hackathon Radar — Campus X" },
+      { name: "description", content: "Upcoming Indian hackathons with themes, prize pools, team size, skills needed and register links." },
+      { property: "og:title", content: "Hackathon Radar — Campus X" },
+      { property: "og:description", content: "Upcoming Indian hackathons with themes, prize pools, team size, skills needed and register links." },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: HackathonsPage,
 });
 

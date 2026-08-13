@@ -9,6 +9,15 @@ import { toast } from "sonner";
 import { AiFixButton } from "@/components/ai-fix-button";
 
 export const Route = createFileRoute("/_authenticated/profile")({
+  head: () => ({
+    meta: [
+      { title: "Your Builder Profile — Campus X" },
+      { name: "description", content: "Edit your Campus X profile: skills, college, links and what you're looking to build or join." },
+      { property: "og:title", content: "Your Builder Profile — Campus X" },
+      { property: "og:description", content: "Edit your Campus X profile: skills, college, links and what you're looking to build or join." },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: Profile,
 });
 

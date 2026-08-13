@@ -8,6 +8,15 @@ import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/alumni")({
+  head: () => ({
+    meta: [
+      { title: "Alumni Referral Network — Campus X" },
+      { name: "description", content: "Match with alumni at your target companies and request warm referral intros." },
+      { property: "og:title", content: "Alumni Referral Network — Campus X" },
+      { property: "og:description", content: "Match with alumni at your target companies and request warm referral intros." },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: AlumniPage,
 });
 
