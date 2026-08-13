@@ -6,6 +6,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
+import { OpportunityDetailSheet } from "@/components/opportunity-detail-sheet";
+import { OpportunityFreshness } from "@/components/opportunity-freshness";
+import { internshipToOpportunity, type Opportunity } from "@/lib/opportunity";
 
 export const Route = createFileRoute("/_authenticated/internships")({
   component: Internships,
@@ -14,6 +17,7 @@ export const Route = createFileRoute("/_authenticated/internships")({
 type Job = {
   id: string; title: string; company: string; location: string | null; stipend: string | null;
   duration: string | null; description: string | null; requirements: string[]; tech_stack: string[]; apply_url: string | null;
+  eligibility: string[]; skills: string[]; faq: unknown; timeline: unknown; deadline: string | null; enriched_at: string | null;
 };
 
 function Internships() {
@@ -22,6 +26,7 @@ function Internships() {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [showApply, setShowApply] = useState(false);
   const [note, setNote] = useState("");
+  const [detail, setDetail] = useState<Opportunity | null>(null);
 
   const { data: jobs } = useQuery({
     queryKey: ["internships"],
@@ -62,7 +67,9 @@ function Internships() {
   if (!jobs) return <div className="text-sm text-muted-foreground">Loading…</div>;
 
   return (
-    <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[minmax(0,1fr)_1.4fr]">
+    <div className="mx-auto max-w-6xl">
+    <OpportunityFreshness invalidateKey="internships" />
+    <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_1.4fr]">
       <div className="space-y-2">
         <div className="mb-2 text-[10px] uppercase tracking-[0.22em] text-muted-foreground">— Open roles / {String(jobs.length).padStart(2, "0")}</div>
         {jobs.map((j, i) => {
@@ -105,7 +112,26 @@ function Internships() {
                 <li key={r} className="flex gap-3 text-sm"><span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-gold" /><span>{r}</span></li>
               ))}
             </ul>
-            <div className="mt-8 flex gap-2">
+            {(active.skills ?? []).length > 0 && (
+              <>
+                <div className="hairline my-7" />
+                <h4 className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">— Skills you need</h4>
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {active.skills.map((s) => (
+                    <span key={s} className="rounded-md border border-gold/25 bg-gold/5 px-2 py-0.5 text-[11px] text-foreground/85">
+                      {s}
+                    </span>
+                  ))}
+                </div>
+              </>
+            )}
+            <button
+              onClick={() => setDetail(internshipToOpportunity(active as unknown as Record<string, unknown>))}
+              className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full border border-border bg-card py-3 text-sm text-foreground/85 hover:border-gold/40"
+            >
+              Eligibility, timeline & FAQ
+            </button>
+            <div className="mt-3 flex gap-2">
               {applied?.has(active.id) ? (
                 <span className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-gold/40 bg-gold/10 py-3 text-sm font-medium text-gold">Application submitted ✓</span>
               ) : (
@@ -135,6 +161,9 @@ function Internships() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {detail && <OpportunityDetailSheet item={detail} onClose={() => setDetail(null)} />}
+    </div>
     </div>
   );
 }
