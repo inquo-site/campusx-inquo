@@ -6,6 +6,9 @@ import { Briefcase, MapPin, IndianRupee, Search, ExternalLink, Plus, BookmarkPlu
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
+import { OpportunityDetailSheet } from "@/components/opportunity-detail-sheet";
+import { OpportunityFreshness } from "@/components/opportunity-freshness";
+import { jobToOpportunity, type Opportunity } from "@/lib/opportunity";
 
 export const Route = createFileRoute("/_authenticated/jobs")({
   component: JobsPage,
@@ -24,6 +27,13 @@ type Job = {
   source: string | null;
   description: string | null;
   is_featured: boolean;
+  eligibility: string[];
+  skills: string[];
+  requirements: string[];
+  faq: unknown;
+  timeline: unknown;
+  deadline: string | null;
+  enriched_at: string | null;
 };
 
 const FILTERS = [
@@ -38,6 +48,7 @@ function JobsPage() {
   const [q, setQ] = useState("");
   const [filter, setFilter] = useState<string>("all");
   const [showPost, setShowPost] = useState(false);
+  const [detail, setDetail] = useState<Opportunity | null>(null);
 
   const { data: jobs, isLoading } = useQuery({
     queryKey: ["jobs"],
@@ -128,6 +139,8 @@ function JobsPage() {
         ))}
       </div>
 
+      <OpportunityFreshness invalidateKey="jobs" />
+
       {isLoading && (
         <div className="mt-10 flex justify-center text-muted-foreground">
           <Loader2 className="h-5 w-5 animate-spin" />
@@ -185,13 +198,32 @@ function JobsPage() {
               </div>
             )}
 
+            {j.skills?.length > 0 && (
+              <div className="mt-3">
+                <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Skills needed</div>
+                <div className="mt-1.5 flex flex-wrap gap-1.5">
+                  {j.skills.slice(0, 8).map((s) => (
+                    <span key={s} className="rounded-md border border-gold/25 bg-gold/5 px-2 py-0.5 text-[11px] text-foreground/85">
+                      {s}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="mt-4 flex flex-wrap items-center gap-2">
+              <button
+                onClick={() => setDetail(jobToOpportunity(j as unknown as Record<string, unknown>))}
+                className="inline-flex items-center gap-1.5 rounded-full bg-gold px-4 py-2 text-xs font-medium text-primary-foreground hover:brightness-110"
+              >
+                View details & apply
+              </button>
               {j.apply_url && (
                 <a
                   href={j.apply_url}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-1.5 rounded-full bg-gold px-4 py-2 text-xs font-medium text-primary-foreground hover:brightness-110"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-xs text-foreground/80 hover:border-gold/40"
                 >
                   Apply <ExternalLink className="h-3 w-3" />
                 </a>
@@ -215,6 +247,7 @@ function JobsPage() {
         )}
       </div>
 
+      {detail && <OpportunityDetailSheet item={detail} onClose={() => setDetail(null)} />}
       {showPost && <PostJobDialog onClose={() => setShowPost(false)} userId={user?.id} />}
     </div>
   );
