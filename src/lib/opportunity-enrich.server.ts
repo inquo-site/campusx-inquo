@@ -128,20 +128,21 @@ export async function runOpportunityRefresh(opts: { limit?: number; force?: bool
           notes.push(`${table}/${(row as { id: string }).id}: unparseable AI output`);
           continue;
         }
-        const patch: Record<string, unknown> = {
+        const keepRequirements =
+          table === "internships" && ((row as { requirements?: string[] | null }).requirements ?? []).length > 0;
+        const patch = {
           eligibility: parsed.eligibility,
           skills: parsed.skills,
           faq: parsed.faq,
           timeline: parsed.timeline,
           enriched_at: new Date().toISOString(),
+          ...(keepRequirements ? {} : { requirements: parsed.requirements }),
         };
-        if (table !== "internships" || !((row as { requirements?: string[] }).requirements ?? []).length) {
-          patch.requirements = parsed.requirements;
-        }
         const { error: upErr } = await supabaseAdmin
           .from(table)
           .update(patch)
           .eq("id", (row as { id: string }).id);
+
         if (upErr) notes.push(`${table}/${(row as { id: string }).id}: ${upErr.message}`);
         else enriched += 1;
       } catch (e) {
