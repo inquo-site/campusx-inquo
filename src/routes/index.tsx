@@ -29,7 +29,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Campus X is a collaborative platform for student developers, engineers and tech innovators in India to share live projects, find internships, and form startup teams.",
+          "India's student builder workspace: ship live projects, land internships and off-campus jobs, and form startup teams.",
       },
       { name: "keywords", content: "student developers, college projects, startup co-founder, tech internships India, student community, Campus X, Suman Kumar" },
       { property: "og:title", content: "Campus X — Where student builders ship real projects" },
