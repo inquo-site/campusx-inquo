@@ -19,7 +19,9 @@ export const getOpportunityFreshness = createServerFn({ method: "GET" }).handler
 });
 
 /** Manual "update now" — enriches a small batch of stale listings on demand. */
-export const refreshOpportunitiesNow = createServerFn({ method: "POST" }).handler(async () => {
+export const refreshOpportunitiesNow = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async () => {
   const { runOpportunityRefresh } = await import("@/lib/opportunity-enrich.server");
   const { enriched, notes } = await runOpportunityRefresh({ limit: 3 });
   return { enriched, notes: notes.slice(0, 3) };
