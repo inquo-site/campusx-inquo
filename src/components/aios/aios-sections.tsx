@@ -36,6 +36,7 @@ import {
 } from "@/lib/aios-teams";
 import { TeamPurchaseDialog, type PurchaseTarget } from "@/components/aios/team-purchase-dialog";
 import { TeamDetailSheet } from "@/components/aios/team-detail-sheet";
+import { DiscountBadge, DiscountRibbon, StrikethroughPrice } from "@/components/aios/discount-badge";
 
 /* ---------------- Hero ---------------- */
 
@@ -450,18 +451,20 @@ export function AiosTeamsPricing() {
         </div>
 
         {/* Bundle */}
-        <div className="ambient-glow mb-10 grid gap-6 rounded-3xl border border-gold/25 bg-surface p-8 md:grid-cols-[1.05fr_1fr] md:p-10">
+        <div className="ambient-glow relative mb-10 grid gap-6 overflow-hidden rounded-3xl border border-gold/25 bg-surface p-8 md:grid-cols-[1.05fr_1fr] md:p-10">
+          <DiscountRibbon label="50% OFF" />
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/5 px-3 py-1 text-[10px] uppercase tracking-widest text-gold">
               <Crown className="h-3 w-3" /> Most complete
             </div>
             <h3 className="mt-4 font-display text-3xl md:text-4xl">{BUNDLE.name}</h3>
             <p className="mt-2 text-sm text-muted-foreground">{BUNDLE.tagline}</p>
-            <div className="mt-6 flex items-baseline gap-2">
+            <div className="mt-6 flex flex-wrap items-baseline gap-2">
               <span className="font-display text-6xl">
                 {inr(cycle === "yearly" ? BUNDLE.yearly : BUNDLE.monthly)}
               </span>
               <span className="text-sm text-muted-foreground">/ {cycle === "yearly" ? "year" : "month"}</span>
+              <StrikethroughPrice amount={cycle === "yearly" ? BUNDLE.yearly * 2 : BUNDLE.monthly * 2} />
             </div>
             <button onClick={() => setTarget({ slug: BUNDLE.slug, cycle })} className="btn-ink group mt-7">
               Hire the full company
@@ -487,8 +490,9 @@ export function AiosTeamsPricing() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
               transition={{ duration: 0.45, delay: (i % 6) * 0.05, ease: [0.22, 1, 0.36, 1] }}
-              className="card-noir-hover flex flex-col bg-surface p-6"
+              className="card-noir-hover relative flex flex-col overflow-hidden bg-surface p-6"
             >
+              <DiscountRibbon label="50% OFF" />
               <div className="flex items-center justify-between">
                 <span className="rounded-full border border-border px-2 py-0.5 text-[10px] uppercase tracking-widest text-muted-foreground">
                   {t.category}
@@ -521,11 +525,12 @@ export function AiosTeamsPricing() {
               </ul>
 
               <div className="mt-auto pt-6">
-                <div className="flex items-baseline gap-1.5">
+                <div className="flex flex-wrap items-baseline gap-1.5">
                   <span className="font-display text-3xl">
                     {inr(cycle === "yearly" ? t.yearly : t.monthly)}
                   </span>
                   <span className="text-xs text-muted-foreground">/ {cycle === "yearly" ? "yr" : "mo"}</span>
+                  <StrikethroughPrice amount={cycle === "yearly" ? t.yearly * 2 : t.monthly * 2} />
                 </div>
                 <button
                   onClick={() => setOpenTeam(t)}
@@ -674,7 +679,9 @@ export function AiosTeaser() {
               </Link>
             </div>
             <p className="mt-4 text-[11px] text-muted-foreground">
-              Teams from {inr(749)}/month · Full company bundle {inr(BUNDLE.monthly)}/month · INR, UPI payment.
+              Teams from {inr(374)}/month after 50% off · Full company bundle{" "}
+              <span className="font-medium text-foreground">{inr(BUNDLE.monthly)}</span>
+              <span className="line-through"> {inr(BUNDLE.monthly * 2)}</span>/month · INR, UPI payment.
             </p>
           </div>
 
@@ -686,12 +693,16 @@ export function AiosTeaser() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.06 }}
-                className="bg-card p-4"
+                className="relative bg-card p-4"
               >
+                <div className="absolute right-2 top-2">
+                  <DiscountBadge label="50%" />
+                </div>
                 <div className="text-[10px] uppercase tracking-widest text-gold">{t.category}</div>
-                <div className="mt-1.5 font-display text-sm leading-tight">{t.name}</div>
+                <div className="mt-1.5 pr-16 font-display text-sm leading-tight">{t.name}</div>
                 <div className="mt-2 text-[11px] text-muted-foreground">
-                  {t.agents.length} agents · {inr(t.monthly)}/mo
+                  {t.agents.length} agents · <span className="font-medium text-foreground">{inr(t.monthly)}/mo</span>{" "}
+                  <span className="line-through">{inr(t.monthly * 2)}</span>
                 </div>
               </motion.div>
             ))}

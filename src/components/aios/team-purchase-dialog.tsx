@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Loader2, X, ShieldCheck, Clock, XCircle, Upload } from "lucide-react";
 import { findTeam, inr } from "@/lib/aios-teams";
 import { UpiPayButtons } from "@/components/aios/upi-pay-buttons";
+import { DiscountBadge, StrikethroughPrice } from "@/components/aios/discount-badge";
 
 
 export type PurchaseTarget = { slug: string; cycle: "monthly" | "yearly" } | null;
@@ -105,9 +106,15 @@ export function TeamPurchaseDialog({
 
         <div className="border-b border-border p-6">
           <div className="text-[10px] uppercase tracking-[0.22em] text-gold">— Hire this team</div>
-          <h3 className="mt-2 font-display text-2xl">{team.name}</h3>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {inr(amount)} / {target.cycle === "yearly" ? "year" : "month"} · Pay instantly with any UPI app
+          <div className="mt-2 flex items-center gap-2">
+            <h3 className="font-display text-2xl">{team.name}</h3>
+            <DiscountBadge />
+          </div>
+          <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+            <span className="font-display text-lg font-medium text-foreground">{inr(amount)}</span>
+            <span>/ {target.cycle === "yearly" ? "year" : "month"}</span>
+            <StrikethroughPrice amount={amount * 2} />
+            <span>· Pay instantly with any UPI app</span>
           </p>
         </div>
 
