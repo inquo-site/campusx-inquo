@@ -691,12 +691,16 @@ export function AiosTeaser() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.06 }}
-                className="bg-card p-4"
+                className="relative bg-card p-4"
               >
+                <div className="absolute right-2 top-2">
+                  <DiscountBadge label="50%" />
+                </div>
                 <div className="text-[10px] uppercase tracking-widest text-gold">{t.category}</div>
-                <div className="mt-1.5 font-display text-sm leading-tight">{t.name}</div>
+                <div className="mt-1.5 pr-16 font-display text-sm leading-tight">{t.name}</div>
                 <div className="mt-2 text-[11px] text-muted-foreground">
-                  {t.agents.length} agents · {inr(t.monthly)}/mo
+                  {t.agents.length} agents · <span className="font-medium text-foreground">{inr(t.monthly)}/mo</span>{" "}
+                  <span className="line-through">{inr(t.monthly * 2)}</span>
                 </div>
               </motion.div>
             ))}
