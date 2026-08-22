@@ -490,8 +490,9 @@ export function AiosTeamsPricing() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
               transition={{ duration: 0.45, delay: (i % 6) * 0.05, ease: [0.22, 1, 0.36, 1] }}
-              className="card-noir-hover flex flex-col bg-surface p-6"
+              className="card-noir-hover relative flex flex-col overflow-hidden bg-surface p-6"
             >
+              <DiscountRibbon label="50% OFF" />
               <div className="flex items-center justify-between">
                 <span className="rounded-full border border-border px-2 py-0.5 text-[10px] uppercase tracking-widest text-muted-foreground">
                   {t.category}
@@ -524,11 +525,12 @@ export function AiosTeamsPricing() {
               </ul>
 
               <div className="mt-auto pt-6">
-                <div className="flex items-baseline gap-1.5">
+                <div className="flex flex-wrap items-baseline gap-1.5">
                   <span className="font-display text-3xl">
                     {inr(cycle === "yearly" ? t.yearly : t.monthly)}
                   </span>
                   <span className="text-xs text-muted-foreground">/ {cycle === "yearly" ? "yr" : "mo"}</span>
+                  <StrikethroughPrice amount={cycle === "yearly" ? t.yearly * 2 : t.monthly * 2} />
                 </div>
                 <button
                   onClick={() => setOpenTeam(t)}
