@@ -17,7 +17,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { TeamPurchaseDialog, type PurchaseTarget } from "@/components/aios/team-purchase-dialog";
-import { BUNDLE } from "@/lib/aios-teams";
+import { BUNDLE, inr } from "@/lib/aios-teams";
 import { TeamConsole } from "@/components/aios/team-console";
 
 export const Route = createFileRoute("/_authenticated/agents")({
