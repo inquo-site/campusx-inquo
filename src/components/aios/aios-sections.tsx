@@ -451,18 +451,20 @@ export function AiosTeamsPricing() {
         </div>
 
         {/* Bundle */}
-        <div className="ambient-glow mb-10 grid gap-6 rounded-3xl border border-gold/25 bg-surface p-8 md:grid-cols-[1.05fr_1fr] md:p-10">
+        <div className="ambient-glow relative mb-10 grid gap-6 overflow-hidden rounded-3xl border border-gold/25 bg-surface p-8 md:grid-cols-[1.05fr_1fr] md:p-10">
+          <DiscountRibbon label="50% OFF" />
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/5 px-3 py-1 text-[10px] uppercase tracking-widest text-gold">
               <Crown className="h-3 w-3" /> Most complete
             </div>
             <h3 className="mt-4 font-display text-3xl md:text-4xl">{BUNDLE.name}</h3>
             <p className="mt-2 text-sm text-muted-foreground">{BUNDLE.tagline}</p>
-            <div className="mt-6 flex items-baseline gap-2">
+            <div className="mt-6 flex flex-wrap items-baseline gap-2">
               <span className="font-display text-6xl">
                 {inr(cycle === "yearly" ? BUNDLE.yearly : BUNDLE.monthly)}
               </span>
               <span className="text-sm text-muted-foreground">/ {cycle === "yearly" ? "year" : "month"}</span>
+              <StrikethroughPrice amount={cycle === "yearly" ? BUNDLE.yearly * 2 : BUNDLE.monthly * 2} />
             </div>
             <button onClick={() => setTarget({ slug: BUNDLE.slug, cycle })} className="btn-ink group mt-7">
               Hire the full company
