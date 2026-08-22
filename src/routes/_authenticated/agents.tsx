@@ -315,9 +315,14 @@ function InactiveState({
       <h2 className="mt-4 font-display text-3xl">
         Turn on <span className="italic-serif">autopilot</span> to unlock all 7 agents.
       </h2>
+      <div className="mt-4 flex justify-center">
+        <DiscountBadge label="FLAT 50% OFF" />
+      </div>
       <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground">
-        Flat 50% off — {inr(BUNDLE.monthly)}/month. Manual UPI verification. Once approved, your agents start working on every
-        blog you publish, every project you post, every signup on your workspace.
+        <span className="font-display text-lg font-medium text-foreground">{inr(BUNDLE.monthly)}</span>
+        <span className="ml-1 line-through">{inr(BUNDLE.monthly * 2)}</span>/month after discount. Manual UPI
+        verification. Once approved, your agents start working on every blog you publish, every project you post, every
+        signup on your workspace.
       </p>
       {sub?.status === "rejected" && sub.admin_note && (
         <div className="mx-auto mt-4 inline-flex items-start gap-2 rounded-lg border border-rose-500/30 bg-rose-500/5 px-3 py-2 text-xs text-rose-400">
