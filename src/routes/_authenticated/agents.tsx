@@ -315,7 +315,7 @@ function InactiveState({
         Turn on <span className="italic-serif">autopilot</span> to unlock all 7 agents.
       </h2>
       <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground">
-        ₹999/month. Manual UPI verification. Once approved, your agents start working on every
+        Flat 50% off — {inr(BUNDLE.monthly)}/month. Manual UPI verification. Once approved, your agents start working on every
         blog you publish, every project you post, every signup on your workspace.
       </p>
       {sub?.status === "rejected" && sub.admin_note && (
