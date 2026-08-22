@@ -36,6 +36,7 @@ import {
 } from "@/lib/aios-teams";
 import { TeamPurchaseDialog, type PurchaseTarget } from "@/components/aios/team-purchase-dialog";
 import { TeamDetailSheet } from "@/components/aios/team-detail-sheet";
+import { DiscountBadge, DiscountRibbon, StrikethroughPrice } from "@/components/aios/discount-badge";
 
 /* ---------------- Hero ---------------- */
 

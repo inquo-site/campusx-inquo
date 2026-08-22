@@ -19,6 +19,7 @@ import {
 import { TeamPurchaseDialog, type PurchaseTarget } from "@/components/aios/team-purchase-dialog";
 import { BUNDLE, inr } from "@/lib/aios-teams";
 import { TeamConsole } from "@/components/aios/team-console";
+import { DiscountBadge } from "@/components/aios/discount-badge";
 
 export const Route = createFileRoute("/_authenticated/agents")({
   component: MyAgentsPage,

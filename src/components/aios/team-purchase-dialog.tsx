@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Loader2, X, ShieldCheck, Clock, XCircle, Upload } from "lucide-react";
 import { findTeam, inr } from "@/lib/aios-teams";
 import { UpiPayButtons } from "@/components/aios/upi-pay-buttons";
+import { DiscountBadge, StrikethroughPrice } from "@/components/aios/discount-badge";
 
 
 export type PurchaseTarget = { slug: string; cycle: "monthly" | "yearly" } | null;
