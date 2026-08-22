@@ -679,7 +679,9 @@ export function AiosTeaser() {
               </Link>
             </div>
             <p className="mt-4 text-[11px] text-muted-foreground">
-              Teams from {inr(749)}/month · Full company bundle {inr(BUNDLE.monthly)}/month · INR, UPI payment.
+              Teams from {inr(374)}/month after 50% off · Full company bundle{" "}
+              <span className="font-medium text-foreground">{inr(BUNDLE.monthly)}</span>
+              <span className="line-through"> {inr(BUNDLE.monthly * 2)}</span>/month · INR, UPI payment.
             </p>
           </div>
 
