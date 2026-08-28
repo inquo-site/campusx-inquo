@@ -1,6 +1,6 @@
 import { motion, useInView, useMotionValue, useTransform, animate } from "motion/react";
 import { useEffect, useRef } from "react";
-import { Users, FolderGit2, Rocket, GitCommit, Zap } from "lucide-react";
+import { GitCommit, Zap } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
 /* Hero Orbit — animated builder constellation                         */
