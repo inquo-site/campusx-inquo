@@ -84,7 +84,7 @@ function AuthPage() {
       <div className="mx-auto grid min-h-screen w-full max-w-6xl grid-cols-1 lg:grid-cols-2">
         <aside className="hidden flex-col justify-between border-r border-border bg-surface p-12 lg:flex">
           <Link to="/" className="font-display text-2xl">
-            Campus<span className="italic-serif">X</span>
+            Tier2<span className="italic-serif">X</span>
           </Link>
           <div>
             <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">— For student builders</div>

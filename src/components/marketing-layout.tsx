@@ -47,7 +47,7 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
             X
           </div>
           <span className="truncate font-display text-xl leading-none">
-            Campus<span className="italic-serif">X</span>
+            Tier2<span className="italic-serif">X</span>
           </span>
         </Link>
 
@@ -156,7 +156,7 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
                   X
                 </div>
                 <span className="font-display text-2xl">
-                  Campus<span className="italic-serif">X</span>
+                  Tier2<span className="italic-serif">X</span>
                 </span>
               </div>
               <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">

@@ -149,7 +149,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
         <Link to="/" className="flex h-20 items-center gap-3 px-6">
           <div className="grid h-9 w-9 place-items-center rounded-md border border-gold/40 bg-gold/10 font-display text-xl italic text-gold">X</div>
           <div className="font-display text-2xl leading-none">
-            Campus<span className="italic-serif">X</span>
+            Tier2<span className="italic-serif">X</span>
           </div>
         </Link>
 
@@ -278,7 +278,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
                 <Link to="/" className="flex items-center gap-2">
                   <div className="grid h-8 w-8 place-items-center rounded-md border border-gold/40 bg-gold/10 font-display text-lg italic text-gold">X</div>
                   <span className="font-display text-xl leading-none">
-                    Campus<span className="italic-serif">X</span>
+                    Tier2<span className="italic-serif">X</span>
                   </span>
                 </Link>
                 <button
