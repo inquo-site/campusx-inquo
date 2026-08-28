@@ -13,6 +13,7 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as McpRouteImport } from './routes/mcp'
+import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as DisclaimerRouteImport } from './routes/disclaimer'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -72,6 +73,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const McpRoute = McpRouteImport.update({
   id: '/mcp',
   path: '/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HowItWorksRoute = HowItWorksRouteImport.update({
+  id: '/how-it-works',
+  path: '/how-it-works',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FeaturesRoute = FeaturesRouteImport.update({
@@ -291,6 +297,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/disclaimer': typeof DisclaimerRoute
   '/features': typeof FeaturesRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -336,6 +343,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/disclaimer': typeof DisclaimerRoute
   '/features': typeof FeaturesRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -383,6 +391,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/disclaimer': typeof DisclaimerRoute
   '/features': typeof FeaturesRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -430,6 +439,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/disclaimer'
     | '/features'
+    | '/how-it-works'
     | '/mcp'
     | '/privacy'
     | '/sitemap.xml'
@@ -475,6 +485,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/disclaimer'
     | '/features'
+    | '/how-it-works'
     | '/mcp'
     | '/privacy'
     | '/sitemap.xml'
@@ -521,6 +532,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/disclaimer'
     | '/features'
+    | '/how-it-works'
     | '/mcp'
     | '/privacy'
     | '/sitemap.xml'
@@ -568,6 +580,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   DisclaimerRoute: typeof DisclaimerRoute
   FeaturesRoute: typeof FeaturesRoute
+  HowItWorksRoute: typeof HowItWorksRoute
   McpRoute: typeof McpRoute
   PrivacyRoute: typeof PrivacyRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -614,6 +627,13 @@ declare module '@tanstack/react-router' {
       path: '/mcp'
       fullPath: '/mcp'
       preLoaderRoute: typeof McpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/how-it-works': {
+      id: '/how-it-works'
+      path: '/how-it-works'
+      fullPath: '/how-it-works'
+      preLoaderRoute: typeof HowItWorksRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/features': {
@@ -958,6 +978,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   DisclaimerRoute: DisclaimerRoute,
   FeaturesRoute: FeaturesRoute,
+  HowItWorksRoute: HowItWorksRoute,
   McpRoute: McpRoute,
   PrivacyRoute: PrivacyRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
