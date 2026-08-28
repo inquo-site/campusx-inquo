@@ -1,4 +1,4 @@
-import { motion, useInView, useMotionValue, useTransform, animate } from "motion/react";
+import { motion, useInView } from "motion/react";
 import { useEffect, useRef } from "react";
 import { GitCommit, Zap } from "lucide-react";
 
