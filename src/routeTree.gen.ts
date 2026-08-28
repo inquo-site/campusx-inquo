@@ -17,6 +17,7 @@ import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as ForAlumniRouteImport } from './routes/for-alumni'
 import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as DisclaimerRouteImport } from './routes/disclaimer'
+import { Route as CollegesRouteImport } from './routes/colleges'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AiCompanyRouteImport } from './routes/ai-company'
 import { Route as AboutRouteImport } from './routes/about'
@@ -94,6 +95,11 @@ const FeaturesRoute = FeaturesRouteImport.update({
 const DisclaimerRoute = DisclaimerRouteImport.update({
   id: '/disclaimer',
   path: '/disclaimer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CollegesRoute = CollegesRouteImport.update({
+  id: '/colleges',
+  path: '/colleges',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -301,6 +307,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/ai-company': typeof AiCompanyRoute
   '/auth': typeof AuthRoute
+  '/colleges': typeof CollegesRoute
   '/disclaimer': typeof DisclaimerRoute
   '/features': typeof FeaturesRoute
   '/for-alumni': typeof ForAlumniRoute
@@ -348,6 +355,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/ai-company': typeof AiCompanyRoute
   '/auth': typeof AuthRoute
+  '/colleges': typeof CollegesRoute
   '/disclaimer': typeof DisclaimerRoute
   '/features': typeof FeaturesRoute
   '/for-alumni': typeof ForAlumniRoute
@@ -397,6 +405,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/ai-company': typeof AiCompanyRoute
   '/auth': typeof AuthRoute
+  '/colleges': typeof CollegesRoute
   '/disclaimer': typeof DisclaimerRoute
   '/features': typeof FeaturesRoute
   '/for-alumni': typeof ForAlumniRoute
@@ -446,6 +455,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/ai-company'
     | '/auth'
+    | '/colleges'
     | '/disclaimer'
     | '/features'
     | '/for-alumni'
@@ -493,6 +503,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/ai-company'
     | '/auth'
+    | '/colleges'
     | '/disclaimer'
     | '/features'
     | '/for-alumni'
@@ -541,6 +552,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/ai-company'
     | '/auth'
+    | '/colleges'
     | '/disclaimer'
     | '/features'
     | '/for-alumni'
@@ -590,6 +602,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AiCompanyRoute: typeof AiCompanyRoute
   AuthRoute: typeof AuthRoute
+  CollegesRoute: typeof CollegesRoute
   DisclaimerRoute: typeof DisclaimerRoute
   FeaturesRoute: typeof FeaturesRoute
   ForAlumniRoute: typeof ForAlumniRoute
@@ -668,6 +681,13 @@ declare module '@tanstack/react-router' {
       path: '/disclaimer'
       fullPath: '/disclaimer'
       preLoaderRoute: typeof DisclaimerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/colleges': {
+      id: '/colleges'
+      path: '/colleges'
+      fullPath: '/colleges'
+      preLoaderRoute: typeof CollegesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -996,6 +1016,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AiCompanyRoute: AiCompanyRoute,
   AuthRoute: AuthRoute,
+  CollegesRoute: CollegesRoute,
   DisclaimerRoute: DisclaimerRoute,
   FeaturesRoute: FeaturesRoute,
   ForAlumniRoute: ForAlumniRoute,
