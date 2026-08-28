@@ -220,30 +220,6 @@ export function TechMarquee() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/* Animated counter                                                    */
-/* ------------------------------------------------------------------ */
-function Counter({ to, suffix = "" }: { to: number; suffix?: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true });
-  const mv = useMotionValue(0);
-  const rounded = useTransform(mv, (v) => Math.round(v).toLocaleString());
-
-  useEffect(() => {
-    if (inView) {
-      const controls = animate(mv, to, { duration: 1.8, ease: [0.22, 1, 0.36, 1] });
-      return () => controls.stop();
-    }
-  }, [inView, to, mv]);
-
-  return (
-    <span ref={ref} className="font-display text-5xl md:text-6xl">
-      <motion.span>{rounded}</motion.span>
-      <span className="text-gold">{suffix}</span>
-    </span>
-  );
-}
-
 export function LiveStats() {
   return (
     <section className="relative px-4 py-20 md:px-8">
