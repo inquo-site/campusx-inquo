@@ -16,7 +16,7 @@ const TESTIMONIALS: T[] = [
     college: "NIT Trichy",
     role: "Founder, ClimaLoop",
     quote:
-      "Found my co-founder for our climate startup on Campus X within two weeks. We're now in YC's Startup School.",
+      "Found my co-founder for our climate startup on Tier2X within two weeks. We're now in YC's Startup School.",
     accent: "#f4c04f",
   },
   {

@@ -23,7 +23,7 @@ export const Route = createFileRoute("/_authenticated/roadmap-maker")({
   component: RoadmapMaker,
   head: () => ({
     meta: [
-      { title: "Roadmap Maker · Campus X" },
+      { title: "Roadmap Maker · Tier2X" },
       {
         name: "description",
         content:
@@ -146,7 +146,7 @@ function RoadmapMaker() {
 
         <div className="mt-6 flex items-center justify-between border-t border-border/60 pt-5">
           <div className="text-[11px] text-muted-foreground">
-            Powered by Campus X AI · takes ~10–15s
+            Powered by Tier2X AI · takes ~10–15s
           </div>
           <button
             onClick={submit}

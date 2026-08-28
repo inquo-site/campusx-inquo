@@ -13,9 +13,9 @@ import { jobToOpportunity, type Opportunity } from "@/lib/opportunity";
 export const Route = createFileRoute("/_authenticated/jobs")({
   head: () => ({
     meta: [
-      { title: "Off-Campus Jobs for Freshers — Campus X" },
+      { title: "Off-Campus Jobs for Freshers — Tier2X" },
       { name: "description", content: "Curated off-campus and fresher tech jobs with skills, eligibility, timelines and apply links." },
-      { property: "og:title", content: "Off-Campus Jobs for Freshers — Campus X" },
+      { property: "og:title", content: "Off-Campus Jobs for Freshers — Tier2X" },
       { property: "og:description", content: "Curated off-campus and fresher tech jobs with skills, eligibility, timelines and apply links." },
       { name: "robots", content: "noindex" },
     ],
@@ -286,7 +286,7 @@ function PostJobDialog({ onClose, userId }: { onClose: () => void; userId?: stri
         apply_url: form.apply_url || null,
         description: form.description || null,
         tech_stack: form.tech.split(",").map((s) => s.trim()).filter(Boolean),
-        source: "Campus X community",
+        source: "Tier2X community",
         posted_by: userId!,
       });
       if (error) throw error;

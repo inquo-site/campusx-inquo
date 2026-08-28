@@ -13,9 +13,9 @@ import { internshipToOpportunity, type Opportunity } from "@/lib/opportunity";
 export const Route = createFileRoute("/_authenticated/internships")({
   head: () => ({
     meta: [
-      { title: "Tech Internships for Students — Campus X" },
+      { title: "Tech Internships for Students — Tier2X" },
       { name: "description", content: "Verified internships with stipend, duration, required skills and a one-click in-app apply flow." },
-      { property: "og:title", content: "Tech Internships for Students — Campus X" },
+      { property: "og:title", content: "Tech Internships for Students — Tier2X" },
       { property: "og:description", content: "Verified internships with stipend, duration, required skills and a one-click in-app apply flow." },
       { name: "robots", content: "noindex" },
     ],

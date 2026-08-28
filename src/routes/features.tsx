@@ -18,9 +18,9 @@ export const Route = createFileRoute("/features")({
   component: FeaturesPage,
   head: () => ({
     meta: [
-      { title: "Features — Campus X" },
+      { title: "Features — Tier2X" },
       { name: "description", content: "LinkedIn Optimizer, GitHub & Resume tools, peer rooms, dev report card, hackathons, off-campus jobs, application tracker, and a full prep roadmap." },
-      { property: "og:title", content: "Features — Campus X" },
+      { property: "og:title", content: "Features — Tier2X" },
       { property: "og:description", content: "The full builder toolkit: LinkedIn/GitHub/Resume optimizer, peer rooms, dev report card, jobs, hackathons, and prep roadmap." },
     ],
   }),
@@ -72,7 +72,7 @@ const features: Feature[] = [
     to: "/resume",
     bullets: [
       "Section-by-section AI polish",
-      "Import from your Campus X projects",
+      "Import from your Tier2X projects",
       "Export a clean, ATS-ready PDF",
     ],
   },
@@ -165,7 +165,7 @@ function FeaturesPage() {
       <section className="px-4 pb-16 pt-8 md:px-8">
         <div className="mx-auto max-w-5xl text-center">
           <div className="text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
-            — Everything inside Campus X
+            — Everything inside Tier2X
           </div>
           <h1 className="mt-4 font-display text-5xl leading-[1.02] tracking-tight md:text-6xl">
             The builder <span className="italic-serif">toolkit.</span>

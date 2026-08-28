@@ -24,13 +24,13 @@ export const Route = createFileRoute("/blog/$slug")({
   },
   head: ({ loaderData }) => {
     const p = loaderData;
-    const title = p ? `${p.title} — Campus X Blog` : "Campus X Blog";
-    const desc = p?.excerpt || "Read on the Campus X blog.";
+    const title = p ? `${p.title} — Tier2X Blog` : "Tier2X Blog";
+    const desc = p?.excerpt || "Read on the Tier2X blog.";
     const url = `https://campusx-inquo.lovable.app/blog/${p?.slug ?? ""}`;
     const meta: Array<Record<string, string>> = [
       { title },
       { name: "description", content: desc },
-      { property: "og:title", content: p?.title ?? "Campus X Blog" },
+      { property: "og:title", content: p?.title ?? "Tier2X Blog" },
       { property: "og:description", content: desc },
       { property: "og:type", content: "article" },
       { property: "og:url", content: url },
@@ -53,7 +53,7 @@ export const Route = createFileRoute("/blog/$slug")({
           description: desc,
           image: p?.cover_image || undefined,
           datePublished: p?.published_at || undefined,
-          author: { "@type": "Person", name: p?.author_name || "Campus X" },
+          author: { "@type": "Person", name: p?.author_name || "Tier2X" },
           mainEntityOfPage: url,
         }),
       },
@@ -206,7 +206,7 @@ function BlogDetail() {
           )}
           <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-4 text-xs text-muted-foreground">
-              <span>{post.author_name || "Campus X"}</span>
+              <span>{post.author_name || "Tier2X"}</span>
               {dt && <span>{dt.toLocaleDateString("en-IN", { year: "numeric", month: "short", day: "numeric" })}</span>}
               <span className="inline-flex items-center gap-1"><Clock className="h-3 w-3" /> {post.read_minutes} min read</span>
             </div>
@@ -270,7 +270,7 @@ function BlogDetail() {
             </div>
           )}
           <div>
-            <div className="font-display text-lg">{post.author_name || "Campus X"}</div>
+            <div className="font-display text-lg">{post.author_name || "Tier2X"}</div>
             <p className="text-sm text-muted-foreground">
               {p.author_bio || "Writing about building, shipping and landing roles as an Indian student developer."}
             </p>

@@ -12,12 +12,12 @@ export const Route = createFileRoute("/u/$handle")({
   head: ({ loaderData }) => ({
     meta: loaderData?.profile
       ? [
-          { title: `${loaderData.profile.display_name ?? loaderData.profile.handle} — Campus X report card` },
-          { name: "description", content: loaderData.profile.headline ?? loaderData.profile.bio ?? "Builder report card on Campus X." },
-          { property: "og:title", content: `${loaderData.profile.display_name ?? loaderData.profile.handle} on Campus X` },
-          { property: "og:description", content: loaderData.profile.headline ?? "Builder report card on Campus X." },
+          { title: `${loaderData.profile.display_name ?? loaderData.profile.handle} — Tier2X report card` },
+          { name: "description", content: loaderData.profile.headline ?? loaderData.profile.bio ?? "Builder report card on Tier2X." },
+          { property: "og:title", content: `${loaderData.profile.display_name ?? loaderData.profile.handle} on Tier2X` },
+          { property: "og:description", content: loaderData.profile.headline ?? "Builder report card on Tier2X." },
         ]
-      : [{ title: "Report card — Campus X" }],
+      : [{ title: "Report card — Tier2X" }],
   }),
   errorComponent: () => (
     <MarketingLayout>
@@ -53,7 +53,7 @@ function PublicCard() {
               <img src={gh.avatar_url} alt={profile.display_name ?? profile.handle} className="h-24 w-24 rounded-2xl border border-border" />
             )}
             <div className="min-w-0 flex-1">
-              <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">— Campus X builder</div>
+              <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">— Tier2X builder</div>
               <h1 className="mt-2 font-display text-4xl leading-tight md:text-5xl">
                 {profile.display_name ?? profile.handle}
               </h1>

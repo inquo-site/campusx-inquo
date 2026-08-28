@@ -5,7 +5,7 @@ import { supabaseForUser } from "../supabase-for-user";
 export default defineTool({
   name: "create_project",
   title: "Create a project",
-  description: "Post a new project to the Campus X Project Hub, owned by the signed-in user.",
+  description: "Post a new project to the Tier2X Project Hub, owned by the signed-in user.",
   inputSchema: {
     title: z.string().trim().min(2).max(120),
     description: z.string().trim().min(10).max(4000),

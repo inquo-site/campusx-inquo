@@ -295,7 +295,7 @@ export function LiveTicker() {
         <div className="mb-8 flex items-end justify-between">
           <div>
             <div className="text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
-              — Live on Campus X
+              — Live on Tier2X
             </div>
             <h2 className="mt-3 font-display text-3xl md:text-4xl">
               Right now, builders are <span className="italic-serif">shipping.</span>
@@ -318,7 +318,7 @@ export function LiveTicker() {
               <div className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
               <div className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
             </div>
-            <div className="text-[10px] text-muted-foreground">~/campus-x · git log --live</div>
+            <div className="text-[10px] text-muted-foreground">~/tier2x · git log --live</div>
             <div className="text-[10px] text-gold">main</div>
           </div>
           <ul className="divide-y divide-white/5">

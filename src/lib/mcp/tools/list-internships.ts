@@ -5,7 +5,7 @@ import { supabaseForUser } from "../supabase-for-user";
 export default defineTool({
   name: "list_internships",
   title: "Browse internships",
-  description: "List available internships on Campus X, optionally filtered by keyword.",
+  description: "List available internships on Tier2X, optionally filtered by keyword.",
   inputSchema: {
     query: z.string().max(120).optional().describe("Match against title/company/description."),
     limit: z.number().int().min(1).max(50).optional(),

@@ -21,7 +21,7 @@ import {
 export const Route = createFileRoute("/_authenticated/prep_/$track_/$node")({
   component: NodePage,
   head: ({ params }) => ({
-    meta: [{ title: `${params.node} · Prep · Campus X` }],
+    meta: [{ title: `${params.node} · Prep · Tier2X` }],
   }),
 });
 

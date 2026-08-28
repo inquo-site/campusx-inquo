@@ -15,7 +15,7 @@ type Enriched = {
   timeline: { label: string; date?: string | null; detail?: string | null }[];
 };
 
-const SYSTEM = `You are Campus X's Opportunity Research Agent for Indian student developers.
+const SYSTEM = `You are Tier2X's Opportunity Research Agent for Indian student developers.
 Given a posting, produce realistic, specific, non-generic details.
 Return STRICT JSON only, no markdown fences, exactly this shape:
 {

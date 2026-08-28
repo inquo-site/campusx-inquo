@@ -4,9 +4,9 @@ import { MarketingLayout } from "@/components/marketing-layout";
 export const Route = createFileRoute("/privacy")({
   head: () => ({
     meta: [
-      { title: "Privacy Policy — Campus X" },
-      { name: "description", content: "How Campus X collects, uses, and protects information shared by student builders on the platform." },
-      { property: "og:title", content: "Privacy Policy — Campus X" },
+      { title: "Privacy Policy — Tier2X" },
+      { name: "description", content: "How Tier2X collects, uses, and protects information shared by student builders on the platform." },
+      { property: "og:title", content: "Privacy Policy — Tier2X" },
       { property: "og:url", content: "https://campusx-inquo.lovable.app/privacy" },
     ],
     links: [{ rel: "canonical", href: "https://campusx-inquo.lovable.app/privacy" }],
@@ -28,7 +28,7 @@ function Privacy() {
           <section>
             <h2 className="font-display text-2xl text-foreground">1. Information we collect</h2>
             <p className="mt-3">
-              When you create a Campus X profile we collect basic information you
+              When you create a Tier2X profile we collect basic information you
               provide — your name, college, skills, project links, and contact
               email. We also collect usage data such as pages viewed and
               interactions to improve the platform.
@@ -48,7 +48,7 @@ function Privacy() {
             <h2 className="font-display text-2xl text-foreground">3. Sharing</h2>
             <p className="mt-3">
               We do not sell your personal data. Profile information you publish on
-              Campus X is visible to other registered users. We may share aggregate,
+              Tier2X is visible to other registered users. We may share aggregate,
               non-identifying analytics publicly.
             </p>
           </section>
@@ -75,7 +75,7 @@ function Privacy() {
             <p className="mt-3">
               Questions about this policy? Reach out at{" "}
               <a href="mailto:campusx4@gmail.com" className="text-gold hover:underline">campusx4@gmail.com</a>{" "}
-              or write to Campus X, Purnia, Bihar 854315, India.
+              or write to Tier2X, Purnia, Bihar 854315, India.
             </p>
           </section>
         </div>

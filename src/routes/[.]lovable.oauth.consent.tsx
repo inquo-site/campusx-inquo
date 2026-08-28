@@ -63,7 +63,7 @@ function Consent() {
       <div>
         <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">— Agent connection</div>
         <h1 className="mt-2 font-display text-3xl">
-          Connect <span className="italic-serif">{clientName}</span> to your Campus X
+          Connect <span className="italic-serif">{clientName}</span> to your Tier2X
         </h1>
         <p className="mt-3 text-sm text-muted-foreground">
           This lets {clientName} act as you — read your projects, resume, internships, and create new projects on your behalf.

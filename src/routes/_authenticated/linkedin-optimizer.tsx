@@ -14,7 +14,7 @@ export const Route = createFileRoute("/_authenticated/linkedin-optimizer")({
   component: LinkedInOptimizerPage,
   head: () => ({
     meta: [
-      { title: "LinkedIn Optimizer — Campus X" },
+      { title: "LinkedIn Optimizer — Tier2X" },
       { name: "description", content: "Paste your LinkedIn profile and get an AI rewrite tuned to recruiter keywords for your target role." },
     ],
   }),

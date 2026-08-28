@@ -44,7 +44,7 @@ const AGENT_BRIEFS: Record<string, string> = {
   marketer: "Positioning, messaging, launch plans, growth loops.",
   digital_marketer: "Paid + organic campaigns, funnels, retargeting.",
   seo_specialist: "Keyword strategy, on-page SEO, technical SEO, content briefs.",
-  content_writer: "Long-form blog posts, guides, tutorials for the Campus X audience.",
+  content_writer: "Long-form blog posts, guides, tutorials for the Tier2X audience.",
   copywriter: "Landing copy, ad copy, email copy, CTAs, product microcopy.",
 };
 
@@ -328,7 +328,7 @@ export const Route = createFileRoute("/api/admin/agent-team-chat")({
           }),
         };
 
-        const system = `You are the CEO Agent orchestrating the Campus X AI product team.
+        const system = `You are the CEO Agent orchestrating the Tier2X AI product team.
 
 Your team (call listAgents any time to see full briefs):
 ${Object.entries(AGENT_BRIEFS)

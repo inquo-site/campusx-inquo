@@ -41,7 +41,7 @@ export function FeatureShell({ eyebrow, title, italic, body, icon: Icon, highlig
 
         <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-xs text-muted-foreground">
           <Sparkles className="h-3 w-3 text-gold" />
-          Rolling out to Campus X builders — early access soon.
+          Rolling out to Tier2X builders — early access soon.
         </div>
       </motion.div>
 

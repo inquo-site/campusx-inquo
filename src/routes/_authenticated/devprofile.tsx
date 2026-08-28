@@ -10,9 +10,9 @@ import { getMyDevProfile, saveDevProfile, syncDevProfile } from "@/lib/dev-profi
 export const Route = createFileRoute("/_authenticated/devprofile")({
   head: () => ({
     meta: [
-      { title: "Unified Dev Report Card — Campus X" },
+      { title: "Unified Dev Report Card — Tier2X" },
       { name: "description", content: "GitHub and Codeforces auto-synced with LeetCode and LinkedIn into one public builder profile." },
-      { property: "og:title", content: "Unified Dev Report Card — Campus X" },
+      { property: "og:title", content: "Unified Dev Report Card — Tier2X" },
       { property: "og:description", content: "GitHub and Codeforces auto-synced with LeetCode and LinkedIn into one public builder profile." },
       { name: "robots", content: "noindex" },
     ],

@@ -10,42 +10,42 @@ const AGENTS: Record<
   "blog.published": {
     name: "Growth Agent",
     system:
-      "You are Campus X Growth Agent. When a new blog is published, generate promo copy: (1) 2 tweets, (2) 1 LinkedIn post, (3) 1 short Instagram caption, (4) 3 SEO keywords. Be concrete, energetic, Hinglish-friendly. Output as markdown with headings.",
+      "You are Tier2X Growth Agent. When a new blog is published, generate promo copy: (1) 2 tweets, (2) 1 LinkedIn post, (3) 1 short Instagram caption, (4) 3 SEO keywords. Be concrete, energetic, Hinglish-friendly. Output as markdown with headings.",
     buildPrompt: (p) =>
-      `New blog published on Campus X.\nTitle: ${p.title}\nExcerpt: ${p.excerpt}\nTags: ${JSON.stringify(p.tags)}\nSlug: ${p.slug}`,
+      `New blog published on Tier2X.\nTitle: ${p.title}\nExcerpt: ${p.excerpt}\nTags: ${JSON.stringify(p.tags)}\nSlug: ${p.slug}`,
   },
   "blog.unpublished": {
     name: "QA Agent",
     system:
-      "You are Campus X QA Agent. A blog was just unpublished. In 3 bullets, note likely reasons (SEO fail, quality, duplicate) and 2 next actions.",
+      "You are Tier2X QA Agent. A blog was just unpublished. In 3 bullets, note likely reasons (SEO fail, quality, duplicate) and 2 next actions.",
     buildPrompt: (p) => `Unpublished blog: ${p.title} (${p.slug}).`,
   },
   "user.signup": {
     name: "Lead-Gen Agent",
     system:
-      "You are Campus X Lead-Gen Agent. Draft a warm 90-word welcome email for a new Indian student developer. Personalize using their name and college. Include 3 next-step CTAs (complete profile, join a room, post a project). Hinglish tone, no emojis in the subject.",
+      "You are Tier2X Lead-Gen Agent. Draft a warm 90-word welcome email for a new Indian student developer. Personalize using their name and college. Include 3 next-step CTAs (complete profile, join a room, post a project). Hinglish tone, no emojis in the subject.",
     buildPrompt: (p) =>
       `New signup:\nName: ${p.full_name || "there"}\nCollege: ${p.college || "unspecified"}`,
   },
   "project.created": {
     name: "Feature-Discovery Agent",
     system:
-      "You are Campus X Feature-Discovery Agent. Analyse a new user project and output: (1) 1-line hook, (2) suggested collaborator roles, (3) 3 growth ideas, (4) recommended tags. Markdown.",
+      "You are Tier2X Feature-Discovery Agent. Analyse a new user project and output: (1) 1-line hook, (2) suggested collaborator roles, (3) 3 growth ideas, (4) recommended tags. Markdown.",
     buildPrompt: (p) =>
       `New project posted.\nTitle: ${p.title}\nDescription: ${p.description}\nTech: ${JSON.stringify(p.tech_stack)}\nTag: ${p.tag}`,
   },
   "internship.created": {
     name: "Lead-Gen Agent",
     system:
-      "You are Campus X Lead-Gen Agent. A new internship is live. Draft: (1) a 1-line notification banner, (2) 2 tweet variants, (3) a 60-word WhatsApp broadcast for student groups. Hinglish OK.",
+      "You are Tier2X Lead-Gen Agent. A new internship is live. Draft: (1) a 1-line notification banner, (2) 2 tweet variants, (3) a 60-word WhatsApp broadcast for student groups. Hinglish OK.",
     buildPrompt: (p) =>
       `New internship: ${p.title} at ${p.company} (${p.location || "remote"}).`,
   },
   "cron.analytics_daily": {
     name: "Analytics Agent",
     system:
-      "You are Campus X Analytics Agent. Given today's platform counts, write a 5-bullet daily digest: what moved, what to watch, one action for tomorrow. Concise, numeric.",
-    buildPrompt: (p) => `Today's Campus X stats: ${JSON.stringify(p)}`,
+      "You are Tier2X Analytics Agent. Given today's platform counts, write a 5-bullet daily digest: what moved, what to watch, one action for tomorrow. Concise, numeric.",
+    buildPrompt: (p) => `Today's Tier2X stats: ${JSON.stringify(p)}`,
   },
 };
 

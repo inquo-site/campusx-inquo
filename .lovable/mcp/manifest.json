@@ -11,15 +11,15 @@
   },
   "mcp": {
     "server": {
-      "name": "campus-x-mcp",
+      "name": "tier2x-mcp",
       "version": "0.1.0",
-      "title": "Campus X"
+      "title": "Tier2X"
     },
     "tools": [
       {
         "name": "whoami",
         "title": "Who am I",
-        "description": "Return the authenticated Campus X user's id and email.",
+        "description": "Return the authenticated Tier2X user's id and email.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -35,7 +35,7 @@
       {
         "name": "list_my_projects",
         "title": "List my projects",
-        "description": "List projects owned by the signed-in Campus X user.",
+        "description": "List projects owned by the signed-in Tier2X user.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -58,7 +58,7 @@
       {
         "name": "create_project",
         "title": "Create a project",
-        "description": "Post a new project to the Campus X Project Hub, owned by the signed-in user.",
+        "description": "Post a new project to the Tier2X Project Hub, owned by the signed-in user.",
         "annotations": {
           "readOnlyHint": false,
           "destructiveHint": false,
@@ -115,7 +115,7 @@
       {
         "name": "list_internships",
         "title": "Browse internships",
-        "description": "List available internships on Campus X, optionally filtered by keyword.",
+        "description": "List available internships on Tier2X, optionally filtered by keyword.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -142,7 +142,7 @@
       {
         "name": "get_my_resume",
         "title": "Get my resume",
-        "description": "Read the signed-in user's Campus X resume (structured JSON).",
+        "description": "Read the signed-in user's Tier2X resume (structured JSON).",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,

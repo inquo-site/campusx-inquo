@@ -6,10 +6,10 @@ import { MarketingLayout } from "@/components/marketing-layout";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About Us — Campus X" },
-      { name: "description", content: "Campus X is founded by Suman Kumar from Purnia, Bihar. Learn about the mission to give student builders a workspace of their own." },
-      { property: "og:title", content: "About Us — Campus X" },
-      { property: "og:description", content: "Founded by Suman Kumar from Purnia, Bihar — Campus X is a workspace for India's student builders." },
+      { title: "About Us — Tier2X" },
+      { name: "description", content: "Tier2X is founded by Suman Kumar from Purnia, Bihar. Learn about the mission to give student builders a workspace of their own." },
+      { property: "og:title", content: "About Us — Tier2X" },
+      { property: "og:description", content: "Founded by Suman Kumar from Purnia, Bihar — Tier2X is a workspace for India's student builders." },
       { property: "og:url", content: "https://campusx-inquo.lovable.app/about" },
     ],
     links: [{ rel: "canonical", href: "https://campusx-inquo.lovable.app/about" }],
@@ -33,7 +33,7 @@ function About() {
               <span className="italic-serif">student builders.</span>
             </h1>
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground">
-              Campus X exists because the best ideas in Indian tech are being
+              Tier2X exists because the best ideas in Indian tech are being
               built in hostel rooms, not boardrooms — and students deserve a
               workspace that takes them seriously.
             </p>
@@ -87,13 +87,13 @@ function About() {
                   <h3 className="font-display text-3xl">
                     Suman <span className="italic-serif">Kumar</span>
                   </h3>
-                  <div className="mt-1 text-sm text-muted-foreground">Founder, Campus X</div>
+                  <div className="mt-1 text-sm text-muted-foreground">Founder, Tier2X</div>
 
                   <p className="mt-5 text-sm leading-relaxed text-muted-foreground">
                     Suman is a student builder from Purnia, Bihar. He started
-                    Campus X after watching too many talented classmates ship
+                    Tier2X after watching too many talented classmates ship
                     nothing because they couldn't find the right people to
-                    build with. Campus X is his attempt to fix that — a
+                    build with. Tier2X is his attempt to fix that — a
                     workspace where finding a co-founder, a teammate, or an
                     internship takes minutes, not months.
                   </p>

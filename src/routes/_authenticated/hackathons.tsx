@@ -13,9 +13,9 @@ import { hackathonToOpportunity, type Opportunity } from "@/lib/opportunity";
 export const Route = createFileRoute("/_authenticated/hackathons")({
   head: () => ({
     meta: [
-      { title: "Hackathon Radar — Campus X" },
+      { title: "Hackathon Radar — Tier2X" },
       { name: "description", content: "Upcoming Indian hackathons with themes, prize pools, team size, skills needed and register links." },
-      { property: "og:title", content: "Hackathon Radar — Campus X" },
+      { property: "og:title", content: "Hackathon Radar — Tier2X" },
       { property: "og:description", content: "Upcoming Indian hackathons with themes, prize pools, team size, skills needed and register links." },
       { name: "robots", content: "noindex" },
     ],

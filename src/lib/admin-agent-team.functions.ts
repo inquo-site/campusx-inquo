@@ -218,7 +218,7 @@ async function trySendEmail(
   const resendKey = process.env.RESEND_API_KEY;
   if (resendKey) {
     try {
-      const from = process.env.RESEND_FROM || "Campus X Admin <onboarding@resend.dev>";
+      const from = process.env.RESEND_FROM || "Tier2X Admin <onboarding@resend.dev>";
       const res = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {

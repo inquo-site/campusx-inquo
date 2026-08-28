@@ -21,7 +21,7 @@ const CONTEXT_HINTS: Record<string, string> = {
 
 function systemPrompt(context: string) {
   const hint = CONTEXT_HINTS[context] ?? CONTEXT_HINTS.generic;
-  return `You are Campus X's text-fix agent. Task: clean the user's input.
+  return `You are Tier2X's text-fix agent. Task: clean the user's input.
 Rules:
 - Fix spelling, grammar, and capitalization (uppercase/lowercase mistakes).
 - Preserve the author's meaning and language mix (Hinglish is fine).

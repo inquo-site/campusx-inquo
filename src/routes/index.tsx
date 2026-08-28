@@ -25,14 +25,14 @@ import { AiosTeaser } from "@/components/aios/aios-sections";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Campus X — Where student builders ship real projects" },
+      { title: "Tier2X — Where student builders ship real projects" },
       {
         name: "description",
         content:
           "India's student builder workspace: ship live projects, land internships and off-campus jobs, and form startup teams.",
       },
-      { name: "keywords", content: "student developers, college projects, startup co-founder, tech internships India, student community, Campus X, Suman Kumar" },
-      { property: "og:title", content: "Campus X — Where student builders ship real projects" },
+      { name: "keywords", content: "student developers, college projects, startup co-founder, tech internships India, student community, Tier2X, Suman Kumar" },
+      { property: "og:title", content: "Tier2X — Where student builders ship real projects" },
       { property: "og:description", content: "Share live projects, find internships, and form startup teams. Built for India's student technologists." },
       { property: "og:url", content: "https://campusx-inquo.lovable.app/" },
     ],
@@ -43,7 +43,7 @@ export const Route = createFileRoute("/")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Organization",
-          name: "Campus X",
+          name: "Tier2X",
           url: "https://campusx-inquo.lovable.app/",
           email: "campusx4@gmail.com",
           founder: { "@type": "Person", name: "Suman Kumar" },
@@ -102,7 +102,7 @@ function Landing() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="mx-auto mt-7 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg"
           >
-            Campus X is a workspace for student developers, engineers, and tech
+            Tier2X is a workspace for student developers, engineers, and tech
             innovators to share live projects, find internships, and form
             startup teams.
           </motion.p>
@@ -188,7 +188,7 @@ function Landing() {
       <section className="px-4 py-20 md:px-8">
         <div className="mx-auto max-w-6xl">
           <div className="mb-12 text-center">
-            <div className="text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground">— Why Campus X</div>
+            <div className="text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground">— Why Tier2X</div>
             <h2 className="mt-3 font-display text-4xl md:text-5xl">
               Because shipping beats <span className="italic-serif">scrolling.</span>
             </h2>
@@ -237,7 +237,7 @@ function Landing() {
             Join the workspace where India's next generation of builders meet.
           </p>
           <Link to="/dashboard" className="btn-ink group mt-8">
-            Enter Campus X
+            Enter Tier2X
             <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </Link>
         </div>

@@ -4,7 +4,7 @@ import { supabaseForUser } from "../supabase-for-user";
 export default defineTool({
   name: "get_my_resume",
   title: "Get my resume",
-  description: "Read the signed-in user's Campus X resume (structured JSON).",
+  description: "Read the signed-in user's Tier2X resume (structured JSON).",
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async (_input, ctx: ToolContext) => {

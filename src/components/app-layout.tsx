@@ -130,7 +130,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
     if (!user) return;
     supabase.from("profiles").select("full_name, college").eq("id", user.id).maybeSingle().then(({ data }) => {
       setDisplayName(data?.full_name ?? user.email?.split("@")[0] ?? "Builder");
-      setCollege(data?.college ?? "Campus X");
+      setCollege(data?.college ?? "Tier2X");
     });
   }, [user]);
 
@@ -375,7 +375,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
               <div className="grid h-8 w-8 place-items-center rounded-full bg-gold font-display text-sm text-primary-foreground">{initial}</div>
               <div className="text-left">
                 <div className="text-xs font-medium leading-tight">{displayName || "Builder"}</div>
-                <div className="text-[10px] leading-tight text-muted-foreground">{college || "Campus X"}</div>
+                <div className="text-[10px] leading-tight text-muted-foreground">{college || "Tier2X"}</div>
               </div>
             </Link>
           </div>
