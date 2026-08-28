@@ -1,5 +1,5 @@
 import { motion, useInView } from "motion/react";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { GitCommit, Zap } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
