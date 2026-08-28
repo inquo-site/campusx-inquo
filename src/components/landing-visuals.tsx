@@ -245,31 +245,18 @@ function Counter({ to, suffix = "" }: { to: number; suffix?: string }) {
 }
 
 export function LiveStats() {
-  const stats = [
-    { n: 4200, suffix: "+", label: "student builders", icon: Users },
-    { n: 860, suffix: "", label: "projects shipped", icon: FolderGit2 },
-    { n: 120, suffix: "", label: "startup teams forming", icon: Rocket },
-    { n: 99, suffix: "%", label: "uptime · edge deployed", icon: Zap },
-  ];
-
   return (
     <section className="relative px-4 py-20 md:px-8">
       <div className="mx-auto max-w-6xl">
-        <div className="grid gap-px overflow-hidden rounded-3xl border border-border bg-border md:grid-cols-4">
-          {stats.map((s) => {
-            const Icon = s.icon;
-            return (
-              <div key={s.label} className="bg-surface p-8">
-                <Icon className="h-4 w-4 text-gold" />
-                <div className="mt-4">
-                  <Counter to={s.n} suffix={s.suffix} />
-                </div>
-                <div className="mt-2 text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                  {s.label}
-                </div>
-              </div>
-            );
-          })}
+        <div className="overflow-hidden rounded-3xl border border-border bg-surface p-10 text-center md:p-14">
+          <Zap className="mx-auto h-5 w-5 text-gold" />
+          <h2 className="mt-5 font-display text-3xl md:text-4xl">
+            We just started. <span className="italic-serif">Real data coming soon.</span>
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
+            No inflated counters here. As students join, land off-campus roles and
+            get alumni intros, we'll publish the numbers exactly as they are.
+          </p>
         </div>
       </div>
     </section>
