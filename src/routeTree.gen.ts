@@ -13,8 +13,11 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as McpRouteImport } from './routes/mcp'
+import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as ForAlumniRouteImport } from './routes/for-alumni'
 import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as DisclaimerRouteImport } from './routes/disclaimer'
+import { Route as CollegesRouteImport } from './routes/colleges'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AiCompanyRouteImport } from './routes/ai-company'
 import { Route as AboutRouteImport } from './routes/about'
@@ -74,6 +77,16 @@ const McpRoute = McpRouteImport.update({
   path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HowItWorksRoute = HowItWorksRouteImport.update({
+  id: '/how-it-works',
+  path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForAlumniRoute = ForAlumniRouteImport.update({
+  id: '/for-alumni',
+  path: '/for-alumni',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FeaturesRoute = FeaturesRouteImport.update({
   id: '/features',
   path: '/features',
@@ -82,6 +95,11 @@ const FeaturesRoute = FeaturesRouteImport.update({
 const DisclaimerRoute = DisclaimerRouteImport.update({
   id: '/disclaimer',
   path: '/disclaimer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CollegesRoute = CollegesRouteImport.update({
+  id: '/colleges',
+  path: '/colleges',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -289,8 +307,11 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/ai-company': typeof AiCompanyRoute
   '/auth': typeof AuthRoute
+  '/colleges': typeof CollegesRoute
   '/disclaimer': typeof DisclaimerRoute
   '/features': typeof FeaturesRoute
+  '/for-alumni': typeof ForAlumniRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -334,8 +355,11 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/ai-company': typeof AiCompanyRoute
   '/auth': typeof AuthRoute
+  '/colleges': typeof CollegesRoute
   '/disclaimer': typeof DisclaimerRoute
   '/features': typeof FeaturesRoute
+  '/for-alumni': typeof ForAlumniRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -381,8 +405,11 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/ai-company': typeof AiCompanyRoute
   '/auth': typeof AuthRoute
+  '/colleges': typeof CollegesRoute
   '/disclaimer': typeof DisclaimerRoute
   '/features': typeof FeaturesRoute
+  '/for-alumni': typeof ForAlumniRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -428,8 +455,11 @@ export interface FileRouteTypes {
     | '/about'
     | '/ai-company'
     | '/auth'
+    | '/colleges'
     | '/disclaimer'
     | '/features'
+    | '/for-alumni'
+    | '/how-it-works'
     | '/mcp'
     | '/privacy'
     | '/sitemap.xml'
@@ -473,8 +503,11 @@ export interface FileRouteTypes {
     | '/about'
     | '/ai-company'
     | '/auth'
+    | '/colleges'
     | '/disclaimer'
     | '/features'
+    | '/for-alumni'
+    | '/how-it-works'
     | '/mcp'
     | '/privacy'
     | '/sitemap.xml'
@@ -519,8 +552,11 @@ export interface FileRouteTypes {
     | '/about'
     | '/ai-company'
     | '/auth'
+    | '/colleges'
     | '/disclaimer'
     | '/features'
+    | '/for-alumni'
+    | '/how-it-works'
     | '/mcp'
     | '/privacy'
     | '/sitemap.xml'
@@ -566,8 +602,11 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AiCompanyRoute: typeof AiCompanyRoute
   AuthRoute: typeof AuthRoute
+  CollegesRoute: typeof CollegesRoute
   DisclaimerRoute: typeof DisclaimerRoute
   FeaturesRoute: typeof FeaturesRoute
+  ForAlumniRoute: typeof ForAlumniRoute
+  HowItWorksRoute: typeof HowItWorksRoute
   McpRoute: typeof McpRoute
   PrivacyRoute: typeof PrivacyRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -616,6 +655,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/how-it-works': {
+      id: '/how-it-works'
+      path: '/how-it-works'
+      fullPath: '/how-it-works'
+      preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/for-alumni': {
+      id: '/for-alumni'
+      path: '/for-alumni'
+      fullPath: '/for-alumni'
+      preLoaderRoute: typeof ForAlumniRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/features': {
       id: '/features'
       path: '/features'
@@ -628,6 +681,13 @@ declare module '@tanstack/react-router' {
       path: '/disclaimer'
       fullPath: '/disclaimer'
       preLoaderRoute: typeof DisclaimerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/colleges': {
+      id: '/colleges'
+      path: '/colleges'
+      fullPath: '/colleges'
+      preLoaderRoute: typeof CollegesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -956,8 +1016,11 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AiCompanyRoute: AiCompanyRoute,
   AuthRoute: AuthRoute,
+  CollegesRoute: CollegesRoute,
   DisclaimerRoute: DisclaimerRoute,
   FeaturesRoute: FeaturesRoute,
+  ForAlumniRoute: ForAlumniRoute,
+  HowItWorksRoute: HowItWorksRoute,
   McpRoute: McpRoute,
   PrivacyRoute: PrivacyRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,

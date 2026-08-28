@@ -260,7 +260,7 @@ export function BlockView({ block, related }: { block: Block; related?: RelatedP
             </div>
           )}
           <div>
-            <div className="font-display text-lg">{s("name") || "Campus X"}</div>
+            <div className="font-display text-lg">{s("name") || "Tier2X"}</div>
             <p className="text-sm text-muted-foreground">{s("bio")}</p>
             {s("link") && (
               <a href={s("link")} target="_blank" rel="noopener noreferrer" className="text-xs text-gold underline">

@@ -4,9 +4,9 @@ import { MarketingLayout } from "@/components/marketing-layout";
 export const Route = createFileRoute("/terms")({
   head: () => ({
     meta: [
-      { title: "Terms & Conditions — Campus X" },
-      { name: "description", content: "The rules of the road for using Campus X — the workspace for India's student builders." },
-      { property: "og:title", content: "Terms & Conditions — Campus X" },
+      { title: "Terms & Conditions — Tier2X" },
+      { name: "description", content: "The rules of the road for using Tier2X — the workspace for India's student builders." },
+      { property: "og:title", content: "Terms & Conditions — Tier2X" },
       { property: "og:url", content: "https://campusx-inquo.lovable.app/terms" },
     ],
     links: [{ rel: "canonical", href: "https://campusx-inquo.lovable.app/terms" }],
@@ -27,15 +27,15 @@ function Terms() {
         <div className="mt-10 space-y-8 text-sm leading-relaxed text-muted-foreground">
           <section>
             <h2 className="font-display text-2xl text-foreground">1. Acceptance</h2>
-            <p className="mt-3">By creating an account or using Campus X, you agree to these terms. If you don't agree, please don't use the platform.</p>
+            <p className="mt-3">By creating an account or using Tier2X, you agree to these terms. If you don't agree, please don't use the platform.</p>
           </section>
           <section>
             <h2 className="font-display text-2xl text-foreground">2. Eligibility</h2>
-            <p className="mt-3">Campus X is intended for students, recent graduates, and people building in tech. You must be 16 or older to register.</p>
+            <p className="mt-3">Tier2X is intended for students, recent graduates, and people building in tech. You must be 16 or older to register.</p>
           </section>
           <section>
             <h2 className="font-display text-2xl text-foreground">3. Your content</h2>
-            <p className="mt-3">You own the projects, descriptions, and other content you post. By posting it, you grant Campus X a non-exclusive license to display it on the platform.</p>
+            <p className="mt-3">You own the projects, descriptions, and other content you post. By posting it, you grant Tier2X a non-exclusive license to display it on the platform.</p>
           </section>
           <section>
             <h2 className="font-display text-2xl text-foreground">4. Acceptable use</h2>
@@ -43,15 +43,15 @@ function Terms() {
           </section>
           <section>
             <h2 className="font-display text-2xl text-foreground">5. Internships & startups</h2>
-            <p className="mt-3">Campus X is a discovery platform. We don't verify every listing — do your own due diligence before sharing personal information, accepting offers, or signing agreements.</p>
+            <p className="mt-3">Tier2X is a discovery platform. We don't verify every listing — do your own due diligence before sharing personal information, accepting offers, or signing agreements.</p>
           </section>
           <section>
             <h2 className="font-display text-2xl text-foreground">6. Limitation of liability</h2>
-            <p className="mt-3">Campus X is provided "as is". To the maximum extent permitted by law, we are not liable for any indirect or consequential losses arising from your use of the platform.</p>
+            <p className="mt-3">Tier2X is provided "as is". To the maximum extent permitted by law, we are not liable for any indirect or consequential losses arising from your use of the platform.</p>
           </section>
           <section>
             <h2 className="font-display text-2xl text-foreground">7. Changes</h2>
-            <p className="mt-3">We may update these terms. Continued use of Campus X after changes means you accept the updated terms.</p>
+            <p className="mt-3">We may update these terms. Continued use of Tier2X after changes means you accept the updated terms.</p>
           </section>
           <section>
             <h2 className="font-display text-2xl text-foreground">8. Contact</h2>

@@ -5,7 +5,7 @@ import { supabaseForUser } from "../supabase-for-user";
 export default defineTool({
   name: "list_my_projects",
   title: "List my projects",
-  description: "List projects owned by the signed-in Campus X user.",
+  description: "List projects owned by the signed-in Tier2X user.",
   inputSchema: {
     limit: z.number().int().min(1).max(50).optional().describe("Max rows (default 20)."),
   },

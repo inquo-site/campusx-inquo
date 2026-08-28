@@ -130,7 +130,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
     if (!user) return;
     supabase.from("profiles").select("full_name, college").eq("id", user.id).maybeSingle().then(({ data }) => {
       setDisplayName(data?.full_name ?? user.email?.split("@")[0] ?? "Builder");
-      setCollege(data?.college ?? "Campus X");
+      setCollege(data?.college ?? "Tier2X");
     });
   }, [user]);
 
@@ -149,7 +149,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
         <Link to="/" className="flex h-20 items-center gap-3 px-6">
           <div className="grid h-9 w-9 place-items-center rounded-md border border-gold/40 bg-gold/10 font-display text-xl italic text-gold">X</div>
           <div className="font-display text-2xl leading-none">
-            Campus<span className="italic-serif">X</span>
+            Tier2<span className="italic-serif">X</span>
           </div>
         </Link>
 
@@ -278,7 +278,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
                 <Link to="/" className="flex items-center gap-2">
                   <div className="grid h-8 w-8 place-items-center rounded-md border border-gold/40 bg-gold/10 font-display text-lg italic text-gold">X</div>
                   <span className="font-display text-xl leading-none">
-                    Campus<span className="italic-serif">X</span>
+                    Tier2<span className="italic-serif">X</span>
                   </span>
                 </Link>
                 <button
@@ -375,7 +375,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
               <div className="grid h-8 w-8 place-items-center rounded-full bg-gold font-display text-sm text-primary-foreground">{initial}</div>
               <div className="text-left">
                 <div className="text-xs font-medium leading-tight">{displayName || "Builder"}</div>
-                <div className="text-[10px] leading-tight text-muted-foreground">{college || "Campus X"}</div>
+                <div className="text-[10px] leading-tight text-muted-foreground">{college || "Tier2X"}</div>
               </div>
             </Link>
           </div>

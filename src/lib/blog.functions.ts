@@ -483,7 +483,7 @@ export const adminAiWriteBlog = createServerFn({ method: "POST" })
     const gateway = createLovableAiGatewayProvider(key);
     const model = gateway("google/gemini-3-flash-preview");
 
-    const prompt = `You are a senior editor writing for Campus X, a workspace for Indian student developers.
+    const prompt = `You are a senior editor writing for Tier2X, a workspace for Indian student developers.
 Write a full blog post as MARKDOWN based on the topic below.
 
 Topic: ${data.topic}

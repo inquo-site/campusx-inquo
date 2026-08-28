@@ -12,13 +12,13 @@ export const Route = createFileRoute("/ai-company")({
   component: AiCompanyPage,
   head: () => ({
     meta: [
-      { title: "AI Company OS — Hire AI Teams | Campus X" },
+      { title: "AI Company OS — Hire AI Teams | Tier2X" },
       {
         name: "description",
         content:
           "Hire an entire AI company: an AI CEO, a coordinator and 16 specialised AI teams for engineering, design, QA, marketing, security and finance. INR pricing, UPI payment.",
       },
-      { property: "og:title", content: "AI Company OS — Hire AI Teams | Campus X" },
+      { property: "og:title", content: "AI Company OS — Hire AI Teams | Tier2X" },
       {
         property: "og:description",
         content:

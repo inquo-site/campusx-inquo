@@ -101,7 +101,7 @@ export const runTeamTask = createServerFn({ method: "POST" })
       .map((a) => `- ${a.name} (${a.role}): ${a.abilities.join("; ")}`)
       .join("\n");
 
-    const system = `You are the coordinator of the "${team.name}" inside the Campus X AI Company OS.
+    const system = `You are the coordinator of the "${team.name}" inside the Tier2X AI Company OS.
 Team focus: ${team.tagline}
 Team capabilities: ${team.capabilities.join(", ")}
 

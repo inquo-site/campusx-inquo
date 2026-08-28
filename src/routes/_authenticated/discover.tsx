@@ -10,9 +10,9 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/_authenticated/discover")({
   head: () => ({
     meta: [
-      { title: "Discover Student Builders — Campus X" },
+      { title: "Discover Student Builders — Tier2X" },
       { name: "description", content: "Find student developers by skill, college and interest, then connect for projects and startups." },
-      { property: "og:title", content: "Discover Student Builders — Campus X" },
+      { property: "og:title", content: "Discover Student Builders — Tier2X" },
       { property: "og:description", content: "Find student developers by skill, college and interest, then connect for projects and startups." },
       { name: "robots", content: "noindex" },
     ],
@@ -82,7 +82,7 @@ function Discover() {
   return (
     <div className="mx-auto max-w-6xl space-y-8">
       <p className="max-w-xl text-sm text-muted-foreground">
-        Real student builders on Campus X. Filter by skills, find who's <span className="italic-serif">open to collaborate</span>, send a connection request.
+        Real student builders on Tier2X. Filter by skills, find who's <span className="italic-serif">open to collaborate</span>, send a connection request.
       </p>
 
       <div className="card-noir flex flex-col gap-3 rounded-2xl p-3 md:flex-row md:items-center">

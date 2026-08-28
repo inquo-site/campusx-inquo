@@ -11,7 +11,7 @@ export const Route = createFileRoute("/auth")({
   validateSearch: (s: Record<string, unknown>): { next?: string } => ({
     next: typeof s.next === "string" && s.next.startsWith("/") && !s.next.startsWith("//") ? s.next : undefined,
   }),
-  head: () => ({ meta: [{ title: "Sign in — Campus X" }] }),
+  head: () => ({ meta: [{ title: "Sign in — Tier2X" }] }),
   component: AuthPage,
 });
 
@@ -50,7 +50,7 @@ function AuthPage() {
           },
         });
         if (error) throw error;
-        toast.success("Account created. Welcome to Campus X.");
+        toast.success("Account created. Welcome to Tier2X.");
         afterAuth();
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -84,7 +84,7 @@ function AuthPage() {
       <div className="mx-auto grid min-h-screen w-full max-w-6xl grid-cols-1 lg:grid-cols-2">
         <aside className="hidden flex-col justify-between border-r border-border bg-surface p-12 lg:flex">
           <Link to="/" className="font-display text-2xl">
-            Campus<span className="italic-serif">X</span>
+            Tier2<span className="italic-serif">X</span>
           </Link>
           <div>
             <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">— For student builders</div>
@@ -95,7 +95,7 @@ function AuthPage() {
               Projects, internships, startup teams, AI mentor, resume builder — one workspace tuned for CS undergrads.
             </p>
           </div>
-          <div className="font-mono text-[11px] text-muted-foreground">© Campus X · Purnia, IN</div>
+          <div className="font-mono text-[11px] text-muted-foreground">© Tier2X · Purnia, IN</div>
         </aside>
 
         <main className="flex items-center justify-center p-6 md:p-12">
@@ -110,7 +110,7 @@ function AuthPage() {
             </div>
             <h2 className="mt-2 font-display text-3xl">
               {mode === "signin" ? "Sign " : "Join "}
-              <span className="italic-serif">Campus X</span>
+              <span className="italic-serif">Tier2X</span>
             </h2>
 
             <button
@@ -170,7 +170,7 @@ function AuthPage() {
             </form>
 
             <p className="mt-6 text-center text-xs text-muted-foreground">
-              {mode === "signin" ? "New to Campus X?" : "Already a member?"}{" "}
+              {mode === "signin" ? "New to Tier2X?" : "Already a member?"}{" "}
               <button
                 onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
                 className="text-gold hover:underline"

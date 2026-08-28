@@ -1,5 +1,5 @@
 export const UPI_ID = "inquosite12@okhdfcbank";
-export const UPI_PAYEE_NAME = "Campus X";
+export const UPI_PAYEE_NAME = "Tier2X";
 
 export type UpiApp = {
   id: string;

@@ -1989,7 +1989,7 @@ function AgentPanel() {
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-xl font-semibold">Campus X Admin Agent</h2>
+        <h2 className="text-xl font-semibold">Tier2X Admin Agent</h2>
         <p className="text-xs text-muted-foreground">
           Ask about users, blogs, rooms and jobs, or ask it to draft a blog. It calls real tools against the database.
         </p>

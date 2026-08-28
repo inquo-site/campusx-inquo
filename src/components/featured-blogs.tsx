@@ -72,7 +72,7 @@ export function FeaturedBlogsSection() {
                     </p>
                   )}
                   <div className="mt-4 flex items-center justify-between border-t border-border pt-4 text-xs text-muted-foreground">
-                    <span>{p.author_name || "Campus X"}</span>
+                    <span>{p.author_name || "Tier2X"}</span>
                     <span className="inline-flex items-center gap-1">
                       <Clock className="h-3 w-3" /> {p.read_minutes} min
                     </span>

@@ -87,7 +87,7 @@ export const studioSuggestTopics = createServerFn({ method: "POST" })
   .inputValidator((i: unknown) => TopicsIn.parse(i))
   .handler(async ({ data }) => {
     verifyAdmin(data.token);
-    const system = `You are an SEO editor for Campus X (Indian student developer platform). Reply with ONLY valid JSON, no prose, no markdown fences.`;
+    const system = `You are an SEO editor for Tier2X (Indian student developer platform). Reply with ONLY valid JSON, no prose, no markdown fences.`;
     const user = `Suggest 6 FRESH blog topic ideas${data.niche ? ` around: ${data.niche}` : " (broad: careers, coding, internships, roadmaps, AI, startups)"}.
 Seed variety: ${data.seed ?? Math.floor(Math.random() * 100000)}. Avoid clichés.
 

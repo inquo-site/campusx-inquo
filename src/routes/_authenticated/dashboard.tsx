@@ -9,10 +9,10 @@ import { useAuth } from "@/hooks/use-auth";
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
-      { title: "Workspace Dashboard — Campus X" },
-      { name: "description", content: "Your Campus X workspace: track applications, projects, prep streaks and AI team activity in one place." },
-      { property: "og:title", content: "Workspace Dashboard — Campus X" },
-      { property: "og:description", content: "Your Campus X workspace: track applications, projects, prep streaks and AI team activity in one place." },
+      { title: "Workspace Dashboard — Tier2X" },
+      { name: "description", content: "Your Tier2X workspace: track applications, projects, prep streaks and AI team activity in one place." },
+      { property: "og:title", content: "Workspace Dashboard — Tier2X" },
+      { property: "og:description", content: "Your Tier2X workspace: track applications, projects, prep streaks and AI team activity in one place." },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -72,7 +72,7 @@ function Dashboard() {
     <div className="mx-auto max-w-6xl space-y-14">
       <section>
         <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-          <span className="h-px w-6 bg-gold/60" /> Campus X · {new Date().toLocaleDateString()}
+          <span className="h-px w-6 bg-gold/60" /> Tier2X · {new Date().toLocaleDateString()}
         </div>
         <motion.h2
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}

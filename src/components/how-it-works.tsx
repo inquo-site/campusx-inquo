@@ -100,7 +100,7 @@ function ProfileEditorVisual() {
       <div className="flex items-center justify-between border-t border-white/5 bg-black/30 px-4 py-1.5 text-[10px] text-muted-foreground">
         <span className="flex items-center gap-1.5">
           <span className="h-1.5 w-1.5 rounded-full bg-[#28c840]" />
-          synced to campus-x
+          synced to tier2x
         </span>
         <span>TS · UTF-8</span>
       </div>
@@ -384,7 +384,7 @@ const steps = [
     n: "03",
     title: "Ship something",
     italic: "real",
-    body: "Form teams, push commits, deploy live. Every shipped project is a public proof-of-work on your Campus X graph.",
+    body: "Form teams, push commits, deploy live. Every shipped project is a public proof-of-work on your Tier2X graph.",
     Visual: DeployVisual,
   },
 ];

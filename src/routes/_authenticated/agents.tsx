@@ -25,7 +25,7 @@ export const Route = createFileRoute("/_authenticated/agents")({
   component: MyAgentsPage,
   head: () => ({
     meta: [
-      { title: "My Agents · Campus X" },
+      { title: "My Agents · Tier2X" },
       { name: "description", content: "Your AI autopilot agents at work." },
     ],
   }),

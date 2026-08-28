@@ -101,7 +101,7 @@ export const Route = createFileRoute("/api/admin/agent-chat")({
               audience: z.string().max(200).optional(),
             }),
             execute: async ({ topic, tone, audience }) => {
-              const prompt = `You are the Campus X editor. Write a blog post as MARKDOWN.
+              const prompt = `You are the Tier2X editor. Write a blog post as MARKDOWN.
 Topic: ${topic}
 Tone: ${tone || "clear, practical, energetic"}
 Audience: ${audience || "Indian student developers"}
@@ -124,7 +124,7 @@ Respond as JSON with keys: title, slug, excerpt, tags, read_minutes, content_mar
 
         const result = streamText({
           model,
-          system: `You are the Campus X Admin Agent — a helpful analyst and editor for the platform's admin.
+          system: `You are the Tier2X Admin Agent — a helpful analyst and editor for the platform's admin.
 - Use tools to look up real data before making claims.
 - When the admin asks for analysis, pull stats first, then summarize with concrete numbers.
 - When asked to draft a blog, call draftBlogPost and present the result clearly (title, excerpt, then content).

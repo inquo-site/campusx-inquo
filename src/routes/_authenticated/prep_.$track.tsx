@@ -17,8 +17,8 @@ export const Route = createFileRoute("/_authenticated/prep_/$track")({
   component: TrackJourney,
   head: ({ params }) => ({
     meta: [
-      { title: `${params.track} · Prep Roadmap · Campus X` },
-      { name: "description", content: `Learning journey for ${params.track} on Campus X.` },
+      { title: `${params.track} · Prep Roadmap · Tier2X` },
+      { name: "description", content: `Learning journey for ${params.track} on Tier2X.` },
     ],
   }),
 });

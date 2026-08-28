@@ -126,7 +126,7 @@ export function BlogStudioWizard({ token, onClose, onDone }: Props) {
           tags: seo.tags,
           status,
           is_featured: false,
-          author_name: "Campus X Editor",
+          author_name: "Tier2X Editor",
           read_minutes: readMinutes || 5,
           force: false,
         },

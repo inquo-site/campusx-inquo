@@ -10,9 +10,9 @@ import { useAuth } from "@/hooks/use-auth";
 export const Route = createFileRoute("/_authenticated/rooms/")({
   head: () => ({
     meta: [
-      { title: "Peer Discussion Rooms — Campus X" },
+      { title: "Peer Discussion Rooms — Tier2X" },
       { name: "description", content: "College-wise and interest-wise rooms where student builders discuss, help and ship together." },
-      { property: "og:title", content: "Peer Discussion Rooms — Campus X" },
+      { property: "og:title", content: "Peer Discussion Rooms — Tier2X" },
       { property: "og:description", content: "College-wise and interest-wise rooms where student builders discuss, help and ship together." },
       { name: "robots", content: "noindex" },
     ],

@@ -14,26 +14,25 @@ import {
 } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing-layout";
 import { HowItWorks } from "@/components/how-it-works";
-import { TechMarquee, LiveStats, LiveTicker } from "@/components/landing-visuals";
+import { TechMarquee, LiveStats } from "@/components/landing-visuals";
 import { FeatureCarousel } from "@/components/feature-carousel";
 import { TestimonialsShowcase } from "@/components/testimonials-showcase";
 import { OpportunityNetworkSection } from "@/components/opportunity-network";
 import { FeaturedBlogsSection } from "@/components/featured-blogs";
-import { AiosTeaser } from "@/components/aios/aios-sections";
 
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Campus X — Where student builders ship real projects" },
+      { title: "Tier2X — Off-campus jobs & alumni intros for Tier-2/3 students" },
       {
         name: "description",
         content:
-          "India's student builder workspace: ship live projects, land internships and off-campus jobs, and form startup teams.",
+          "Off-campus drives, alumni intros and proof-of-work for students at India's Tier-2 and Tier-3 engineering colleges.",
       },
-      { name: "keywords", content: "student developers, college projects, startup co-founder, tech internships India, student community, Campus X, Suman Kumar" },
-      { property: "og:title", content: "Campus X — Where student builders ship real projects" },
-      { property: "og:description", content: "Share live projects, find internships, and form startup teams. Built for India's student technologists." },
+      { name: "keywords", content: "off campus jobs India, tier 2 college placements, alumni referral, fresher jobs, Tier2X, Suman Kumar" },
+      { property: "og:title", content: "Tier2X — Off-campus jobs & alumni intros for Tier-2/3 students" },
+      { property: "og:description", content: "Off-campus drives, alumni intros and proof-of-work for the ~3,900 Indian engineering colleges that aren't IITs." },
       { property: "og:url", content: "https://campusx-inquo.lovable.app/" },
     ],
     links: [{ rel: "canonical", href: "https://campusx-inquo.lovable.app/" }],
@@ -43,12 +42,12 @@ export const Route = createFileRoute("/")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Organization",
-          name: "Campus X",
+          name: "Tier2X",
           url: "https://campusx-inquo.lovable.app/",
           email: "campusx4@gmail.com",
           founder: { "@type": "Person", name: "Suman Kumar" },
           address: { "@type": "PostalAddress", addressLocality: "Purnia", addressRegion: "Bihar", postalCode: "854315", addressCountry: "IN" },
-          description: "Collaborative platform for student developers to share projects, find internships, and form startup teams.",
+          description: "Off-campus jobs, alumni introductions and career support for students at India's Tier-2 and Tier-3 engineering colleges.",
         }),
       },
     ],
@@ -85,7 +84,7 @@ function Landing() {
             transition={{ duration: 0.6 }}
             className="mx-auto inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/5 px-4 py-1.5 text-xs text-gold"
           >
-            <Sparkles className="h-3 w-3" /> India's student builder workspace
+            <Sparkles className="h-3 w-3" /> Off-campus jobs and alumni intros for Tier-2/3 students
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -93,8 +92,8 @@ function Landing() {
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="mt-6 font-display text-5xl leading-[1.02] tracking-tight md:text-7xl lg:text-8xl"
           >
-            Where students <br />
-            <span className="italic-serif">ship things</span> that matter.
+            Your college can't see <br />
+            off-campus. <span className="italic-serif">We can.</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}
@@ -102,9 +101,8 @@ function Landing() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="mx-auto mt-7 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg"
           >
-            Campus X is a workspace for student developers, engineers, and tech
-            innovators to share live projects, find internships, and form
-            startup teams.
+            Off-campus drives, alumni intros, and proof-of-work — for the
+            ~3,900 Indian engineering colleges that aren't IITs.
           </motion.p>
 
           <motion.div
@@ -117,11 +115,11 @@ function Landing() {
               to="/dashboard"
               className="btn-ink group"
             >
-              Enter the workspace
+              Get early access
               <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </Link>
-            <Link to="/about" className="btn-ghost">
-              About the founder
+            <Link to="/how-it-works" className="btn-ghost">
+              How it works
             </Link>
           </motion.div>
 
@@ -171,16 +169,12 @@ function Landing() {
       {/* Opportunity + Network layers */}
       <OpportunityNetworkSection />
 
-      {/* AI Agents autopilot */}
-      <AiosTeaser />
 
 
 
       {/* Live stats counters */}
       <LiveStats />
 
-      {/* Live commit ticker */}
-      <LiveTicker />
 
 
 
@@ -188,7 +182,7 @@ function Landing() {
       <section className="px-4 py-20 md:px-8">
         <div className="mx-auto max-w-6xl">
           <div className="mb-12 text-center">
-            <div className="text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground">— Why Campus X</div>
+            <div className="text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground">— Why Tier2X</div>
             <h2 className="mt-3 font-display text-4xl md:text-5xl">
               Because shipping beats <span className="italic-serif">scrolling.</span>
             </h2>
@@ -237,7 +231,7 @@ function Landing() {
             Join the workspace where India's next generation of builders meet.
           </p>
           <Link to="/dashboard" className="btn-ink group mt-8">
-            Enter Campus X
+            Enter Tier2X
             <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </Link>
         </div>

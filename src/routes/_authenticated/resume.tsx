@@ -11,9 +11,9 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/_authenticated/resume")({
   head: () => ({
     meta: [
-      { title: "Resume Builder — Campus X" },
+      { title: "Resume Builder — Tier2X" },
       { name: "description", content: "Build an ATS-friendly student resume with AI polish for experience, projects and skills." },
-      { property: "og:title", content: "Resume Builder — Campus X" },
+      { property: "og:title", content: "Resume Builder — Tier2X" },
       { property: "og:description", content: "Build an ATS-friendly student resume with AI polish for experience, projects and skills." },
       { name: "robots", content: "noindex" },
     ],

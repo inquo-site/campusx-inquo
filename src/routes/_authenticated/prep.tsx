@@ -21,7 +21,7 @@ export const Route = createFileRoute("/_authenticated/prep")({
   component: PrepHub,
   head: () => ({
     meta: [
-      { title: "Prep Roadmap · Campus X" },
+      { title: "Prep Roadmap · Tier2X" },
       {
         name: "description",
         content:

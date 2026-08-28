@@ -10,9 +10,9 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/_authenticated/alumni")({
   head: () => ({
     meta: [
-      { title: "Alumni Referral Network — Campus X" },
+      { title: "Alumni Referral Network — Tier2X" },
       { name: "description", content: "Match with alumni at your target companies and request warm referral intros." },
-      { property: "og:title", content: "Alumni Referral Network — Campus X" },
+      { property: "og:title", content: "Alumni Referral Network — Tier2X" },
       { property: "og:description", content: "Match with alumni at your target companies and request warm referral intros." },
       { name: "robots", content: "noindex" },
     ],

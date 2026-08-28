@@ -16,9 +16,9 @@ const blogsQO = () =>
 export const Route = createFileRoute("/blog/")({
   head: () => ({
     meta: [
-      { title: "Campus X Blog — Guides for student builders" },
-      { name: "description", content: "Essays, guides and playbooks from Campus X for Indian student developers: careers, projects, internships, and building in public." },
-      { property: "og:title", content: "Campus X Blog" },
+      { title: "Tier2X Blog — Guides for student builders" },
+      { name: "description", content: "Essays, guides and playbooks from Tier2X for Indian student developers: careers, projects, internships, and building in public." },
+      { property: "og:title", content: "Tier2X Blog" },
       { property: "og:description", content: "Guides, essays and playbooks for India's student developers." },
       { property: "og:url", content: "https://campusx-inquo.lovable.app/blog" },
     ],
@@ -109,7 +109,7 @@ function BlogIndex() {
       <section className="px-4 pb-16 pt-8 md:px-8">
         <div className="mx-auto max-w-6xl">
           <div className="text-center">
-            <div className="text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground">— Campus X Journal</div>
+            <div className="text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground">— Tier2X Journal</div>
             <h1 className="mt-3 font-display text-5xl leading-[1.05] md:text-6xl">
               Stories for people who <span className="italic-serif">ship</span>.
             </h1>
@@ -243,7 +243,7 @@ function BlogIndex() {
                           </p>
                         )}
                         <div className="mt-4 flex items-center justify-between border-t border-border pt-4 text-xs text-muted-foreground">
-                          <span>{p.author_name || "Campus X"}</span>
+                          <span>{p.author_name || "Tier2X"}</span>
                           <span className="inline-flex items-center gap-1">
                             <Clock className="h-3 w-3" /> {p.read_minutes} min
                           </span>

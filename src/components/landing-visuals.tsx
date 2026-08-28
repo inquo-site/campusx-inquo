@@ -1,6 +1,6 @@
-import { motion, useInView, useMotionValue, useTransform, animate } from "motion/react";
-import { useEffect, useRef } from "react";
-import { Users, FolderGit2, Rocket, GitCommit, Zap } from "lucide-react";
+import { motion, useInView } from "motion/react";
+import { useRef } from "react";
+import { GitCommit, Zap } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
 /* Hero Orbit — animated builder constellation                         */
@@ -220,56 +220,19 @@ export function TechMarquee() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/* Animated counter                                                    */
-/* ------------------------------------------------------------------ */
-function Counter({ to, suffix = "" }: { to: number; suffix?: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true });
-  const mv = useMotionValue(0);
-  const rounded = useTransform(mv, (v) => Math.round(v).toLocaleString());
-
-  useEffect(() => {
-    if (inView) {
-      const controls = animate(mv, to, { duration: 1.8, ease: [0.22, 1, 0.36, 1] });
-      return () => controls.stop();
-    }
-  }, [inView, to, mv]);
-
-  return (
-    <span ref={ref} className="font-display text-5xl md:text-6xl">
-      <motion.span>{rounded}</motion.span>
-      <span className="text-gold">{suffix}</span>
-    </span>
-  );
-}
-
 export function LiveStats() {
-  const stats = [
-    { n: 4200, suffix: "+", label: "student builders", icon: Users },
-    { n: 860, suffix: "", label: "projects shipped", icon: FolderGit2 },
-    { n: 120, suffix: "", label: "startup teams forming", icon: Rocket },
-    { n: 99, suffix: "%", label: "uptime · edge deployed", icon: Zap },
-  ];
-
   return (
     <section className="relative px-4 py-20 md:px-8">
       <div className="mx-auto max-w-6xl">
-        <div className="grid gap-px overflow-hidden rounded-3xl border border-border bg-border md:grid-cols-4">
-          {stats.map((s) => {
-            const Icon = s.icon;
-            return (
-              <div key={s.label} className="bg-surface p-8">
-                <Icon className="h-4 w-4 text-gold" />
-                <div className="mt-4">
-                  <Counter to={s.n} suffix={s.suffix} />
-                </div>
-                <div className="mt-2 text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                  {s.label}
-                </div>
-              </div>
-            );
-          })}
+        <div className="overflow-hidden rounded-3xl border border-border bg-surface p-10 text-center md:p-14">
+          <Zap className="mx-auto h-5 w-5 text-gold" />
+          <h2 className="mt-5 font-display text-3xl md:text-4xl">
+            We just started. <span className="italic-serif">Real data coming soon.</span>
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
+            No inflated counters here. As students join, land off-campus roles and
+            get alumni intros, we'll publish the numbers exactly as they are.
+          </p>
         </div>
       </div>
     </section>
@@ -295,7 +258,7 @@ export function LiveTicker() {
         <div className="mb-8 flex items-end justify-between">
           <div>
             <div className="text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
-              — Live on Campus X
+              — Live on Tier2X
             </div>
             <h2 className="mt-3 font-display text-3xl md:text-4xl">
               Right now, builders are <span className="italic-serif">shipping.</span>
@@ -318,7 +281,7 @@ export function LiveTicker() {
               <div className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
               <div className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
             </div>
-            <div className="text-[10px] text-muted-foreground">~/campus-x · git log --live</div>
+            <div className="text-[10px] text-muted-foreground">~/tier2x · git log --live</div>
             <div className="text-[10px] text-gold">main</div>
           </div>
           <ul className="divide-y divide-white/5">
