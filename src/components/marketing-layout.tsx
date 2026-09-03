@@ -226,7 +226,7 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
 
           <div className="hairline mt-10" />
           <div className="mt-5 flex flex-col items-start justify-between gap-2 text-xs text-muted-foreground md:flex-row md:items-center">
-            <div>© {new Date().getFullYear()} Tier2X. Built by Suman Kumar.</div>
+            <div>© {new Date().getFullYear()} Tier2X. Made in Purnia, Bihar.</div>
             <div className="italic-serif text-gold">ship things that matter.</div>
           </div>
         </div>
