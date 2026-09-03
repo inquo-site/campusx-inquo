@@ -6,16 +6,15 @@ import { AnimatePresence, motion } from "motion/react";
 /** Primary nav — kept short on purpose so nothing feels hidden. */
 const navLinks = [
   { to: "/", label: "Home" },
-  { to: "/features", label: "Features" },
-  { to: "/ai-company", label: "AI Teams & Pricing" },
-  { to: "/prep", label: "Prep" },
+  { to: "/how-it-works", label: "How it works" },
+  { to: "/pricing", label: "Pricing" },
+  { to: "/for-alumni", label: "For Alumni" },
+  { to: "/colleges", label: "Colleges" },
   { to: "/blog", label: "Blog" },
-  { to: "/about", label: "About" },
 ] as const;
 
 const featureLinks = [
-  { to: "/ai-company", label: "AI Company OS" },
-  { to: "/agents", label: "AI Workspace" },
+  { to: "/features", label: "All Features" },
   { to: "/prep", label: "Prep Roadmap" },
   { to: "/jobs", label: "Off-Campus Jobs" },
   { to: "/hackathons", label: "Hackathons" },
@@ -57,7 +56,11 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
               key={l.to}
               to={l.to}
               activeProps={{ className: "text-gold" }}
-              className="text-sm text-foreground/70 transition hover:text-gold"
+              className={
+                l.to === "/for-alumni"
+                  ? "text-sm font-medium text-gold transition hover:brightness-110"
+                  : "text-sm text-foreground/70 transition hover:text-gold"
+              }
             >
               {l.label}
             </Link>
@@ -66,10 +69,16 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
 
         <div className="flex shrink-0 items-center gap-2">
           <Link
-            to="/dashboard"
+            to="/auth"
+            className="hidden text-sm text-foreground/70 transition hover:text-gold md:inline"
+          >
+            Log in
+          </Link>
+          <Link
+            to="/auth"
             className="group inline-flex items-center gap-1.5 rounded-full bg-gold px-4 py-2 text-xs font-medium text-primary-foreground transition hover:brightness-110 md:text-sm"
           >
-            Launch App
+            Get Early Access
             <ArrowUpRight className="h-3.5 w-3.5 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </Link>
           <button
@@ -217,7 +226,7 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
 
           <div className="hairline mt-10" />
           <div className="mt-5 flex flex-col items-start justify-between gap-2 text-xs text-muted-foreground md:flex-row md:items-center">
-            <div>© {new Date().getFullYear()} Tier2X. Built by Suman Kumar.</div>
+            <div>© {new Date().getFullYear()} Tier2X. Made in Purnia, Bihar.</div>
             <div className="italic-serif text-gold">ship things that matter.</div>
           </div>
         </div>

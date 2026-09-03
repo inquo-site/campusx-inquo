@@ -20,7 +20,6 @@ import {
   MessagesSquare,
   Github,
   Linkedin,
-  Bot,
   Map,
   Compass,
   ChevronDown,
@@ -38,7 +37,6 @@ const navGroups: { label: string; items: { to: string; label: string; icon: type
     label: "Home",
     items: [
       { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-      { to: "/agents", label: "AI Company OS", icon: Bot },
     ],
   },
   {
