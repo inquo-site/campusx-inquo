@@ -20,7 +20,6 @@ import {
   MessagesSquare,
   Github,
   Linkedin,
-  Bot,
   Map,
   Compass,
   ChevronDown,
