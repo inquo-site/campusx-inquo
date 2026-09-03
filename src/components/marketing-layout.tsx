@@ -6,16 +6,15 @@ import { AnimatePresence, motion } from "motion/react";
 /** Primary nav — kept short on purpose so nothing feels hidden. */
 const navLinks = [
   { to: "/", label: "Home" },
-  { to: "/features", label: "Features" },
-  { to: "/ai-company", label: "AI Teams & Pricing" },
-  { to: "/prep", label: "Prep" },
+  { to: "/how-it-works", label: "How it works" },
+  { to: "/pricing", label: "Pricing" },
+  { to: "/for-alumni", label: "For Alumni" },
+  { to: "/colleges", label: "Colleges" },
   { to: "/blog", label: "Blog" },
-  { to: "/about", label: "About" },
 ] as const;
 
 const featureLinks = [
-  { to: "/ai-company", label: "AI Company OS" },
-  { to: "/agents", label: "AI Workspace" },
+  { to: "/features", label: "All Features" },
   { to: "/prep", label: "Prep Roadmap" },
   { to: "/jobs", label: "Off-Campus Jobs" },
   { to: "/hackathons", label: "Hackathons" },
