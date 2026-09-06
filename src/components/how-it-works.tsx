@@ -78,7 +78,8 @@ function ProfileEditorVisual() {
                 </>
               )}
             </motion.div>
-          </>
+          </React.Fragment>
+
         ))}
 
         {/* blinking cursor */}
