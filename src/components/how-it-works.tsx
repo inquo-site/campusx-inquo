@@ -1,5 +1,5 @@
 import { motion, useInView } from "motion/react";
-import { useRef } from "react";
+import React, { useRef } from "react";
 import {
   Terminal,
   GitBranch,
