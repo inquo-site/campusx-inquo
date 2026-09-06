@@ -132,10 +132,6 @@ function HowItWorksPage() {
         </div>
       </section>
 
-      <section className="px-4 pb-8 md:px-8">
-
-
-      <section className="px-4 pb-8 md:px-8">
         <div className="mx-auto grid max-w-6xl gap-6 md:grid-cols-3">
           {steps.map((s, i) => {
             const Icon = s.icon;
