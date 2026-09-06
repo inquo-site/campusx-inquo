@@ -159,6 +159,28 @@ function HowItWorksPage() {
 
       <HowItWorks />
 
+      {/* Live feed of real listings */}
+      <section className="px-4 pb-20 md:px-8">
+        <div className="mx-auto max-w-4xl">
+          <div className="mb-8 text-center">
+            <div className="text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
+              — Latest on the radar
+            </div>
+            <h2 className="mt-3 font-display text-3xl leading-tight md:text-4xl">
+              What just <span className="italic-serif">landed</span>.
+            </h2>
+          </div>
+          <LiveFeed data={data} loading={isLoading} />
+          <div className="mt-8 text-center">
+            <Link to="/jobs" className="btn-ghost">
+              See every listing
+            </Link>
+          </div>
+        </div>
+      </section>
+
+
+
       <section className="px-4 py-20 md:px-8">
         <div className="ambient-glow mx-auto max-w-4xl rounded-3xl border border-gold/20 bg-surface p-12 text-center md:p-16">
           <GraduationCap className="mx-auto h-6 w-6 text-gold" />
