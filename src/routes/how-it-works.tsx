@@ -98,6 +98,43 @@ function HowItWorksPage() {
         </div>
       </section>
 
+      {/* Live radar + real counters */}
+      <section className="px-4 pb-16 md:px-8">
+        <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-2">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.94 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <RadarScope data={data} />
+          </motion.div>
+
+          <div>
+            <div className="text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
+              — Live right now
+            </div>
+            <h2 className="mt-3 font-display text-3xl leading-tight md:text-4xl">
+              Everything on this page is <span className="italic-serif">real data</span>.
+            </h2>
+            <p className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground">
+              These numbers come straight from the listings currently on Tier2X — no
+              mockups, no placeholder logos.
+            </p>
+            <div className="mt-8">
+              <LiveCounters data={data} loading={isLoading} />
+            </div>
+          </div>
+        </div>
+
+        <div className="mx-auto mt-10 max-w-6xl">
+          <CompanyMarquee data={data} />
+        </div>
+      </section>
+
+      <section className="px-4 pb-8 md:px-8">
+
+
       <section className="px-4 pb-8 md:px-8">
         <div className="mx-auto grid max-w-6xl gap-6 md:grid-cols-3">
           {steps.map((s, i) => {
