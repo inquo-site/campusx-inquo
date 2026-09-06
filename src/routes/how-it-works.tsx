@@ -58,8 +58,11 @@ const steps = [
 ];
 
 function HowItWorksPage() {
+  const { data, isLoading } = useRadarData();
+
   return (
     <MarketingLayout>
+
       <section className="px-4 pb-16 pt-10 md:px-8">
         <div className="mx-auto max-w-4xl text-center">
           <div className="text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
