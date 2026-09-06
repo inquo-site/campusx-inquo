@@ -49,8 +49,9 @@ function ProfileEditorVisual() {
       {/* code */}
       <div className="grid grid-cols-[2.5rem_1fr] gap-2 px-4 py-5 leading-relaxed">
         {lines.map((l, i) => (
-          <>
-            <div key={`n-${i}`} className="select-none text-right text-muted-foreground/40">
+          <React.Fragment key={`row-${i}`}>
+            <div className="select-none text-right text-muted-foreground/40">
+
               {i + 1}
             </div>
             <motion.div
