@@ -1,5 +1,5 @@
 import { motion, useInView } from "motion/react";
-import { useRef } from "react";
+import React, { useRef } from "react";
 import {
   Terminal,
   GitBranch,
@@ -49,12 +49,13 @@ function ProfileEditorVisual() {
       {/* code */}
       <div className="grid grid-cols-[2.5rem_1fr] gap-2 px-4 py-5 leading-relaxed">
         {lines.map((l, i) => (
-          <>
-            <div key={`n-${i}`} className="select-none text-right text-muted-foreground/40">
+          <React.Fragment key={`row-${i}`}>
+            <div className="select-none text-right text-muted-foreground/40">
+
               {i + 1}
             </div>
             <motion.div
-              key={`l-${i}`}
+
               initial={{ opacity: 0, x: -8 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.35, delay: 0.15 + i * 0.18 }}
@@ -77,7 +78,8 @@ function ProfileEditorVisual() {
                 </>
               )}
             </motion.div>
-          </>
+          </React.Fragment>
+
         ))}
 
         {/* blinking cursor */}
@@ -210,7 +212,9 @@ function PeerGraphVisual() {
                 cy={n.y}
                 r={n.r}
                 fill="url(#pulse)"
+                initial={{ r: n.r, opacity: 0.8 }}
                 animate={{ r: [n.r, n.r + 14, n.r], opacity: [0.8, 0, 0.8] }}
+
                 transition={{ duration: 2.4, repeat: Infinity }}
               />
             )}
