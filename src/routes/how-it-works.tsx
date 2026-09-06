@@ -3,6 +3,13 @@ import { motion } from "motion/react";
 import { Radar, Filter, BellRing, ArrowUpRight, GraduationCap } from "lucide-react";
 import { MarketingLayout } from "@/components/marketing-layout";
 import { HowItWorks } from "@/components/how-it-works";
+import {
+  useRadarData,
+  RadarScope,
+  LiveCounters,
+  LiveFeed,
+  CompanyMarquee,
+} from "@/components/how-it-works-live";
 
 export const Route = createFileRoute("/how-it-works")({
   component: HowItWorksPage,
@@ -20,11 +27,14 @@ export const Route = createFileRoute("/how-it-works")({
         content:
           "We pull live off-campus listings and filter them by college, branch and CGPA.",
       },
-      { property: "og:url", content: "https://campusx-inquo.lovable.app/how-it-works" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:url", content: "https://tier2x.lovable.app/how-it-works" },
     ],
-    links: [{ rel: "canonical", href: "https://campusx-inquo.lovable.app/how-it-works" }],
+    links: [{ rel: "canonical", href: "https://tier2x.lovable.app/how-it-works" }],
   }),
 });
+
 
 const steps = [
   {
