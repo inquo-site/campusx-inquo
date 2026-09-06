@@ -212,7 +212,9 @@ function PeerGraphVisual() {
                 cy={n.y}
                 r={n.r}
                 fill="url(#pulse)"
+                initial={{ r: n.r, opacity: 0.8 }}
                 animate={{ r: [n.r, n.r + 14, n.r], opacity: [0.8, 0, 0.8] }}
+
                 transition={{ duration: 2.4, repeat: Infinity }}
               />
             )}
