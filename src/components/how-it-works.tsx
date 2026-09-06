@@ -55,7 +55,7 @@ function ProfileEditorVisual() {
               {i + 1}
             </div>
             <motion.div
-              key={`l-${i}`}
+
               initial={{ opacity: 0, x: -8 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.35, delay: 0.15 + i * 0.18 }}
