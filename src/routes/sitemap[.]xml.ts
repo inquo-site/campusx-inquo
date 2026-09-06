@@ -1,34 +1,35 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 
-const BASE_URL = "https://campusx-inquo.lovable.app";
+const BASE_URL = "https://tier2x.lovable.app";
 
 interface SitemapEntry {
   path: string;
   changefreq?: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
   priority?: string;
-  lastmod?: string;
 }
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const today = new Date().toISOString().split("T")[0];
-
         const entries: SitemapEntry[] = [
-          { path: "/", changefreq: "weekly", priority: "1.0", lastmod: today },
-          { path: "/about", changefreq: "monthly", priority: "0.8", lastmod: today },
-          { path: "/privacy", changefreq: "yearly", priority: "0.3", lastmod: today },
-          { path: "/terms", changefreq: "yearly", priority: "0.3", lastmod: today },
-          { path: "/disclaimer", changefreq: "yearly", priority: "0.3", lastmod: today },
+          { path: "/", changefreq: "weekly", priority: "1.0" },
+          { path: "/about", changefreq: "monthly", priority: "0.8" },
+          { path: "/how-it-works", changefreq: "monthly", priority: "0.8" },
+          { path: "/for-alumni", changefreq: "monthly", priority: "0.8" },
+          { path: "/colleges", changefreq: "monthly", priority: "0.8" },
+          { path: "/pricing", changefreq: "monthly", priority: "0.8" },
+          { path: "/blog", changefreq: "daily", priority: "0.9" },
+          { path: "/privacy", changefreq: "yearly", priority: "0.3" },
+          { path: "/terms", changefreq: "yearly", priority: "0.3" },
+          { path: "/disclaimer", changefreq: "yearly", priority: "0.3" },
         ];
 
         const urls = entries.map((e) =>
           [
             `  <url>`,
             `    <loc>${BASE_URL}${e.path}</loc>`,
-            e.lastmod ? `    <lastmod>${e.lastmod}</lastmod>` : null,
             e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
             e.priority ? `    <priority>${e.priority}</priority>` : null,
             `  </url>`,
