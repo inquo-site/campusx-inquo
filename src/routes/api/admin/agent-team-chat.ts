@@ -9,7 +9,7 @@ import {
 import { z } from "zod";
 import { createLovableAiGatewayProvider } from "@/lib/ai-gateway.server";
 
-const ADMIN_SECRET = "SUMAN@12suman";
+const ADMIN_SECRET = "SUMAN@suman";
 const NOTIFY_EMAIL = "cartooninverse5@gmail.com";
 
 const AGENT_ROLES = [

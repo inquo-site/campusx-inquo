@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-const ADMIN_SECRET = "SUMAN@12suman";
+const ADMIN_SECRET = "SUMAN@suman";
 function verifyAdmin(token: string) {
   if (token !== ADMIN_SECRET) throw new Error("Forbidden");
 }
