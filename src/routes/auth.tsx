@@ -25,7 +25,10 @@ function AuthPage() {
   const [loading, setLoading] = useState(false);
 
   const afterAuth = () => {
-    if (next) window.location.href = next;
+    const stored = typeof window !== "undefined" ? sessionStorage.getItem("auth_next") : null;
+    if (stored) sessionStorage.removeItem("auth_next");
+    const target = next ?? (stored && stored.startsWith("/") && !stored.startsWith("//") ? stored : null);
+    if (target) window.location.href = target;
     else navigate({ to: "/dashboard" });
   };
 
@@ -33,6 +36,10 @@ function AuthPage() {
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) afterAuth();
     });
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_IN" && session) afterAuth();
+    });
+    return () => sub.subscription.unsubscribe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate, next]);
 
@@ -40,26 +47,41 @@ function AuthPage() {
     e.preventDefault();
     setLoading(true);
     try {
+      const cleanEmail = email.trim().toLowerCase();
       if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
-          email,
+        const { data, error } = await supabase.auth.signUp({
+          email: cleanEmail,
           password,
           options: {
-            emailRedirectTo: next ? window.location.origin + next : window.location.origin,
-            data: { full_name: fullName },
+            emailRedirectTo: window.location.origin + "/auth" + (next ? `?next=${encodeURIComponent(next)}` : ""),
+            data: { full_name: fullName.trim() },
           },
         });
         if (error) throw error;
+        if (data.user && (data.user.identities?.length ?? 0) === 0) {
+          toast.error("An account with this email already exists. Please sign in.");
+          setMode("signin");
+          return;
+        }
+        if (!data.session) {
+          toast.success("Check your inbox and click the confirmation link to activate your account.");
+          setMode("signin");
+          return;
+        }
         toast.success("Account created. Welcome to Tier2X.");
         afterAuth();
       } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { error } = await supabase.auth.signInWithPassword({ email: cleanEmail, password });
         if (error) throw error;
         toast.success("Signed in.");
         afterAuth();
       }
     } catch (err: any) {
-      toast.error(err.message ?? "Auth failed");
+      const msg = String(err?.message ?? "");
+      if (/invalid login credentials/i.test(msg)) toast.error("Wrong email or password.");
+      else if (/email not confirmed/i.test(msg)) toast.error("Please confirm your email first — check your inbox.");
+      else if (/rate limit/i.test(msg)) toast.error("Too many attempts. Please wait a minute and try again.");
+      else toast.error(msg || "Auth failed");
     } finally {
       setLoading(false);
     }
@@ -67,8 +89,9 @@ function AuthPage() {
 
   const google = async () => {
     setLoading(true);
+    if (next) sessionStorage.setItem("auth_next", next);
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: next ? window.location.origin + next : window.location.origin,
+      redirect_uri: window.location.origin + "/auth",
     });
     if (result.error) {
       toast.error(result.error.message ?? "Google sign-in failed");
