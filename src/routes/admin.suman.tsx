@@ -69,7 +69,7 @@ export const Route = createFileRoute("/admin/suman")({
 });
 
 const ALLOWED_EMAILS = ["cartooninverse5@gmail.com", "inquo4@gmail.com"];
-const ADMIN_PASSWORD = "SUMAN@12suman";
+const ADMIN_PASSWORD = "SUMAN@suman";
 const STORAGE_KEY = "admin-suman-auth";
 const TOKEN_KEY = "admin-suman-token";
 

@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 
-const ADMIN_SECRET = "SUMAN@12suman";
+const ADMIN_SECRET = "SUMAN@suman";
 
 function verify(token: string) {
   if (token !== ADMIN_SECRET) {
