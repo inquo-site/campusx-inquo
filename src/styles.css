@@ -41,6 +41,8 @@
   --color-gold: var(--gold);
   --color-gold-muted: var(--gold-muted);
   --color-cream: var(--cream);
+  --color-home-coral: var(--home-coral);
+  --color-home-lime: var(--home-lime);
 
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
@@ -264,3 +266,77 @@
 .prose-blog pre { background: var(--color-muted, #111); padding: 1rem 1.2rem; border-radius: 12px; overflow-x: auto; margin: 1.4rem 0; }
 .prose-blog pre code { background: transparent; padding: 0; font-size: 0.88rem; }
 .prose-blog strong { color: var(--color-foreground); font-weight: 600; }
+
+/* Homepage-only theme: existing application pages retain their theme. */
+.launch-theme {
+  --background: oklch(0.145 0.008 240);
+  --foreground: oklch(0.96 0.006 240);
+  --primary: oklch(0.84 0.13 190);
+  --primary-foreground: oklch(0.17 0.025 190);
+  --card: oklch(0.19 0.009 240);
+  --card-foreground: var(--foreground);
+  --secondary: oklch(0.21 0.009 240);
+  --secondary-foreground: var(--foreground);
+  --muted: var(--secondary);
+  --muted-foreground: oklch(0.69 0.012 240);
+  --accent: oklch(0.25 0.03 190);
+  --accent-foreground: var(--foreground);
+  --border: oklch(0.95 0.01 240 / 13%);
+  --input: var(--border);
+  --ring: var(--primary);
+  --gold: var(--primary);
+  --surface: var(--card);
+  --surface-2: var(--secondary);
+  --home-coral: oklch(0.76 0.14 35);
+  --home-lime: oklch(0.86 0.15 125);
+  --home-shadow: 0 15px 50px oklch(0 0 0 / 25%);
+  --hero-shade: linear-gradient(90deg, var(--background) 0%, oklch(0.145 0.008 240 / 92%) 28%, oklch(0.145 0.008 240 / 18%) 75%), linear-gradient(0deg, var(--background), transparent 30%);
+  color: var(--foreground);
+  font-family: "Inter", system-ui, sans-serif;
+}
+.tier2x-home h1, .tier2x-home h2, .tier2x-home h3, .demo-dialog h3 { font-family: inherit; letter-spacing: 0; }
+.home-container { width: min(1160px, calc(100% - 64px)); margin-inline: auto; }
+.home-header a { transition: color 200ms; }
+.home-header a:hover, .tier2x-home footer a:hover { color: var(--primary); }
+.brand-symbol { display: grid; place-items: center; width: 28px; height: 28px; background: var(--primary); color: var(--primary-foreground); border-radius: 6px; font-size: 22px; }
+.home-hero { min-height: 710px; }
+.hero-shade { background: var(--hero-shade); }
+.hero-path { object-position: center; }
+.home-section { padding-block: 88px; scroll-margin-top: 96px; }
+.home-title { font-size: 42px; line-height: 1.15; font-weight: 500; }
+.home-eyebrow { font: 10px "JetBrains Mono", monospace; color: var(--primary); letter-spacing: 0.1em; }
+.home-feature { transition: transform 300ms, border-color 300ms, box-shadow 300ms; }
+.home-feature:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: var(--home-shadow); }
+.feature-1:hover { border-color: var(--home-coral); }
+.feature-2:hover { border-color: var(--home-lime); }
+.journey-track { scrollbar-width: thin; scrollbar-color: var(--primary) var(--secondary); overscroll-behavior-x: contain; }
+.journey-card { width: 345px; }
+.journey-art { height: 195px; padding: 18px; border: 1px solid var(--border); border-radius: 6px; background: var(--background); }
+.connection-ring { position: absolute; width: 225px; height: 225px; border: 1px dashed var(--border); border-radius: 50%; }
+.ring-two { width: 360px; height: 360px; }
+.connection-label { position: absolute; z-index: 11; display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; font-size: 12px; background: var(--card); box-shadow: var(--home-shadow); }
+.label-one { left: 9%; top: 15%; transform: rotate(-6deg); }
+.label-two { right: 4%; top: 28%; transform: rotate(5deg); }
+.label-three { left: 24%; bottom: 7%; transform: rotate(-3deg); }
+.home-cta { background: var(--card); }
+.tier2x-home .card-noir { background: var(--card); border-color: var(--border); border-radius: 8px; }
+.tier2x-home .btn-ghost { border-color: var(--border); background: var(--background); }
+.tier2x-home a[href^="#"] { scroll-margin-top: 90px; }
+html:has(.tier2x-home) { scroll-behavior: smooth; background: var(--background); }
+@media (max-width: 767px) {
+  .home-container { width: calc(100% - 36px); }
+  .home-hero { min-height: auto; }
+  .hero-path { object-position: 68% center; opacity: 0.35; }
+  .home-hero h1 { font-size: 48px; }
+  .home-section { padding-block: 56px; }
+  .home-title { font-size: 32px; }
+  .hero-bottom { font-size: 8px; gap: 15px; }
+  .hero-bottom a { max-width: 125px; }
+  .journey-card { width: min(315px, 85vw); }
+  .connection-label { padding: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html:has(.tier2x-home) { scroll-behavior: auto; }
+  .tier2x-home *, .demo-dialog * { animation: none !important; transition: none !important; }
+  .home-feature:hover { transform: none; }
+}
