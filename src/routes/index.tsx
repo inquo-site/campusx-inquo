@@ -19,6 +19,7 @@ import { FeatureCarousel } from "@/components/feature-carousel";
 import { TestimonialsShowcase } from "@/components/testimonials-showcase";
 import { OpportunityNetworkSection } from "@/components/opportunity-network";
 import { FeaturedBlogsSection } from "@/components/featured-blogs";
+import { ScrollCutoutStack } from "@/components/scroll-cutout-stack";
 
 
 export const Route = createFileRoute("/")({
@@ -33,6 +34,8 @@ export const Route = createFileRoute("/")({
       { name: "keywords", content: "off campus jobs India, tier 2 college placements, alumni referral, fresher jobs, Tier2X, Suman Kumar" },
       { property: "og:title", content: "Tier2X — Off-campus jobs & alumni intros for Tier-2/3 students" },
       { property: "og:description", content: "Off-campus drives, alumni intros and proof-of-work for the ~3,900 Indian engineering colleges that aren't IITs." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { property: "og:url", content: "https://campusx-inquo.lovable.app/" },
     ],
     links: [{ rel: "canonical", href: "https://campusx-inquo.lovable.app/" }],
@@ -75,6 +78,7 @@ const why = [
 function Landing() {
   return (
     <MarketingLayout>
+      <ScrollCutoutStack>
       {/* Hero */}
       <section className="relative px-4 pb-24 pt-16 md:px-8 md:pt-24">
         <div className="mx-auto max-w-5xl text-center">
@@ -236,6 +240,7 @@ function Landing() {
           </Link>
         </div>
       </section>
+      </ScrollCutoutStack>
     </MarketingLayout>
   );
 }
