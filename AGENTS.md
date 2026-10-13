@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Keep homepage cover-on-scroll behavior in the reusable ScrollCutoutStack wrapper; measure each layer's height so tall sections remain readable before pinning, and use normal flow for reduced motion.

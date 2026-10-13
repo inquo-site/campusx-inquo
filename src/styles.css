@@ -264,3 +264,40 @@
 .prose-blog pre { background: var(--color-muted, #111); padding: 1rem 1.2rem; border-radius: 12px; overflow-x: auto; margin: 1.4rem 0; }
 .prose-blog pre code { background: transparent; padding: 0; font-size: 0.88rem; }
 .prose-blog strong { color: var(--color-foreground); font-weight: 600; }
+
+/* Full-width cut-out sheets: natural scrolling, then a sticky hand-off. */
+.scroll-cutout-stack {
+  isolation: isolate;
+  position: relative;
+  --layer-edge: var(--color-border);
+}
+.scroll-cutout-layer {
+  position: sticky;
+  top: var(--layer-top, 96px);
+  display: grid;
+  align-content: center;
+  min-height: calc(100svh - 96px);
+  padding-block: 16px;
+  background: var(--color-background);
+  border-top: 1px solid var(--layer-edge);
+  clip-path: polygon(24px 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%, 0 24px);
+}
+.scroll-cutout-layer:nth-child(even) {
+  background: var(--color-surface);
+}
+.scroll-cutout-layer:first-child {
+  border-top: 0;
+  clip-path: none;
+}
+.scroll-cutout-layer:last-child {
+  position: relative;
+  top: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cutout-layer {
+    position: relative;
+    top: auto;
+    min-height: auto;
+    clip-path: none;
+  }
+}
