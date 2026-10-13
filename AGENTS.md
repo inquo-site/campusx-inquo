@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Keep homepage cover-on-scroll behavior in the reusable ScrollCutoutStack wrapper; measure each layer's height so tall sections remain readable before pinning, and use normal flow for reduced motion.
+- Scope Lenis wheel smoothing to ScrollCutoutStack, load it after hydration, and destroy it on navigation or reduced-motion changes; preserve native touch and nested tool scrolling so the effect never traps input.
